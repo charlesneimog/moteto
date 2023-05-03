@@ -8,8 +8,6 @@
 
 </head>
 <script>
-    // pedir fullscreen
-    //document.documentElement.requestFullscreen();
     document.onclick = function (argument) {
         var conf = confirm("Fullscreen mode?");
         var docelem = document.documentElement;
@@ -28,10 +26,7 @@
             }
         }
     }
-
-    // ask for permission to autoplay
     var promise = document.querySelector('video').play();
-
     var Util={};
     Util.base64 = function(mimeType, base64) {
     return 'data:' + mimeType + ';base64,' + base64;
