@@ -4,10 +4,7 @@
 #X msg 7 30 ssl 1;
 #X obj 7 3 loadbang;
 #X obj 7 59 pd-server/server 2023;
-#X obj 33 161 py4pd score chord -score;
-#X msg 57 111 run c4;
 #X connect 0 0 4 0;
 #X connect 1 0 4 0;
 #X connect 2 0 4 0;
 #X connect 3 0 2 0;
-#X connect 6 0 5 0;
