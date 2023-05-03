@@ -1,10 +1,10 @@
 #N canvas 799 5 688 691 8;
-#X obj 7 59 pd-server/server 8090;
 #X msg 46 30 start;
 #X msg 83 30 stop;
 #X msg 7 30 ssl 1;
 #X obj 7 3 loadbang;
-#X connect 1 0 0 0;
-#X connect 2 0 0 0;
-#X connect 3 0 0 0;
-#X connect 4 0 3 0;
+#X obj 7 59 pd-server/server 2023;
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
