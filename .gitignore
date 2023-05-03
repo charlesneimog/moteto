@@ -1,1 +1,3 @@
 *.pem
+py-modules
+__py_cache__
