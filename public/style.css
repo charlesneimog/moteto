@@ -1,0 +1,33 @@
+/* Remove the default border, outline, and box-shadow */
+select#naipe-select {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    /* Remove the default dropdown arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Add padding and background color */
+    padding: 0.5rem 1rem;
+    background-color: #f2f2f2;
+    /* Add border-radius */
+    border-radius: 0.25rem;
+    /* Add transition for smooth animation */
+    transition: all 0.2s ease-in-out;
+  }
+  
+  /* Style the hover and focus states */
+  select#naipe-select:hover,
+  select#naipe-select:focus {
+    background-color: #e6e6e6;
+    /* Add box-shadow */
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+  }
+
+    select#naipe-select {
+        text-align: center;
+    }
+  
+    select#naipe-select option:checked {
+        text-align: center;
+    }
