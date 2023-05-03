@@ -52,12 +52,6 @@ def chord(pitches):
     pitches = [x.lower() for x in pitches]
 
     py4pdTMPfolder = "./"
-    for file in py4pdTMPfolder:
-        if file.endswith(".ppm"):
-            try:
-                os.remove(py4pdTMPfolder + "/" + file)
-            except BaseException:
-                pass
     staffSoprano = Staff((Mm(0), Mm(0)), None, Mm(30))
     trebleClef = 'treble'
     Clef(ZERO, staffSoprano, trebleClef)
@@ -73,8 +67,7 @@ def chord(pitches):
 </p>
 """
     default_font = neoscore.default_font # Alias just for docs legibility
-    RichText(Point(x=Unit(13.0), y=Unit(30.0)), staffSoprano, text, Inch(1), default_font)
-
+    RichText(Point(x=Unit(26.0), y=Unit(30.0)), staffSoprano, text, Inch(0.7), default_font)
 
     for pitch in pitches:
         # in pitch remove not number
@@ -83,9 +76,9 @@ def chord(pitches):
         pitchClass, accidental = getpitchKey(pitchWithoutNumber)
         note = [(pitchClass, accidental, pitchOctave)]
         if pitchOctave < 4:
-            Chordrest(Mm(5), staffBaixo, note, (int(1), int(1)))
+            Chordrest(Mm(10), staffBaixo, note, (int(1), int(1)))
         else:
-            Chordrest(Mm(5), staffSoprano, note, (int(1), int(1)))
+            Chordrest(Mm(10), staffSoprano, note, (int(1), int(1)))
     randomNumber = randint(1, 100)
     notePathName = py4pdTMPfolder + "/" + pitch + f"{randomNumber}.png"
     neoscore.render_image(rect=None, dest=notePathName, dpi=1500, wait=True)
