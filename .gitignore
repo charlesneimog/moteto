@@ -1,3 +1,4 @@
 *.pem
 py-modules
-__py_cache__
+__pycache__
+*.png
