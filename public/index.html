@@ -1,73 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title style="text-align: center;">Eco III (Kyrie)</title>
-    <video id="screenOn" autoplay style="height: 2px; width: 2px; position: absolute; top: 0; left: 0; z-index: -1;" controls muted> </video>
-</head>
-<script await src="./permitionRequests.js"> </script>
-<link rel="stylesheet" type="text/css" href="style.css">
-<body id="mainBody">
-    <h1 style="text-align: center;">Eco III (Kyrie)</h1>
-    <label id="message4choosenaipe" for="naipe-select" style="position: absolute; left: 50%; transform: translateX(-50%);">Escolha seu Naipe!</label>
-    <br id="break4choosenaipe">
-    <br id="break4choosenaipe">
-    <select id="naipe-select" onchange="chooseNaipe()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
-        <option value="none">Escolha seu Naipe!</option>
-        <option value="Soprano">Soprano</option>
-        <option value="Contralto">Contralto</option>
-        <option value="Tenor">Tenor</option>
-        <option value="Baixo">Baixo</option>
-    </select>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title style="text-align: center;">Moteto - Kyrie Eleison</title>
+        <video id="screenOn" autoplay style="height: 2px; width: 2px; position: absolute; top: 0; left: 0; z-index: -1;" controls muted> </video>
+    </head>
+    <body id="mainBody">
+        <script await src="./permitionRequests.js"> </script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <h1 style="text-align: center;">Moteto</h1>
+        <label id="message4choosenaipe" for="naipe-select" style="position: absolute; left: 50%; transform: translateX(-50%);"></label>
+        <br id="break4choosenaipe">
+        <br id="break4choosenaipe">
+        <select id="naipe-select" onchange="chooseNaipe()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
+            <option value="none">Escolha seu Naipe!</option>
+            <option value="Soprano">Soprano</option>
+            <option value="Contralto">Contralto</option>
+            <option value="Tenor">Tenor</option>
+            <option value="Baixo">Baixo</option>
+        </select>
+        <img id="imgNote" style="position: relative; left: 50%; transform: translateX(-50%); max-width: 95%; max-height: 50vh; width: auto; height: auto; margin-top: 10%;" src="none.png" alt="Note">
+        <script src="obra.js"></script>
+        <script>
 
-    <script>
-        // define function chooseNaipe
-        function chooseNaipe() {
-            var selectedNaipe = document.getElementById("naipe-select").value;
-            // save value in global variable
-            window.naipe = selectedNaipe;
-            // change message and print selectedNaipe as bold
-            document.getElementById("message4choosenaipe").innerHTML = "";
-            document.getElementById("break4choosenaipe").remove();
-
-            // check if note id already exists
-            if (document.getElementById("note")) {
-                document.getElementById("note").remove();
+            <!-- if (navigator.userAgent.indexOf("Chrome") !== -1) { -->
+                // console.log("Running on Chrome");
+            // } 
+            // else {
+                // alert("Essa obra necessita do Navegador Chrome, você está usando outro Navegador.");
+            // }
+            function chooseNaipe() {
+                var selectedNaipe = document.getElementById("naipe-select").value;
+                window.naipe = selectedNaipe;
+                chooseNoteName(1);
+                console.log("Naipe escolhido: " + selectedNaipe);
             }
-            // check if note id already exists
-            if (document.getElementById("palavra")) {
-                document.getElementById("palavra").remove();
-            }
-            
-            
-            // add image block
-            var img = document.createElement("img");
-            img.src = "./note.png";
-            img.id = "note";
-            img.style = "position: relative; left: 50%; transform: translateX(-50%); max-width: 75%; max-height: 75%; margin-top: 10%;";
-            document.getElementById("mainBody").appendChild(img);
 
-            // after the image, create one h1 text with "Kyrie"
-            var h1 = document.createElement("h1");
-            h1.innerHTML = "Kyrie";
-            h1.id = "palavra";
-            h1.style = "text-align: center; position: relative; left: 50%; transform: translateX(-50%);";
-            document.getElementById("mainBody").appendChild(h1);
-
-
-
-        }
-
-        
-
-
-
-
-        
-
-
-    </script>
-</body>
-
+        </script>
+    </body>
 </html>
