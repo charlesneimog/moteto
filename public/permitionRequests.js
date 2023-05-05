@@ -1,29 +1,29 @@
 // =====================================================
 // It requests fullscreen mode
 // =====================================================
-document.onclick = function (argument) {
-    var conf = confirm("Fullscreen mode?");
-    var docelem = document.documentElement;
-    if (conf == true) {
-        if (docelem.requestFullscreen) {
-            docelem.requestFullscreen();
-            // disable this function
-            document.onclick = null;
-        }
-        else if (docelem.mozRequestFullScreen) {
-            docelem.mozRequestFullScreen();
-            document.onclick = null;
-        }
-        else if (docelem.webkitRequestFullScreen) {
-            docelem.webkitRequestFullScreen();
-            document.onclick = null;
-        }
-        else if (docelem.msRequestFullscreen) {
-            docelem.msRequestFullscreen();
-            document.onclick = null;
-        }
-    }
-}
+// document.onclick = function (argument) {
+//     var conf = confirm("Fullscreen mode?");
+//     var docelem = document.documentElement;
+//     if (conf == true) {
+//         if (docelem.requestFullscreen) {
+//             docelem.requestFullscreen();
+//             // disable this function
+//             document.onclick = null;
+//         }
+//         else if (docelem.mozRequestFullScreen) {
+//             docelem.mozRequestFullScreen();
+//             document.onclick = null;
+//         }
+//         else if (docelem.webkitRequestFullScreen) {
+//             docelem.webkitRequestFullScreen();
+//             document.onclick = null;
+//         }
+//         else if (docelem.msRequestFullscreen) {
+//             docelem.msRequestFullscreen();
+//             document.onclick = null;
+//         }
+//     }
+// }
 
 // =====================================================
 // Play simple video in order to not turn off the screen
