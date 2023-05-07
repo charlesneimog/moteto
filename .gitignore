@@ -1,4 +1,7 @@
+notes
 *.pem
 py-modules
 __pycache__
 *.png
+*.wav
+pyrightconfig.json
