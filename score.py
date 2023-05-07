@@ -1,10 +1,7 @@
 from random import randint
 import os
-os.environ['QT_QPA_PLATFORM'] = "xcb" 
 if os.name == 'nt':
     os.environ['QT_QPA_PLATFORM'] = "windows"
-    
-
 from neoscore.common import *
 
 
@@ -137,7 +134,7 @@ def mensages(silaba):
 
     py4pdTMPfolder = "./public/"
     Path.rect((Mm(-10), Mm(-10)), None, Mm(42), Mm(42),
-              Brush(Color(255, 255, 255, 0)), Pen(thickness=Mm(0)))
+              Brush(Color(255, 255, 255, 255)), Pen(thickness=Mm(0)))
 
     text = f"""
         <p style="text-align:center;">
@@ -160,6 +157,25 @@ def mensages(silaba):
     return None
 
 
+# ===============================================
+silabas = ["No", "i-ní", "cio", "Ha", "via", "tu", "do"]
+notenames = ["c", "d", "e", "f", "g", "a", "b"]
 
-mensages("Respire!")
+
+totalofIterations = len(silabas) * len(notenames) * 7 * 3
+
+for silaba in silabas:
+    for notename in notenames:
+        accidentals = ["", "+", "-", "#", "b", "#+", "b-"]
+        for accidental in accidentals:
+            for octaves in range(2, 5):
+                print(f"Faltam {totalofIterations} iterações")
+                totalofIterations -= 1
+                chord(notename + accidental + str(octaves), silaba)
+
+
+
+
+
+# mensages("Respire!")
 
