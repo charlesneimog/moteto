@@ -7,6 +7,12 @@
         <video id="screenOn" autoplay style="height: 2px; width: 2px; position: absolute; top: 0; left: 0; z-index: -1;" controls muted> </video>
     </head>
     <body id="mainBody">
+        <!-- <div class="col transport"> -->
+        <!--   <label> -->
+        <!--     start / stop -->
+        <!--     <input type="checkbox" id="transportButton" onchange="toggleTransport();"> -->
+        <!--   </label> -->
+        <!-- </div> -->
         <script await src="./permitionRequests.js"> </script>
         <link rel="stylesheet" type="text/css" href="style.css">
         <h1 style="text-align: center;">Moteto</h1>
@@ -21,22 +27,75 @@
             <option value="Baixo">Baixo</option>
         </select>
         <img id="imgNote" style="position: relative; left: 50%; transform: translateX(-50%); max-width: 95%; max-height: 50vh; width: auto; height: auto; margin-top: 10%;" src="none.png" alt="Note">
-        <script src="obra.js"></script>
+        <h4 id="completePhrase" style="text-align: center; position: relative; left: 50%; transform: translateX(-50%);"></h4>
+        
+        <script src="note.js"></script>
+        
         <script>
+            var heavyModule = null;
+            var loader = null;    
 
-            <!-- if (navigator.userAgent.indexOf("Chrome") !== -1) { -->
-                // console.log("Running on Chrome");
-            // } 
-            // else {
-                // alert("Essa obra necessita do Navegador Chrome, você está usando outro Navegador.");
-            // }
+
+            window.onload = function() {
+                    note_Module().then(loadedModule => {
+                        heavyModule = loadedModule;
+                        moduleLoaded();
+                    });
+                document.getElementById("transportButton").style.visibility = "hidden";
+            }
+
+            function moduleLoaded() {
+                loader = new heavyModule.AudioLibLoader();
+                document.getElementById("transportButton").style.visibility = "visible";
+                if (loader != null) {
+                    console.log("Module loaded!");
+                }
+                else {
+                    console.log("Module not loaded!");
+                }
+            }
+
+            function start() {
+                if(!loader.webAudioContext) {
+                    loader.init({
+                        blockSize: 2048,
+                        printHook: onPrint,
+                        sendHook: onFloatMessage,
+                        webAudioContext: null
+                        }).then(() => {
+                    });
+                }
+                loader.start();
+            }
+
+            function onPrint(message) {
+                console.log(message);
+            }
+            
+            function toggleTransport(element) {
+                // ask for audio permission
+                
+
+                (loader.isPlaying) ? stop() : start();
+            }
+
+            function onFloatMessage(sendName, floatValue) {
+                console.log(sendName, floatValue);
+            }
+
+            // randomizer
+            function randomiseParameters() {
+            }
+
+
             function chooseNaipe() {
                 var selectedNaipe = document.getElementById("naipe-select").value;
                 window.naipe = selectedNaipe;
                 chooseNoteName(1);
+                start();
                 console.log("Naipe escolhido: " + selectedNaipe);
             }
-
         </script>
+        <script src="obra.js"></script>
     </body>
 </html>
