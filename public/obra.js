@@ -111,6 +111,8 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     img = document.getElementById("imgNote");
     img.src = pngPitchFile;
 
+
+    // play the note
     loader.sendFloatParameterToWorklet("freq", midicent2Freq(midicent));
     loader.sendFloatParameterToWorklet("duration", eventDuration - 500);
     loader.sendEvent("start");
@@ -122,6 +124,8 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
 
 // ++++++++++++++++++++++++
 function chooseNoteName(eventNumber) {
+    var now = new Date().getTime();
+    console.log("I am starting to sing at " + now);
     var event = choirEvents.find(event => event.eventNumber === eventNumber);
 
     // notas
@@ -169,4 +173,59 @@ function chooseNoteName(eventNumber) {
 }
 
 
+// ========================================================
+// ========================================================
 
+function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+}
+
+// ========================================================
+async function delay(ms) {
+    completePhrase = document.getElementById("completePhrase");
+    // set color to red
+    completePhrase.style.color = "red";
+    for (let i = ms / 1000; i > 1; i--) {
+        completePhrase.innerHTML = "Faltam " + Math.floor(i) + " segundos...";
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        if (i == 1){
+            await new Promise((resolve) => setTimeout(resolve, ms % 1000));
+            var pngFile = "respire.png";
+            var img = document.getElementById("imgNote");
+            img.src = pngFile;
+        }
+    }
+    completePhrase.innerHTML = "";
+    completePhrase.style.color = "black";
+}
+
+
+// ========================================================
+async function syncStart() {
+    readTextFile("start.json" + '?' + new Date().getTime(), function(text){
+        var data = JSON.parse(text);
+        var now = new Date().getTime();
+        var startTime = data.startTime * 1000; // convert time.time from Python to milliseconds
+        console.log("start time: " + startTime);
+        var delayTime = startTime - now;
+        if (startTime != 0){
+            // console.log("I will delay for " + delayTime + " ms");
+            delay(delayTime).then(function() {
+                chooseNoteName(1);
+            });
+        }
+        else{   
+            setTimeout(function() {
+                syncStart(); // Call syncStart() again after 500 ms
+            }, 1);
+    }
+  });
+}
