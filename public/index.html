@@ -7,12 +7,12 @@
         <video id="screenOn" autoplay style="height: 2px; width: 2px; position: absolute; top: 0; left: 0; z-index: -1;" controls muted> </video>
     </head>
     <body id="mainBody">
-        <!-- <div class="col transport"> -->
-        <!--   <label> -->
-        <!--     start / stop -->
-        <!--     <input type="checkbox" id="transportButton" onchange="toggleTransport();"> -->
-        <!--   </label> -->
-        <!-- </div> -->
+        <div class="col transport" style="display:none;">
+          <label>
+            start / stop
+            <input type="checkbox" id="transportButton" onchange="toggleTransport();">
+          </label>
+        </div>
         <script await src="./permitionRequests.js"> </script>
         <link rel="stylesheet" type="text/css" href="style.css">
         <h1 style="text-align: center;">Moteto</h1>
@@ -34,7 +34,7 @@
         <script>
             var heavyModule = null;
             var loader = null;    
-
+            sendMessage();
 
             window.onload = function() {
                     note_Module().then(loadedModule => {
@@ -69,7 +69,7 @@
             }
 
             function onPrint(message) {
-                console.log(message);
+                // console.log(message);
             }
             
             function toggleTransport(element) {
@@ -87,12 +87,24 @@
             function randomiseParameters() {
             }
 
+            function sendMessage() {
+                var xhr = new XMLHttpRequest();
+                var host = window.location.hostname;
+                var port = window.location.port;
+                var protocol = window.location.protocol;
+                var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
+                xhr.open('POST', url, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                const userAgent = navigator.userAgent;
+                const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
+                xhr.send(JSON.stringify({ 'name': deviceName}));
+            }
 
             function chooseNaipe() {
                 var selectedNaipe = document.getElementById("naipe-select").value;
                 window.naipe = selectedNaipe;
-                chooseNoteName(1);
                 start();
+                syncStart();
                 console.log("Naipe escolhido: " + selectedNaipe);
             }
         </script>
