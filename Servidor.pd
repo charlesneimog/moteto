@@ -1,13 +1,13 @@
-#N canvas 1045 138 688 691 8;
+#N canvas 668 234 826 636 8;
 #X declare -path else;
 #X obj 7 3 loadbang;
-#X obj 285 5 loadbang;
+#X obj 354 5 loadbang;
 #X obj 7 122 bng 15 250 50 0 empty empty empty 0 -8 0 8 #fcfcfc #000000 #000000;
 #X obj 7 170 nbx 3 18 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 12 #fcfcfc #000000 #000000 0 256;
 #X obj 7 151 count 1 40;
 #X obj 36 48 bng 15 250 50 0 empty empty empty 0 -8 0 8 #fcfcfc #000000 #000000;
 #X obj 36 68 s fim;
-#X obj 302 26 r fim;
+#X obj 371 26 r fim;
 #X obj 28 100 r fim;
 #X obj 65 151 count 1 40;
 #X obj 86 100 r fim;
@@ -15,7 +15,7 @@
 #X msg 86 121 1;
 #X msg 28 121 1;
 #X obj 6 218 bng 35 250 50 0 empty empty empty 0 -8 0 8 #ff0400 #ffffff #ffffff;
-#N canvas 441 315 515 508 server 0;
+#N canvas 441 315 806 508 server 0;
 #X msg 46 52 start;
 #X msg 83 52 stop;
 #X msg 7 52 ssl 1;
@@ -30,6 +30,9 @@
 #X obj 30 202 print device;
 #X obj 7 110 route name fim ok freqs amps, f 42;
 #X obj 185 161 outlet;
+#X obj 264 57 loadbang;
+#X obj 264 99 s mkqrcode;
+#X obj 264 78 delay 2000 1 msec;
 #X connect 0 0 3 0;
 #X connect 1 0 3 0;
 #X connect 2 0 3 0;
@@ -44,6 +47,8 @@
 #X connect 12 2 9 0;
 #X connect 12 3 10 0;
 #X connect 12 4 13 0;
+#X connect 14 0 16 0;
+#X connect 16 0 15 0;
 #X restore 7 23 pd server;
 #X f 24;
 #X text 44 225 Click here to start the performance!;
@@ -51,7 +56,7 @@
 #N canvas 10 682 450 300 config 0;
 #X obj 3 3 declare -path else;
 #X obj 3 23 py4pd -lib pyFunc;
-#X restore 232 5 pd config;
+#X restore 57 3 pd config;
 #X obj 124 43 print amps;
 #N canvas 536 418 450 431 else 0;
 #X obj 36 33 freq2midi;
@@ -69,10 +74,12 @@
 #X connect 5 0 6 0;
 #X restore 95 61 pd else;
 #X obj 95 82 print freq;
-#X obj 285 64 resetTime;
-#X obj 285 46 bng 15 250 50 0 empty empty empty 0 -8 0 8 #fcfcfc #000000 #000000;
+#X obj 354 64 resetTime;
+#X obj 354 46 bng 15 250 50 0 empty empty empty 0 -8 0 8 #fcfcfc #000000 #000000;
 #X obj 6 291 setStartTime;
 #X msg 6 261 10;
+#X obj 234 136 mkqrcode;
+#X obj 234 115 r mkqrcode;
 #X connect 0 0 15 0;
 #X connect 1 0 23 0;
 #X connect 2 0 4 0;
@@ -93,3 +100,4 @@
 #X connect 15 4 19 0;
 #X connect 23 0 22 0;
 #X connect 25 0 24 0;
+#X connect 27 0 26 0;
