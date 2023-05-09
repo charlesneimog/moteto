@@ -29,7 +29,6 @@
         <img id="imgNote" style="position: relative; left: 50%; transform: translateX(-50%); max-width: 95%; max-height: 50vh; width: auto; height: auto; margin-top: 10%;" src="none.png" alt="Note">
         <h4 id="completePhrase" style="text-align: center; position: relative; left: 50%; transform: translateX(-50%);"></h4>
         <script id="eventScript" src="events.js"></script> 
-        <script id="notesScript" src="note.js"></script>
         
         <script>
 
@@ -50,69 +49,71 @@
                 console.log("Not on website");
             }
             
-            function loadKISSFFT() {
+            function loadCFunctionsFFT() {
                 return new Promise((resolve, reject) => {
                     var script = document.createElement('script');
                     script.onload = resolve;
                     script.onerror = reject;
-                    script.src = 'fft/kissfft.js';
+                    script.src = 'cFunctions/cFunctions.js';
                     document.head.appendChild(script);
-                    console.log("KISSFFT loaded!");
+                    console.log("C functions loaded!");
                 });
             }
-            loadKISSFFT();
-
-            window.onload = function() {
-                    note_Module().then(loadedModule => {
-                        heavyModule = loadedModule;
-                        moduleLoaded();
-                    });
-                document.getElementById("transportButton").style.visibility = "hidden";
-            }
-
-            function moduleLoaded() {
-                loader = new heavyModule.AudioLibLoader();
-                document.getElementById("transportButton").style.visibility = "visible";
-                if (loader != null) {
-                    console.log("Module loaded!");
-                }
-                else {
-                    console.log("Module not loaded!");
-                }
-            }
-
-            function start() {
-                if(!loader.webAudioContext) {
-                    loader.init({
-                        blockSize: 2048,
-                        printHook: onPrint,
-                        sendHook: onFloatMessage,
-                        webAudioContext: null
-                        }).then(() => {
-                    });
-                }
-                loader.start();
-            }
-
-            function onPrint(message) {
-                // console.log(message);
-            }
             
-            function toggleTransport(element) {
-                // ask for audio permission
-                
 
-                (loader.isPlaying) ? stop() : start();
-            }
+            loadCFunctionsFFT();
 
-            function onFloatMessage(sendName, floatValue) {
-                console.log(sendName, floatValue);
-            }
+            // window.onload = function() {
+            //         note_Module().then(loadedModule => {
+            //             heavyModule = loadedModule;
+            //             moduleLoaded();
+            //         });
+            //     document.getElementById("transportButton").style.visibility = "hidden";
+            // }
 
-            // randomizer
-            function randomiseParameters() {
-            }
-
+            // function moduleLoaded() {
+            //     loader = new heavyModule.AudioLibLoader();
+            //     document.getElementById("transportButton").style.visibility = "visible";
+            //     if (loader != null) {
+            //         console.log("Module loaded!");
+            //     }
+            //     else {
+            //         console.log("Module not loaded!");
+            //     }
+            // }
+            //
+            // function start() {
+            //     if(!loader.webAudioContext) {
+            //         loader.init({
+            //             blockSize: 2048,
+            //             printHook: onPrint,
+            //             sendHook: onFloatMessage,
+            //             webAudioContext: null
+            //             }).then(() => {
+            //         });
+            //     }
+            //     loader.start();
+            // }
+            //
+            // function onPrint(message) {
+            //     // console.log(message);
+            // }
+            // 
+            // function toggleTransport(element) {
+            //     // ask for audio permission
+            //     
+            //
+            //     (loader.isPlaying) ? stop() : start();
+            // }
+            //
+            // function onFloatMessage(sendName, floatValue) {
+            //     console.log(sendName, floatValue);
+            // }
+            //
+            // // randomizer
+            // function randomiseParameters() {
+            // }
+            //
             function sendMessage() {
                 var xhr = new XMLHttpRequest();
                 var host = window.location.hostname;
@@ -129,7 +130,7 @@
             function chooseNaipe() {
                 var selectedNaipe = document.getElementById("naipe-select").value;
                 window.naipe = selectedNaipe;
-                start();
+                // start();
                 syncStart();
                 setTheNaipe();
                 AudioStream(); 

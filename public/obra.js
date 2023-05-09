@@ -88,7 +88,6 @@ function getFreqsFromPartialTracking(typeOfCalculation) {
     });
 }
 
-getFreqsFromPartialTracking("up");
 
 // =====================================================
 function configFFT(dataArray, sampleRate){ 
@@ -275,12 +274,38 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
 
     img.src = pngPitchFile;
 
-    // play the note
-    loader.sendFloatParameterToWorklet("freq", midicent2Freq(midicent));
-    loader.sendFloatParameterToWorklet("duration", eventDuration - eventClass.breathTime);
-    loader.sendEvent("start");
+    // malloc new array for double samples with eventDuration - eventClass.breathTime
 
-    // create one 
+    // convert ms to samples
+    var durationMs = eventDuration - eventClass.breathTime;
+    var durationSec = durationMs / 1000;
+    var samples = Math.floor(durationSec * sampleRate);
+
+
+    var samples = new Float64Array(samples);
+    var samplesPtr = Module._malloc(samples.length * samples.BYTES_PER_ELEMENT);
+    Module.HEAPF64.set(samples, samplesPtr >> 3);
+    // generate_sine_wave(float frequency, float samplerate, float duration, double *output)
+    Module.ccall(   
+        'generate_sine_wave', 'number', ['number', 'number', 'number', 'number'], 
+        [midicent2Freq(midicent), sampleRate, eventDuration - eventClass.breathTime, samplesPtr]);
+
+    // print samples
+    var samples = new Float64Array(Module.HEAPF64.buffer, samplesPtr, samples.length);
+
+
+    var audioContext = new AudioContext();
+    var buffer = audioContext.createBuffer(1, samples.length, sampleRate);
+    var channelData = buffer.getChannelData(0);
+    channelData.set(Float32Array.from(samples));
+    var source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioContext.destination);
+    source.start();
+
+
+
+
     completePhrase.innerHTML = eventClass.completePhrase;
 }
 
