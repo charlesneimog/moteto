@@ -290,7 +290,9 @@ function StartMicroEvent(event, eventDuration) {
     var notes = event.notes; 
     var notesProbabilities = event.notesProbabilities;
 
-    setTheNaipe();
+    if (thisNaipe == undefined){
+        setTheNaipe();
+    }
 
     var higherNote = thisNaipe.higherNote;
     var lowerNote = thisNaipe.lowerNote;
