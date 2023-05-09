@@ -33,11 +33,11 @@
         <img id="imgNote" style="position: relative; left: 50%; transform: translateX(-50%); max-width: 95%; max-height: 50vh; width: auto; height: auto; margin-top: 10%;" src="none.png" alt="Note">
         <h4 id="completePhrase" style="text-align: center; position: relative; left: 50%; transform: translateX(-50%);"></h4>
         <script src="./public/events.js"></script> 
-        <script src="./public/note.js"></script>
+        <!-- <script src="./public/note.js"></script> -->
         
         <script>
                 completePhrase = document.getElementById("completePhrase");
-                completePhrase.style.color = "yellow";
+                completePhrase.style.color = "#FFBF00";
                 completePhrase.innerHTML = "Escolha seu naipe!";
 
                 var host = window.location.hostname;
@@ -60,10 +60,7 @@
                         console.log("C functions loaded!");
                     });
                 }
-                
-
                 loadCFunctionsFFT();
-
 
             function chooseNaipe() {
                 var selectedNaipe = document.getElementById("naipe-select").value;
