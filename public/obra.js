@@ -6,6 +6,10 @@ var host = window.location.hostname;
 var onWebSite = false;
 if (host == "charlesneimog.com") {
     onWebSite = true;
+    console.log("On website");
+}
+else {
+    console.log("Not on website");
 }
 
 // =====================================================
@@ -414,6 +418,9 @@ async function syncStart() {
             delay(delayTime).then(function() {
                 startMacroEvent(1);
             });
+        }
+        else if(onWebSite == true){
+            startMacroEvent(1);
         }
         else{   
             setTimeout(function() {
