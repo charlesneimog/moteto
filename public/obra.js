@@ -3,23 +3,101 @@
 // set global variables
 var streamAudioForPartialTracking = false;
 
-// TODO: put this in the right place
+// =====================================================
+//  TODO: put this in the right place
 function midicent2Freq(midicent) {
     var freq = 440 * Math.pow(2, (midicent - 6900) / 1200);
     return freq;
 }
 
+// ========================================================
+function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+}
+
+// =====================================================
+function getFreqsFromPartialTracking(typeOfCalculation) {
+    // if typeOfCalculation == "down" then down amplitudes get higher probability
+    readTextFile("partialtracking.json" + '?' + new Date().getTime(), function(text){
+        var data = JSON.parse(text);
+        var freqs = data.f;
+        var amps = data.a;
+        
+        if (freqs == undefined || amps == undefined) {
+            console.log("No data from partial tracking");
+            return;
+        }
+
+        if (typeOfCalculation == "down") {
+            console.log("Calculating down");
+            const sumAbsAmps = amps.reduce((sum, amp) => sum + Math.abs(amp), 0);
+            const freqProbs = freqs.map((freq, i) => ({
+              frequency: freq,
+              amplitude: amps[i],
+              probability: Math.abs(amps[i]) / sumAbsAmps
+            }));
+            freqProbs.sort((a, b) => b.probability - a.probability);
+            return freqProbs;
+        }
+
+        else if (typeOfCalculation == "up") {
+            // python poor translation
+            var normalized_amps = [];
+            var minAmp = Math.min(...amps);
+            var maxAmp = Math.max(...amps);
+            for (var i = 0; i < amps.length; i++) {
+                normalized_amps.push((amps[i] - minAmp) / (maxAmp - minAmp));
+            }
+            var freq_amp_dict = {};
+            for (var i = 0; i < freqs.length; i++) {
+                freq_amp_dict[freqs[i]] = normalized_amps[i];
+            }
+            var sorted_freq_amp = [];
+            for (var key in freq_amp_dict) {
+                sorted_freq_amp.push([key, freq_amp_dict[key]]);
+            }
+            sorted_freq_amp.sort(function(a, b) {
+                    return b[1] - a[1];
+                }
+            );
+            var n = freqs.length;
+            var rank_probs = [];
+            for (var i = 1; i < n + 1; i++) {
+                rank_probs.push(1 / i);
+            }
+            var sumRankProbs = rank_probs.reduce((sum, prob) => sum + prob, 0);
+            rank_probs = rank_probs.map((prob) => prob / sumRankProbs);
+            var freq_prob_dict = {};
+            for (var i = 0; i < sorted_freq_amp.length; i++) {
+                freq_prob_dict[sorted_freq_amp[i][0]] = rank_probs[i];
+            }
+            var table = [];
+            for (var i = 0; i < freqs.length; i++) {
+                table.push([freqs[i], freq_prob_dict[freqs[i]]]);
+            }
+            return table;
+        }
+    });
+}
+
+getFreqsFromPartialTracking("up");
+
 // =====================================================
 function configFFT(dataArray, sampleRate){ 
-    console.log("configFFT");
+    console.log("Running Partial Tracking");
     var fftSize = 4096;
     if (dataArray.length != fftSize) {
         return;
     }
     else {
-
-
-
         const inArray = new Float64Array(dataArray);
         const inPtr = Module._malloc(inArray.length * inArray.BYTES_PER_ELEMENT);
         const inHeap = new Float64Array(Module.HEAPF64.buffer, inPtr, inArray.length);
@@ -34,32 +112,48 @@ function configFFT(dataArray, sampleRate){
 
         // `outHeap` now contains the output of the FFT
         const result = new Float32Array(Module.HEAPF32.buffer, outPtr, outArray.length);
-            
-        var freqsAndAmps = [];
-
-        console.log("========== js ==========");
+        var freqs = [];
+        var amps = [];
         for (var i = 0; i < result.length / 2; i++) {
             if (result[2 * i] !=  0) {
                 var freq = result[2 * i];
                 var amp = result[2 * i + 1];
-                console.log("freq: " + freq + " amp: " + amp);
-                freqsAndAmps.push([freq, amp]);
+                freqs.push(freq);
+                amps.push(amp);
             }
         }
-        console.log("========== js ==========");
-
-
         Module._free(outPtr);
         Module._free(inPtr);
+
         var xhr = new XMLHttpRequest();
         var host = window.location.hostname;
         var port = window.location.port;
         var protocol = window.location.protocol;
-        var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
+        var url = protocol + '//' + host + ':' + port + '/send2pd'; 
+
         xhr.open('POST', url, true);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        freqsAmps = [];
-        xhr.send(JSON.stringify({ 'freqsAndAmps': freqsAmps }));
+        xhr.send(JSON.stringify({ 'freqs': freqs}));
+        // xhr.close();
+
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                if (xhr.status == 200) {
+                    console.log("Sent to PureData");
+                }
+                else {
+                    console.log("Error sending to PD");
+                }
+            }
+        }
+
+        var xhrAmps = new XMLHttpRequest();
+        xhrAmps.open('POST', url, true);
+        xhrAmps.setRequestHeader('Content-Type', 'application/json');
+        xhrAmps.send(JSON.stringify({ 'amps': amps}));
+        // xhr.close();
+
         return;
     }
 }
@@ -185,7 +279,6 @@ function StartMicroEvent(event, eventDuration) {
     // notas
     var notes = event.notes; 
     var notesProbabilities = event.notesProbabilities;
-
     var higherNote = thisNaipe.higherNote;
     var lowerNote = thisNaipe.lowerNote;
     var validEvents = [];
@@ -193,9 +286,13 @@ function StartMicroEvent(event, eventDuration) {
     var goodNotes = [];
     var goodNotesProbabilities = [];
     var sendPartialTracking = Math.random();
-    // if (sendPartialTracking > 0.1) {
+
+    // ========================================================
+    //  NOTE: Here is where I execute the partial tracking
+    if (sendPartialTracking > 0.1 && event.mkPartialTracking == true) {
         streamAudioForPartialTracking = true;
-    // }
+    }
+    // ========================================================
 
     // remove not valid notes
     for (var i = 0; i < notes.length; i++) {
@@ -206,7 +303,6 @@ function StartMicroEvent(event, eventDuration) {
             goodNotesProbabilities.push(notesProbabilities[i]);
         }
     }
-    
     if (goodNotes.length > 0) {
         var noteAndMidicent = chooseWithProbabilities(goodNotes, goodNotesProbabilities);
         var note = noteAndMidicent[0];
@@ -223,7 +319,6 @@ function StartMicroEvent(event, eventDuration) {
         var pngFile = "pausa.png";
         midicent = 0;
     }
-    
 
     // check if pngFile exists
     var timeOut = eventDuration;
@@ -275,22 +370,6 @@ async function startMacroEvent(eventNumber) {
     }
 }
 
-
-
-
-// ========================================================
-function readTextFile(file, callback) {
-    var rawFile = new XMLHttpRequest();
-    rawFile.overrideMimeType("application/json");
-    rawFile.open("GET", file, true);
-    rawFile.onreadystatechange = function() {
-        if (rawFile.readyState === 4 && rawFile.status == "200") {
-            callback(rawFile.responseText);
-        }
-    }
-    rawFile.send(null);
-}
-
 // ========================================================
 async function delay(ms) {
     completePhrase = document.getElementById("completePhrase");
@@ -312,7 +391,7 @@ async function delay(ms) {
     img.src = pngFile;
     completePhrase.innerHTML = "";
     completePhrase.style.color = "black";
-
+    return;
 }
 
 
@@ -332,7 +411,7 @@ async function syncStart() {
             setTimeout(function() {
                 syncStart(); // Call syncStart() again after 500 ms
             }, 1);
-    }
-  });
+        }
+    });
 }
 
