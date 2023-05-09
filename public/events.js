@@ -47,6 +47,7 @@ class MicroEvent {
         this.breathTime = 0;
         this.possibleDurations = [];
         this.duration = 0;
+        this.mkPartialTracking = false;
     }
 }
 
@@ -166,6 +167,7 @@ microEvent7.syllablesProbabilities = [0.5, 0.5];
 microEvent7.completePhrase = "tudo.";
 microEvent7.breathTime = 1000;
 microEvent7.possibleDurations = [9000, 10000, 11000];
+microEvent7.mkPartialTracking = true;
 mediumEvent1.MicroEvents.push(microEvent7);
 
 // ++++++++++++++++++++++++++++++++
