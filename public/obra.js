@@ -1,84 +1,136 @@
-// ========================================================
-// ====================  Score Events  ====================
-// ========================================================
-class ChoirEvent {
-    constructor(eventNumber) {
-        this.eventNumber = eventNumber;
-        this.notes = [];
-        this.notesProbabilities = [];
-        this.notesMidicent = [];
-        this.syllables = [];
-        this.syllablesProbabilities = [];
-        this.completePhrase = "";
-        this.naipe = "";
-        this.breathTime = 0;
-        this.duration = 0;
-    }
-}
+// Description: This file contains the code to run the choir.
 
-// ++++++++++++++++++++++++++++++++
-// activate audio context
-var AudioContext = window.AudioContext || window.webkitAudioContext;
-var audioCtx = new AudioContext();
+// set global variables
+var streamAudioForPartialTracking = false;
 
-// ++++++++++++++++++++++++++++++++
-function createChoirEvent(eventNumber) {
-    return new ChoirEvent(eventNumber);
-}
-
-// ++++++++++++++++++++++++++++++++
-
-function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-// ++++++++++++++++++++++++++++++++
-function listRandom(list){
-    // choose one number in the list
-    var index = randomInt(0, list.length - 1);
-    return list[index];
-}
-
-// ========================================================
-// ++++++++++++++++++++++++++++++++
-let choirEvents = [];
-let transitionTime = randomInt(100, 500); 
-let sumORdecr = listRandom([0, 1]); // 0 = sum, 1 = decr
-
-// ++++++++++++++++++++++++++++++++
-// ++++++++++ Events ++++++++++++++
-// ++++++++++++++++++++++++++++++++
-
-let event1 = createChoirEvent(1);
-event1.notes = [["c4", 6000]];
-event1.notesProbabilities = [1];
-event1.syllables = ["No", "i-ní", "cio"];
-event1.syllablesProbabilities = [0.33, 0.33, 0.33];
-event1.completePhrase = "No início";
-event1.breathTime = 1000;
-choirEvents.push(event1);
-
-// ++++++++++++++++++++++++++++++++
-let event2 = createChoirEvent(2);
-event2.notes = [["c4", 6000], ["c+4", 6050], ["c#4", 6100]];
-event2.notesProbabilities = [0.5, 0.25, 0.25];
-event2.syllables = ["Ha", "via", "tu", "do"];
-event2.syllablesProbabilities = [0.35, 0.05, 0.25, 0.25];
-event2.completePhrase = "Havia tudo.";
-event2.breathTime = 700;
-choirEvents.push(event2);
-
-// ========================================================
-// ======================  Functions  =====================
-// ========================================================
-
+// TODO: put this in the right place
 function midicent2Freq(midicent) {
     var freq = 440 * Math.pow(2, (midicent - 6900) / 1200);
     return freq;
 }
 
+// =====================================================
+function configFFT(dataArray, sampleRate){ 
+    console.log("configFFT");
+    var fftSize = 4096;
+    if (dataArray.length != fftSize) {
+        return;
+    }
+    else {
+
+
+
+        const inArray = new Float64Array(dataArray);
+        const inPtr = Module._malloc(inArray.length * inArray.BYTES_PER_ELEMENT);
+        const inHeap = new Float64Array(Module.HEAPF64.buffer, inPtr, inArray.length);
+        inHeap.set(inArray);
+
+        const outArray = new Float32Array(fftSize);
+        const outPtr = Module._malloc(outArray.length * outArray.BYTES_PER_ELEMENT);
+        const outHeap = new Float32Array(Module.HEAPF32.buffer, outPtr, outArray.length);
+        
+        // call the function
+        Module.ccall('fft', 'number', ['number', 'number', 'number', 'number', 'number'], [inPtr, fftSize, 0, outPtr, sampleRate]);
+
+        // `outHeap` now contains the output of the FFT
+        const result = new Float32Array(Module.HEAPF32.buffer, outPtr, outArray.length);
+            
+        var freqsAndAmps = [];
+
+        console.log("========== js ==========");
+        for (var i = 0; i < result.length / 2; i++) {
+            if (result[2 * i] !=  0) {
+                var freq = result[2 * i];
+                var amp = result[2 * i + 1];
+                console.log("freq: " + freq + " amp: " + amp);
+                freqsAndAmps.push([freq, amp]);
+            }
+        }
+        console.log("========== js ==========");
+
+
+        Module._free(outPtr);
+        Module._free(inPtr);
+        var xhr = new XMLHttpRequest();
+        var host = window.location.hostname;
+        var port = window.location.port;
+        var protocol = window.location.protocol;
+        var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        freqsAmps = [];
+        xhr.send(JSON.stringify({ 'freqsAndAmps': freqsAmps }));
+        return;
+    }
+}
+
+// ========================================================
+function AudioStream() {
+    var audioContext = new AudioContext();
+    var analyser = audioContext.createAnalyser();
+    analyser.fftSize = 4096; // this will 
+    var sampleRate = audioContext.sampleRate;
+    var data = new Float32Array(analyser.fftSize);
+    // -----------------------------------------------
+    function step() {
+        if (streamAudioForPartialTracking == true) {
+            audioContext.resume();
+            analyser.getFloatTimeDomainData(data);
+            const floatData = new Float32Array(data.length);
+            floatData.set(data);
+            configFFT(floatData, sampleRate);
+            requestAnimationFrame(step);
+            streamAudioForPartialTracking = false;
+        }
+        else if (streamAudioForPartialTracking == false) {
+            requestAnimationFrame(step);
+        }
+    }
+    // -----------------------------------------------
+    stream.then(function(stream) {
+        var mediaStreamSource = audioContext.createMediaStreamSource(stream);
+        mediaStreamSource.connect(analyser);
+        step(); // this is a requestAnimationFrame???
+    });
+}
+
+// ========================================================
+function setTheNaipe(){
+    if (window.naipe == "Baixo") {
+        thisNaipe = new Baixo();
+    }
+    else if (window.naipe == "Tenor") {
+        thisNaipe = new Tenor();
+    }
+    else if (window.naipe == "Contralto") {
+        thisNaipe = new Contralto();
+    }
+    else if (window.naipe == "Soprano") {
+        thisNaipe = new Soprano();
+    }
+    else {
+        alert("Não foi possível identificar o naipe, por favor, avise o Charles :).");
+    }
+}
+
+// ========================================================
+// ======================  Functions  =====================
+// ========================================================
+
+
+
 // ++++++++++++++++++++++++
 function chooseWithProbabilities(elements, probabilities) {
+    // adapt probabilities to always sum 1
+    var sum = 0;
+    for (var i = 0; i < probabilities.length; i++) {
+        sum += probabilities[i];
+    }
+    for (var i = 0; i < probabilities.length; i++) {
+        probabilities[i] = probabilities[i] / sum;
+    }
+
+    // create cumulative probabilities
     var cumulativeProbabilities = [];
     var sum = 0;
     for (var i = 0; i < probabilities.length; i++) {
@@ -96,13 +148,21 @@ function chooseWithProbabilities(elements, probabilities) {
 // ++++++++++++++++++++++++
 async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     // show the breath image
-    var pngFile = "respire.png";
-    var eventDuration = eventClass.duration;
     var img = document.getElementById("imgNote");
-    img.src = pngFile;
     completePhrase = document.getElementById("completePhrase");
-    completePhrase.innerHTML = "";
+    if (midicent != 0) {
+        var pngFile = "respire.png";
+        var eventDuration = eventClass.duration;
+        img.src = pngFile;
+    }
+    else{
+        img.src = pngPitchFile; 
+        completePhrase.innerHTML = "Nenhuma nota encontrada.";
+        await new Promise((resolve) => setTimeout(resolve, eventClass.breathTime));
+        return;
 
+    }
+    completePhrase.innerHTML = "";
 
     // delay for 500ms
     await new Promise((resolve) => setTimeout(resolve, eventClass.breathTime)); // TODO: rethink about this
@@ -111,39 +171,62 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     img = document.getElementById("imgNote");
     img.src = pngPitchFile;
 
-
     // play the note
     loader.sendFloatParameterToWorklet("freq", midicent2Freq(midicent));
-    loader.sendFloatParameterToWorklet("duration", eventDuration - 500);
+    loader.sendFloatParameterToWorklet("duration", eventDuration - eventClass.breathTime);
     loader.sendEvent("start");
 
     // create one 
     completePhrase.innerHTML = eventClass.completePhrase;
-
 }
 
 // ++++++++++++++++++++++++
-function chooseNoteName(eventNumber) {
-    var now = new Date().getTime();
-    console.log("I am starting to sing at " + now);
-    var event = choirEvents.find(event => event.eventNumber === eventNumber);
-
+function StartMicroEvent(event, eventDuration) {
     // notas
     var notes = event.notes; 
     var notesProbabilities = event.notesProbabilities;
-    var noteAndMidicent = chooseWithProbabilities(notes, notesProbabilities);
-    var note = noteAndMidicent[0];
-    var midicent = noteAndMidicent[1];
 
-    // silabas
-    var syllables = event.syllables;
-    var syllablesProbabilities = event.syllablesProbabilities;
-    var syllable = chooseWithProbabilities(syllables, syllablesProbabilities);
+    var higherNote = thisNaipe.higherNote;
+    var lowerNote = thisNaipe.lowerNote;
+    var validEvents = [];
 
-    // create note name file
-    var pngFile = "notes/" + note + "-" + syllable + ".png";
+    var goodNotes = [];
+    var goodNotesProbabilities = [];
+    var sendPartialTracking = Math.random();
+    // if (sendPartialTracking > 0.1) {
+        streamAudioForPartialTracking = true;
+    // }
 
-    var timeOut = 5000;
+    // remove not valid notes
+    for (var i = 0; i < notes.length; i++) {
+        if (notes[i][1] <= higherNote && notes[i][1] >= lowerNote) {
+            var note = notes[i][0];
+            var midicent = notes[i][1];
+            goodNotes.push([note, midicent]);
+            goodNotesProbabilities.push(notesProbabilities[i]);
+        }
+    }
+    
+    if (goodNotes.length > 0) {
+        var noteAndMidicent = chooseWithProbabilities(goodNotes, goodNotesProbabilities);
+        var note = noteAndMidicent[0];
+        var midicent = noteAndMidicent[1];
+
+        // silabas
+        var syllables = event.syllables;
+        var syllablesProbabilities = event.syllablesProbabilities;
+        var syllable = chooseWithProbabilities(syllables, syllablesProbabilities);
+        var pngFile = "notes/" + note + "-" + syllable + ".png";
+        pngFile = pngFile.replace("#", "s");
+    }
+    else{
+        var pngFile = "pausa.png";
+        midicent = 0;
+    }
+    
+
+    // check if pngFile exists
+    var timeOut = eventDuration;
     if (sumORdecr == 0) {
         timeOut = timeOut + transitionTime;
         sumORdecr = 1;
@@ -155,27 +238,47 @@ function chooseNoteName(eventNumber) {
     event.duration = timeOut;
     showNoteAndBreath(pngFile, event, midicent);
 
-    // sleep for 1 second
-    setTimeout(function() {
-        eventNumber = eventNumber + 1;
-        if (eventNumber > choirEvents.length) {
-            var pngFile = "fim.png";
-            var img = document.getElementById("imgNote"); // mostra a partitura
-            img.src = pngFile;
-            completePhrase = document.getElementById("completePhrase");
-            completePhrase.innerHTML = "";
-            return;
-        }
-        else{
-            chooseNoteName(eventNumber);
-        }
-    }, timeOut);
+}
+
+// ========================================================
+async function startMacroEvent(eventNumber) {
+    if (eventNumber == undefined) {
+        eventNumber = 1;
+    }
+
+    completePhrase = document.getElementById("completePhrase");
+    completePhrase.innerHTML = "Evento " + eventNumber + " de " + pieceEvents.length;
+
+    var mediumEvent = pieceEvents.find(event => event.eventNumber === eventNumber);
+    var length = mediumEvent.MicroEvents.length;
+    var possibleDurationsLength = mediumEvent.MicroEvents[0].possibleDurations.length;
+    var durationIndex = Math.floor(Math.random() * possibleDurationsLength);
+    for (var i = 0; i < length; i++) {
+        var eventNumber = mediumEvent.MicroEvents[i];
+        var event = mediumEvent.MicroEvents[i];
+        var eventDuration = event.possibleDurations[durationIndex];
+        StartMicroEvent(event, eventDuration);
+        await new Promise((resolve) => setTimeout(resolve, eventDuration));
+    }
+    eventNumber = eventNumber + 1;
+
+    var sendPartialTracking = Math.random();
+
+    if (eventNumber < pieceEvents.length) {
+        startMacroEvent(eventNumber);
+    }
+    else {
+        var img = document.getElementById("imgNote");
+        img.src = "fim.png";
+        completePhrase = document.getElementById("completePhrase");
+        completePhrase.innerHTML = "Fim da peça!";
+    }
 }
 
 
-// ========================================================
-// ========================================================
 
+
+// ========================================================
 function readTextFile(file, callback) {
     var rawFile = new XMLHttpRequest();
     rawFile.overrideMimeType("application/json");
@@ -193,18 +296,23 @@ async function delay(ms) {
     completePhrase = document.getElementById("completePhrase");
     // set color to red
     completePhrase.style.color = "red";
-    for (let i = ms / 1000; i > 1; i--) {
-        completePhrase.innerHTML = "Faltam " + Math.floor(i) + " segundos...";
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        if (i == 1){
-            await new Promise((resolve) => setTimeout(resolve, ms % 1000));
-            var pngFile = "respire.png";
-            var img = document.getElementById("imgNote");
-            img.src = pngFile;
+    var cicles = Math.floor(ms / 1000)
+    for (let i = cicles; i > 1; i--) {
+        var isFirefox = typeof InstallTrigger !== 'undefined';
+        var index = i;
+        if (isFirefox) {
+            index = i + 1;
         }
+        completePhrase.innerHTML = "Iniciando obra em " + Math.floor(index) + " segundos...";
+        await new Promise((resolve) => setTimeout(resolve, 1000));
     }
+    await new Promise((resolve) => setTimeout(resolve, ms % 1000));
+    var pngFile = "respire.png";
+    var img = document.getElementById("imgNote");
+    img.src = pngFile;
     completePhrase.innerHTML = "";
     completePhrase.style.color = "black";
+
 }
 
 
@@ -214,12 +322,10 @@ async function syncStart() {
         var data = JSON.parse(text);
         var now = new Date().getTime();
         var startTime = data.startTime * 1000; // convert time.time from Python to milliseconds
-        console.log("start time: " + startTime);
         var delayTime = startTime - now;
         if (startTime != 0){
-            // console.log("I will delay for " + delayTime + " ms");
             delay(delayTime).then(function() {
-                chooseNoteName(1);
+                startMacroEvent(1);
             });
         }
         else{   
@@ -229,3 +335,4 @@ async function syncStart() {
     }
   });
 }
+
