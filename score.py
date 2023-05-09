@@ -3,7 +3,7 @@ import os
 if os.name == 'nt':
     os.environ['QT_QPA_PLATFORM'] = "windows"
 from neoscore.common import *
-
+import sys
 
 def getpitchKey(pitch, cents=0):
     note = {
@@ -116,7 +116,11 @@ def chord(pitches, silaba):
             Chordrest(Mm(10), staffBaixo, [(pitchClass, accidental, pitchOctave)], (int(1), int(1)))
         else:
             Chordrest(Mm(10), staffSoprano, [(pitchClass, accidental, pitchOctave)], (int(1), int(1)))
-    notePathName = py4pdTMPfolder + "/" + pitches[0] + "-" + silaba + ".png"
+    thepitch = pitches[0]
+    # replace # by s in thepitch
+    thepitch = thepitch.replace('#', 's')
+
+    notePathName = py4pdTMPfolder + "/" + thepitch + "-" + silaba + ".png"
     neoscore.render_image(rect=None, dest=notePathName, dpi=1500, wait=True)
     neoscore.shutdown()
     if os.name == 'nt':
@@ -148,9 +152,8 @@ def mensages(silaba):
     x = Mm(-10) + (Mm(42) - width) / 2 # center the text horizontally
     y = Mm(-5) + (Mm(42) - height) / 2 # center the text vertically
     RichText(Point(x=x, y=y), None, text, width, default_font)
-
     notePathName = py4pdTMPfolder + "/" + silaba + ".png"
-    neoscore.render_image(rect=None, dest=notePathName, dpi=1500, wait=True)
+    neoscore.render_image(rect=None, dest=notePathName, dpi=1000, wait=True)
     neoscore.shutdown()
     if os.name == 'nt':
         notePathName = notePathName.replace("\\", "/")
@@ -158,24 +161,38 @@ def mensages(silaba):
 
 
 # ===============================================
-silabas = ["No", "i-ní", "cio", "Ha", "via", "tu", "do"]
+#   ["Cri", "ou"], ["o", "na", "da"] ["di", "an", "te"], ["tan", "to", "tu", "do"],  ["an", "te"];  ["tu", "do"];
+
+import multiprocessing
+
+processes = []
+processesCalls = 0
+
+def create_note(notename, accidental, octave, silaba):
+    print(f"Criação da nota {notename + accidental + str(octave)}-{silaba}.png")
+    chord(notename + accidental + str(octave), silaba)
+
+
+silabas = ["Cri", "ou", "o", "na", "da", "di", "an", "te", "tan", "to", "tu", "do", "an", "te", "tu", "do"]
 notenames = ["c", "d", "e", "f", "g", "a", "b"]
-
-
-totalofIterations = len(silabas) * len(notenames) * 7 * 3
+totalofIterations = len(silabas) * len(notenames) * 7 * 2
 
 for silaba in silabas:
     for notename in notenames:
         accidentals = ["", "+", "-", "#", "b", "#+", "b-"]
         for accidental in accidentals:
-            for octaves in range(2, 5):
-                print(f"Faltam {totalofIterations} iterações")
+            for octave in range(3, 5):
+                p = multiprocessing.Process(target=create_note, args=(notename, accidental, octave, silaba))
+                processes.append(p)
+                p.start()
                 totalofIterations -= 1
-                chord(notename + accidental + str(octaves), silaba)
+                processesCalls += 1
+                print(f"Total of iterations: {totalofIterations}")
+                if (processesCalls == 16):
+                    print("Waiting for processes to finish")
+                    for p in processes:
+                        p.join()
+                    processesCalls = 0
+                    processes = []
 
-
-
-
-
-# mensages("Respire!")
 
