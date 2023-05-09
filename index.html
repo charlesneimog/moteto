@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title style="text-align: center;">Moteto - Kyrie Eleison</title>
+        <video id="screenOn" autoplay style="height: 2px; width: 2px; position: absolute; top: 0; left: 0; z-index: -1;" controls muted> </video>
+    </head>
+    <body id="mainBody">
+        <div class="col transport" style="display:none;">
+          <label>
+            start / stop
+            <input type="checkbox" id="transportButton" onchange="toggleTransport();">
+          </label>
+        </div>
+        <script await src="./public/permitionRequests.js"> </script>
+        <link rel="stylesheet" type="text/css" href="./public/style.css">
+        <h1 id="PageTitle" style="text-align: center;">Moteto</h1>
+        <label id="message4choosenaipe" for="naipe-select" style="position: absolute; left: 50%; transform: translateX(-50%);"></label>
+        <br id="break4choosenaipe">
+        <br id="break4choosenaipe">
+        <select id="naipe-select" onchange="chooseNaipe()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
+            <option value="none">Escolha seu Naipe!</option>
+            <option value="Soprano">Soprano</option>
+            <option value="Contralto">Contralto</option>
+            <option value="Tenor">Tenor</option>
+            <option value="Baixo">Baixo</option>
+        </select>
+        <img id="imgNote" style="position: relative; left: 50%; transform: translateX(-50%); max-width: 95%; max-height: 50vh; width: auto; height: auto; margin-top: 10%;" src="none.png" alt="Note">
+        <h4 id="completePhrase" style="text-align: center; position: relative; left: 50%; transform: translateX(-50%);"></h4>
+        <script src="./public/events.js"></script> 
+        <script src="./public/note.js"></script>
+        
+        <script>
+            completePhrase = document.getElementById("completePhrase");
+            completePhrase.style.color = "yellow";
+            completePhrase.innerHTML = "Escolha seu naipe!";
+            var heavyModule = null;
+            var loader = null;    
+            sendMessage();
+
+            // fft/kissfft.js is one file from emscripten, load it here
+            
+            function loadKISSFFT() {
+                return new Promise((resolve, reject) => {
+                    var script = document.createElement('script');
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    script.src = './public/fft/kissfft.js';
+                    document.head.appendChild(script);
+                    console.log("KISSFFT loaded!");
+                });
+            }
+            loadKISSFFT();
+
+            window.onload = function() {
+                    note_Module().then(loadedModule => {
+                        heavyModule = loadedModule;
+                        moduleLoaded();
+                    });
+                document.getElementById("transportButton").style.visibility = "hidden";
+            }
+
+            function moduleLoaded() {
+                loader = new heavyModule.AudioLibLoader();
+                document.getElementById("transportButton").style.visibility = "visible";
+                if (loader != null) {
+                    console.log("Module loaded!");
+                }
+                else {
+                    console.log("Module not loaded!");
+                }
+            }
+
+            function start() {
+                if(!loader.webAudioContext) {
+                    loader.init({
+                        blockSize: 2048,
+                        printHook: onPrint,
+                        sendHook: onFloatMessage,
+                        webAudioContext: null
+                        }).then(() => {
+                    });
+                }
+                loader.start();
+            }
+
+            function onPrint(message) {
+                // console.log(message);
+            }
+            
+            function toggleTransport(element) {
+                // ask for audio permission
+                
+
+                (loader.isPlaying) ? stop() : start();
+            }
+
+            function onFloatMessage(sendName, floatValue) {
+                console.log(sendName, floatValue);
+            }
+
+            // randomizer
+            function randomiseParameters() {
+            }
+
+            function sendMessage() {
+                var xhr = new XMLHttpRequest();
+                var host = window.location.hostname;
+                var port = window.location.port;
+                var protocol = window.location.protocol;
+                var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
+                xhr.open('POST', url, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                const userAgent = navigator.userAgent;
+                const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
+                xhr.send(JSON.stringify({ 'name': deviceName}));
+            }
+
+            function chooseNaipe() {
+                var selectedNaipe = document.getElementById("naipe-select").value;
+                window.naipe = selectedNaipe;
+                start();
+                syncStart();
+                setTheNaipe();
+                AudioStream(); 
+                completePhrase = document.getElementById("completePhrase");
+                completePhrase.style.color = "green";
+                completePhrase.innerHTML = "Aguarde a conexão dos demais performers...";
+                var xhr = new XMLHttpRequest();
+                var host = window.location.hostname;
+                var port = window.location.port;
+                var protocol = window.location.protocol;
+                var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
+                xhr.open('POST', url, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                const userAgent = navigator.userAgent;
+                const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
+                xhr.send(JSON.stringify({ 'ok': deviceName}));
+            }
+        </script>
+        <script src="./public/obra.js"></script>
+    </body>
+</html>
