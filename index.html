@@ -39,9 +39,6 @@
                 completePhrase = document.getElementById("completePhrase");
                 completePhrase.style.color = "yellow";
                 completePhrase.innerHTML = "Escolha seu naipe!";
-                var heavyModule = null;
-                var loader = null;    
-                sendMessage();
 
                 var host = window.location.hostname;
                 var onWebSite = false;
@@ -81,15 +78,7 @@
                 if (onWebSite) {
                     return;
                 }
-                var host = window.location.hostname;
-                var port = window.location.port;
-                var protocol = window.location.protocol;
-                var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
-                xhr.open('POST', url, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                const userAgent = navigator.userAgent;
-                const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
-                xhr.send(JSON.stringify({'ok': deviceName}));
+
             }
         </script>
         <script src="./public/obra.js"></script>
