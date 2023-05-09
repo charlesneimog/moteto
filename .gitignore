@@ -5,4 +5,5 @@ __pycache__
 *.png
 *.wav
 *.o
+start.json
 pyrightconfig.json
