@@ -24,6 +24,16 @@
 //         }
 //     }
 // }
+//
+
+// ask for audio permission
+const audioContext = new AudioContext();
+const bufferSize = 4096;
+const sampleRate = audioContext.sampleRate;
+var stream = navigator.mediaDevices.getUserMedia({audio: true, video: false});
+
+
+
 
 // =====================================================
 // Play simple video in order to not turn off the screen
