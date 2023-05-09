@@ -407,24 +407,26 @@ async function delay(ms) {
 
 // ========================================================
 async function syncStart() {
-    readTextFile("start.json" + '?' + new Date().getTime(), function(text){
-        var data = JSON.parse(text);
-        var now = new Date().getTime();
-        var startTime = data.startTime * 1000; // convert time.time from Python to milliseconds
-        var delayTime = startTime - now;
-        if (startTime != 0 && onWebSite == false) {
-            delay(delayTime).then(function() {
-                startMacroEvent(1);
-            });
-        }
-        else if(onWebSite == true){
-            startMacroEvent(1);
-        }
-        else{   
-            setTimeout(function() {
-                syncStart(); // Call syncStart() again after 500 ms
-            }, 1);
-        }
-    });
+    if (onWebSite == true){
+        startMacroEvent(1);
+    }
+    else{
+        readTextFile("start.json" + '?' + new Date().getTime(), function(text){
+            var data = JSON.parse(text);
+            var now = new Date().getTime();
+            var startTime = data.startTime * 1000; // convert time.time from Python to milliseconds
+            var delayTime = startTime - now;
+            if (startTime != 0 && onWebSite == false) {
+                delay(delayTime).then(function() {
+                    startMacroEvent(1);
+                });
+            }
+            else{   
+                setTimeout(function() {
+                    syncStart(); // Call syncStart() again after 500 ms
+                }, 1);
+            }
+        });
+    }
 }
 

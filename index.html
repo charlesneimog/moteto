@@ -47,8 +47,6 @@
                 onWebSite = true;
             }
 
-
-
                     
             if (onWebSite) {
                 var imgNote = document.getElementById("imgNote");
@@ -119,6 +117,9 @@
             }
 
             function sendMessage() {
+                if (onWebSite) {
+                    return;
+                }
                 var xhr = new XMLHttpRequest();
                 var host = window.location.hostname;
                 var port = window.location.port;
@@ -141,7 +142,9 @@
                 completePhrase = document.getElementById("completePhrase");
                 completePhrase.style.color = "green";
                 completePhrase.innerHTML = "Aguarde a conexão dos demais performers...";
-                var xhr = new XMLHttpRequest();
+                if (onWebSite) {
+                    return;
+                }
                 var host = window.location.hostname;
                 var port = window.location.port;
                 var protocol = window.location.protocol;
