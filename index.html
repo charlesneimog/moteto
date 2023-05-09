@@ -41,14 +41,14 @@
 
             var host = window.location.hostname;
             var onWebSite = false;
-            if (host == "charlesneimog.com") {
+            
+            // check if host contains the word charlesneimog
+            if (host.includes("charlesneimog")) {
                 onWebSite = true;
-                console.log("On website");
             }
-            else {
-                console.log("Not on website");
-                console.log("Host: " + host);
-            }
+
+
+
                     
             if (onWebSite) {
                 var imgNote = document.getElementById("imgNote");
