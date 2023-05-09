@@ -1,0 +1,16 @@
+[
+  {
+    "arguments": [
+      "emcc",
+      "-I",
+      "/home/neimog/Documents/emsdk/upstream/emscripten/cache/sysroot/include/",
+      "-c",
+      "-o",
+      "src/py4pd.o",
+      "src/py4pd.c"
+    ],
+    "directory": "/home/neimog/Documents/Git/Moteto",
+    "file": "/home/neimog/Documents/Git/Moteto/public/senoide/main.c",
+    "output": "senoide.html"
+  }
+]
