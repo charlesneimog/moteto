@@ -1,3 +1,5 @@
+
+``` text
 Na Gênese, a cegueira originante.
 Já havia tudo.
 Criou o Nada, 
@@ -14,3 +16,5 @@ Sentiu-se centro do Todo,
 Julgou-se divino.
 
 Homem criado.
+
+```
