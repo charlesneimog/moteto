@@ -412,7 +412,7 @@ async function syncStart() {
         var now = new Date().getTime();
         var startTime = data.startTime * 1000; // convert time.time from Python to milliseconds
         var delayTime = startTime - now;
-        if (startTime != 0){
+        if (startTime != 0 && onWebSite == false) {
             delay(delayTime).then(function() {
                 startMacroEvent(1);
             });
