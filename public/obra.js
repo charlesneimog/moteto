@@ -303,9 +303,6 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     source.connect(audioContext.destination);
     source.start();
 
-
-
-
     completePhrase.innerHTML = eventClass.completePhrase;
 }
 
