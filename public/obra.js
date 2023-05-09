@@ -2,6 +2,11 @@
 
 // set global variables
 var streamAudioForPartialTracking = false;
+var host = window.location.hostname;
+var onWebSite = false;
+if (host == "charlesneimog.com") {
+    onWebSite = true;
+}
 
 // =====================================================
 //  TODO: put this in the right place
@@ -95,6 +100,9 @@ function configFFT(dataArray, sampleRate){
     console.log("Running Partial Tracking");
     var fftSize = 4096;
     if (dataArray.length != fftSize) {
+        return;
+    }
+    else if (onWebSite == true){
         return;
     }
     else {
@@ -289,7 +297,7 @@ function StartMicroEvent(event, eventDuration) {
 
     // ========================================================
     //  NOTE: Here is where I execute the partial tracking
-    if (sendPartialTracking > 0.1 && event.mkPartialTracking == true) {
+    if (sendPartialTracking > 0.1 && event.mkPartialTracking == true && onWebSite == false) {
         streamAudioForPartialTracking = true;
     }
     // ========================================================
