@@ -66,7 +66,6 @@ void fft(double* in, int nfft, int inverse, float* out, int sampleRate) {
             if (freq > midicent2Freq(4500) && freq < midicent2Freq(7400)) {
                 outs[2 * i] = freq;
                 outs[2 * i + 1] = b;
-                // printf("freq: %f, amp: %f\n", freq, b);
             }
             else {
                 outs[2 * i] = 0;
