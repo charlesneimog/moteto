@@ -29,7 +29,7 @@
 // ask for audio permission
 const audioContext = new AudioContext();
 const bufferSize = 4096;
-const sampleRate = 16000;
+const sampleRate = 48000;
 var stream = navigator.mediaDevices.getUserMedia({audio: true, video: false});
 
 
