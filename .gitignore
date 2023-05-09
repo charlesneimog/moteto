@@ -4,4 +4,5 @@ py-modules
 __pycache__
 *.png
 *.wav
+*.o
 pyrightconfig.json
