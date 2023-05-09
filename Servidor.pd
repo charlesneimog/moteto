@@ -52,7 +52,7 @@
 #X restore 7 23 pd server;
 #X f 24;
 #X text 44 225 Click here to start the performance!;
-#X text 44 261 10s for sync... You can change it.;
+#X text 30 261 10s for sync... You can change it.;
 #N canvas 10 682 450 300 config 0;
 #X obj 3 3 declare -path else;
 #X obj 3 23 py4pd -lib pyFunc;
@@ -72,14 +72,14 @@
 #X connect 3 0 1 0;
 #X connect 4 0 0 0;
 #X connect 5 0 6 0;
-#X restore 95 61 pd else;
+#X restore 104 63 pd else;
 #X obj 95 82 print freq;
 #X obj 354 64 resetTime;
 #X obj 354 46 bng 15 250 50 0 empty empty empty 0 -8 0 8 #fcfcfc #000000 #000000;
 #X obj 6 291 setStartTime;
-#X msg 6 261 10;
-#X obj 234 136 mkqrcode;
+#X obj 234 142 mkqrcode 330 330;
 #X obj 234 115 r mkqrcode;
+#X msg 6 261 10;
 #X connect 0 0 15 0;
 #X connect 1 0 23 0;
 #X connect 2 0 4 0;
@@ -91,7 +91,7 @@
 #X connect 10 0 12 0;
 #X connect 12 0 9 0;
 #X connect 13 0 4 0;
-#X connect 14 0 25 0;
+#X connect 14 0 27 0;
 #X connect 15 0 2 0;
 #X connect 15 1 5 0;
 #X connect 15 2 9 0;
@@ -99,5 +99,5 @@
 #X connect 15 3 21 0;
 #X connect 15 4 19 0;
 #X connect 23 0 22 0;
-#X connect 25 0 24 0;
-#X connect 27 0 26 0;
+#X connect 26 0 25 0;
+#X connect 27 0 24 0;
