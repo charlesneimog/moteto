@@ -289,6 +289,9 @@ function StartMicroEvent(event, eventDuration) {
     // notas
     var notes = event.notes; 
     var notesProbabilities = event.notesProbabilities;
+
+    setTheNaipe();
+
     var higherNote = thisNaipe.higherNote;
     var lowerNote = thisNaipe.lowerNote;
     var validEvents = [];
@@ -387,12 +390,7 @@ async function delay(ms) {
     completePhrase.style.color = "red";
     var cicles = Math.floor(ms / 1000)
     for (let i = cicles; i > 1; i--) {
-        var isFirefox = typeof InstallTrigger !== 'undefined';
-        var index = i;
-        if (isFirefox) {
-            index = i + 1;
-        }
-        completePhrase.innerHTML = "Iniciando obra em " + Math.floor(index) + " segundos...";
+        completePhrase.innerHTML = "Iniciando obra em " + Math.floor(i) + " segundos...";
         await new Promise((resolve) => setTimeout(resolve, 1000));
     }
     await new Promise((resolve) => setTimeout(resolve, ms % 1000));
@@ -408,6 +406,9 @@ async function delay(ms) {
 // ========================================================
 async function syncStart() {
     if (onWebSite == true){
+        if (thisNaipe == undefined) {
+            setTheNaipe();
+        }
         startMacroEvent(1);
     }
     else{
