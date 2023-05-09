@@ -2,15 +2,6 @@
 
 // set global variables
 var streamAudioForPartialTracking = false;
-var host = window.location.hostname;
-var onWebSite = false;
-if (host == "charlesneimog.com") {
-    onWebSite = true;
-    console.log("On website");
-}
-else {
-    console.log("Not on website");
-}
 
 // =====================================================
 //  TODO: put this in the right place
@@ -258,6 +249,9 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     completePhrase = document.getElementById("completePhrase");
     if (midicent != 0) {
         var pngFile = "respire.png";
+        if (onWebSite == true) {
+            pngFile = "public/" + pngFile;
+        }
         var eventDuration = eventClass.duration;
         img.src = pngFile;
     }
@@ -275,6 +269,10 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
 
     // show the note image
     img = document.getElementById("imgNote");
+    if (onWebSite == true) {
+        pngPitchFile = "public/" + pngPitchFile;
+    }
+
     img.src = pngPitchFile;
 
     // play the note
