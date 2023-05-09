@@ -5,5 +5,7 @@ __pycache__
 *.png
 *.wav
 *.o
+.cache
+compile_commands.json
 start.json
 pyrightconfig.json

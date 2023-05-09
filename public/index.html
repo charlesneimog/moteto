@@ -63,57 +63,7 @@
 
             loadCFunctionsFFT();
 
-            // window.onload = function() {
-            //         note_Module().then(loadedModule => {
-            //             heavyModule = loadedModule;
-            //             moduleLoaded();
-            //         });
-            //     document.getElementById("transportButton").style.visibility = "hidden";
-            // }
 
-            // function moduleLoaded() {
-            //     loader = new heavyModule.AudioLibLoader();
-            //     document.getElementById("transportButton").style.visibility = "visible";
-            //     if (loader != null) {
-            //         console.log("Module loaded!");
-            //     }
-            //     else {
-            //         console.log("Module not loaded!");
-            //     }
-            // }
-            //
-            // function start() {
-            //     if(!loader.webAudioContext) {
-            //         loader.init({
-            //             blockSize: 2048,
-            //             printHook: onPrint,
-            //             sendHook: onFloatMessage,
-            //             webAudioContext: null
-            //             }).then(() => {
-            //         });
-            //     }
-            //     loader.start();
-            // }
-            //
-            // function onPrint(message) {
-            //     // console.log(message);
-            // }
-            // 
-            // function toggleTransport(element) {
-            //     // ask for audio permission
-            //     
-            //
-            //     (loader.isPlaying) ? stop() : start();
-            // }
-            //
-            // function onFloatMessage(sendName, floatValue) {
-            //     console.log(sendName, floatValue);
-            // }
-            //
-            // // randomizer
-            // function randomiseParameters() {
-            // }
-            //
             function sendMessage() {
                 var xhr = new XMLHttpRequest();
                 var host = window.location.hostname;
