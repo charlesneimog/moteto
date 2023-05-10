@@ -242,6 +242,8 @@ function chooseWithProbabilities(elements, probabilities) {
 }
 
 // ++++++++++++++++++++++++
+
+/*
 async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     // show the breath image
     var img = document.getElementById("imgNote");
@@ -281,19 +283,26 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     var durationSec = durationMs / 1000;
     var samples = Math.floor(durationSec * sampleRate);
 
-
     var samples = new Float64Array(samples);
     var samplesPtr = Module._malloc(samples.length * samples.BYTES_PER_ELEMENT);
     Module.HEAPF64.set(samples, samplesPtr >> 3);
-    // generate_sine_wave(float frequency, float samplerate, float duration, double *output)
-    Module.ccall(   
-        'generate_sine_wave', 'number', ['number', 'number', 'number', 'number'], 
-        [midicent2Freq(midicent), sampleRate, eventDuration - eventClass.breathTime, samplesPtr]);
 
-    // print samples
+    // Allocate memory for the frequency array and copy values
+    const freqList = [midicent2Freq(midicent) * 1, midicent2Freq(midicent) * 2, midicent2Freq(midicent) * 3, midicent2Freq(midicent) * 4];
+    const ampList = [0.7, 0.1, 0.05, 0.05];
+    const freqPtr = Module._malloc(freqList.length * Float32Array.BYTES_PER_ELEMENT);
+    Module.HEAPF32.set(freqList, freqPtr / Float32Array.BYTES_PER_ELEMENT);
+    const ampPtr = Module._malloc(ampList.length * Float32Array.BYTES_PER_ELEMENT);
+    Module.HEAPF32.set(ampList, ampPtr / Float32Array.BYTES_PER_ELEMENT);
+    // Call the C function
+    Module.ccall('generate_sines_wave', 'number', ['number', 'number', 'number', 'number', 'number', 'number'],
+            [freqPtr, ampPtr, freqList.length, sampleRate, eventDuration - eventClass.breathTime, samplesPtr]);            
+
+
+    // Get the output data from the buffer
     var samples = new Float64Array(Module.HEAPF64.buffer, samplesPtr, samples.length);
 
-
+    // =====================
     var audioContext = new AudioContext();
     var buffer = audioContext.createBuffer(1, samples.length, sampleRate);
     var channelData = buffer.getChannelData(0);
@@ -303,7 +312,95 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     source.connect(audioContext.destination);
     source.start();
 
+    // free memory
+    Module._free(samplesPtr);
+    Module._free(freqPtr);
+    Module._free(ampPtr);
     completePhrase.innerHTML = eventClass.completePhrase;
+}
+*/
+
+// ========================================================
+async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
+    // show the breath image
+    var img = document.getElementById("imgNote");
+    completePhrase = document.getElementById("completePhrase");
+    var div = document.getElementById('DurationBar');
+    // set the color of the bar
+    div.style.color = "red";
+
+    if (midicent != 0) {
+        var pngFile = "respire.png";
+        
+        if (onWebSite == true) {
+            pngFile = "public/" + pngFile;
+        }
+        var eventDuration = eventClass.duration;
+        img.src = pngFile;
+    }
+    else{
+        img.src = pngPitchFile; 
+        completePhrase.innerHTML = "Nenhuma nota encontrada.";
+        await new Promise((resolve) => setTimeout(resolve, eventClass.breathTime));
+        return;
+
+    }
+    completePhrase.innerHTML = "";
+
+    // delay for 500ms
+    await new Promise((resolve) => setTimeout(resolve, eventClass.breathTime)); // TODO: rethink about this
+
+    var div = document.getElementById('DurationBar');
+    // div.style.color = "black";
+
+    // show the note image
+    img = document.getElementById("imgNote");
+    if (onWebSite == true) {
+        pngPitchFile = "public/" + pngPitchFile;
+    }
+    img.src = pngPitchFile;
+
+    /// Synth the note
+    var durationMs = eventDuration - eventClass.breathTime;
+    var durationSec = durationMs / 1000;
+    var samples = Math.floor(durationSec * sampleRate);
+    var samples = new Float64Array(samples);
+    var samplesPtr = Module._malloc(samples.length * samples.BYTES_PER_ELEMENT);
+    Module.HEAPF64.set(samples, samplesPtr >> 3);
+    Module.ccall(   
+        'generate_sine_wave', 'number', ['number', 'number', 'number', 'number'], 
+        [midicent2Freq(midicent), sampleRate, eventDuration - eventClass.breathTime, samplesPtr]);
+    var samples = new Float64Array(Module.HEAPF64.buffer, samplesPtr, samples.length);
+    var audioContext = new AudioContext();
+    var buffer = audioContext.createBuffer(1, samples.length, sampleRate);
+    var channelData = buffer.getChannelData(0);
+    channelData.set(Float32Array.from(samples));
+    var source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioContext.destination);
+    source.start();
+    Module._free(samplesPtr);
+    /// ========================
+    completePhrase.innerHTML = eventClass.completePhrase;
+}
+
+// ++++++++++++++++++++++++
+function updateMeasureBarProgress(duration) {
+    var start = new Date().getTime();
+    var interval = setInterval(function() {
+        var now = new Date().getTime();
+        var progress = now - start;
+        var div = document.getElementById('DurationBar');
+        var div_width = Math.min(progress / duration * 100, 100);
+        measureDivWidth = div_width;
+        div.style.width =  div_width + '%';
+        if (div_width == 100) {
+            clearInterval(interval);
+            div.style.width = 100;
+            console.log("Measure bar progress finished");
+        }
+    }, 30);
+
 }
 
 // ++++++++++++++++++++++++
@@ -356,28 +453,34 @@ function StartMicroEvent(event, eventDuration) {
         var pngFile = "pausa.png";
         midicent = 0;
     }
-
-    // check if pngFile exists
-    var timeOut = eventDuration;
-    if (sumORdecr == 0) {
-        timeOut = timeOut + transitionTime;
-        sumORdecr = 1;
-    }
-    else {
-        timeOut = timeOut - transitionTime;
-        sumORdecr = 0;
-    }
-    event.duration = timeOut;
+    event.duration = eventDuration;
+    updateMeasureBarProgress(eventDuration);
     showNoteAndBreath(pngFile, event, midicent);
-
 }
 
 // ========================================================
 async function startMacroEvent(eventNumber) {
+    var start = new Date().getTime();
+    // convert to São Paulo time
+    start = start - 10800000;
+    var startString = new Date(start).toISOString().slice(11, -1);
+
+    /*
+    var xhr = new XMLHttpRequest();
+    var host = window.location.hostname;
+    var port = window.location.port;
+    var protocol = window.location.protocol;
+    var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    const userAgent = navigator.userAgent;
+    const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
+    xhr.send(JSON.stringify({ 'started': startString}));
+    */
+
     if (eventNumber == undefined) {
         eventNumber = 1;
     }
-
     completePhrase = document.getElementById("completePhrase");
     completePhrase.innerHTML = "Evento " + eventNumber + " de " + pieceEvents.length;
 
@@ -386,7 +489,7 @@ async function startMacroEvent(eventNumber) {
     var possibleDurationsLength = mediumEvent.MicroEvents[0].possibleDurations.length;
     var durationIndex = Math.floor(Math.random() * possibleDurationsLength);
     for (var i = 0; i < length; i++) {
-        var eventNumber = mediumEvent.MicroEvents[i];
+        console.log("MacroEvent: " + eventNumber + " MicroEvent: " + (i + 1));
         var event = mediumEvent.MicroEvents[i];
         var eventDuration = event.possibleDurations[durationIndex];
         StartMicroEvent(event, eventDuration);
@@ -394,9 +497,10 @@ async function startMacroEvent(eventNumber) {
     }
     eventNumber = eventNumber + 1;
 
-    var sendPartialTracking = Math.random();
+    // console.log("eventNumber: " + eventNumber);
+    // console.log("pieceEvents.length: " + pieceEvents.length);
 
-    if (eventNumber < pieceEvents.length) {
+    if (eventNumber <= pieceEvents.length) {
         startMacroEvent(eventNumber);
     }
     else {
