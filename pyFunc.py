@@ -1,10 +1,18 @@
 import pd
 
+import sys
 import json
 import os
 import time
-import qrcode
 import socket
+
+try:
+    import qrcode
+except:
+    pd.error("Please install qrcode: Create py.pip object and send one message local qrcode")
+    sys.exit(1)
+
+    
 
 
 def setStartTime(delayInSeconds):

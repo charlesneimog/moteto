@@ -1,6 +1,6 @@
 CC = emcc
 CFLAGS = -I ./kissfft-131.1.0 -O3
-LDFLAGS = -s WASM=1 -s EXPORTED_FUNCTIONS='["_malloc", "_free", "_fft", "_generate_sine_wave"]' -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'
+LDFLAGS = -s WASM=1 -s EXPORTED_FUNCTIONS='["_malloc", "_free", "_fft", "_generate_sine_wave"]' -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' -sALLOW_MEMORY_GROWTH
 SRC = main.c ./kissfft-131.1.0/kiss_fft.c
 OBJ = $(SRC:.c=.o)
 TARGET = cFunctions.html
