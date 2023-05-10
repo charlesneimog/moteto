@@ -1,11 +1,13 @@
-name: "emsdk"
+name: "Compile C functions"
 on: [push]
 
 jobs:
-  build:
+  build-emscripten:
     runs-on: ubuntu-latest
     steps:
       - uses: mymindstorm/setup-emsdk@v11
-
-      - name: Verify
-        run: emcc -v
+      # cFunctions
+      - name: Compile C Functions
+        run: |
+          cd public/cFunctions/
+          make
