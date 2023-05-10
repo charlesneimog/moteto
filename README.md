@@ -4,30 +4,7 @@ Depois, com Josquin des Prez, Giovanni Pierluigi da Palestrina e outros, além d
 
 A obra `Moteto` é exatamente isso, além de sobreposições de vozes independentes, utilizamos estruturas de Afinção Justa, nosso principal objetivo, no entanto, é fazer com que a obra seja executada também por coros amadores.
 
-O texto utilizado uma distorção nossa do poema de Mia Couto intitulado `Avesso Bíblico`:
-
-``` txt
-No início,
-já havia tudo.
-
-Mas Deus era cego
-e, perante tanto tudo,
-o que ele viu foi o Nada.
-
-Deus tocou a água
-e acreditou ter criado o oceano.
-
-Tocou o chão
-e pensou que a terra nascia sob os seus pés.
-
-E quando a si mesmo se tocou
-ele se achou o centro do Universo.
-E se julgou divino.
-
-Estava criado o Homem.
-
-```
-Distorcemos ele um pouco:
+O texto utilizado uma distorção (pelo ChatGpt) do poema de Mia Couto intitulado `Avesso Bíblico`: 
 
 ``` txt
 Já havia tudo.
