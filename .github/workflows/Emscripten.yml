@@ -31,6 +31,6 @@ jobs:
         with:
           # upload all that is inside ${{github.workspace}} to the release
           file: ${{github.workspace}}/*
-          # overwrite: true
-          update_latest_release: true
-          tag_name: ${{github.event.inputs.pieceVersion}}
+          # upload to the latest release
+
+
