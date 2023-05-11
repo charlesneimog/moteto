@@ -31,6 +31,43 @@
         <script id="eventScript" src="events.js"></script> 
         <script>
 
+    
+            function checkCompatibility(){
+                if (typeof navigator === "undefined" || typeof navigator.userAgent === "undefined") {
+                    alert("navigator.userAgent is undefined");
+                    return;
+                }
+                let userAgent = navigator.userAgent;
+                let browserName;
+                 
+                if(userAgent.match(/chrome|chromium|crios/i)){
+                    browserName = "chrome";
+                }
+                else if(userAgent.match(/firefox|fxios/i)){
+                    browserName = "firefox";
+                    const isMobile = navigator.userAgent.mobile;
+                    if (isMobile){
+                        alert("O navegador Firefox não parece ser compatível com algumas de nossas funcionalidades. Para melhor experiência altere o navegador.");
+                    }
+                }  
+                else if(userAgent.match(/safari/i)){
+                    browserName = "safari";
+                }
+                else if(userAgent.match(/opr\//i)){
+                    browserName = "opera";
+                } 
+                else if(userAgent.match(/edg/i)){
+                    browserName = "edge";
+                }
+                else{
+                    browserName="No browser detection";
+                }
+                if (/Mobi|Android/i.test(navigator.userAgent) == true && browserName == "firefox") {
+                    alert("O navegador Firefox não parece ser compatível com algumas requisitos de nossa obra (Moteto). Para melhor experiência altere o navegador.");
+                }
+            }
+            checkCompatibility();
+
             completePhrase = document.getElementById("completePhrase");
             completePhrase.style.color = "#FFBF00";
             completePhrase.innerHTML = "Escolha seu naipe!";
@@ -55,13 +92,10 @@
                     script.onerror = reject;
                     script.src = 'cFunctions/cFunctions.js';
                     document.head.appendChild(script);
-                    console.log("C functions loaded!");
                 });
             }
             
-
             loadCFunctionsFFT();
-
 
             function sendMessage() {
                 var xhr = new XMLHttpRequest();
@@ -99,6 +133,6 @@
             }
         </script>
         <script src="obra.js"></script>
-        <div id="DurationBar" style="position: fixed; bottom: 0; left: 0; width: 0%; height: 40px; background-color: black;"></div>
+        <div id="DurationBar" style="position: fixed; bottom: 0; left: 0; width: 0%; height: 20px; background-color: black;"></div>
     </body>
 </html>

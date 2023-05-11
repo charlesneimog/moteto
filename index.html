@@ -36,35 +36,72 @@
         <!-- <script src="./public/note.js"></script> -->
         
         <script>
-                completePhrase = document.getElementById("completePhrase");
-                completePhrase.style.color = "#FFBF00";
-                completePhrase.innerHTML = "Escolha seu naipe!";
+            completePhrase = document.getElementById("completePhrase");
+            completePhrase.style.color = "#FFBF00";
+            completePhrase.innerHTML = "Escolha seu naipe!";
 
-                var host = window.location.hostname;
-                var onWebSite = false;
-                // if host has charlesneimog.com, then it is on website
-                if (host.includes("charlesneimog.com")) {
-                    onWebSite = true;
-                    imgNote = document.getElementById("imgNote");
-                    imgNote.src = "public/none.png";
-                    console.log("On website");
-                }
-                else {
-                    console.log("Not on website");
-                }
 
-                
-                function loadCFunctionsFFT() {
-                    return new Promise((resolve, reject) => {
-                        var script = document.createElement('script');
-                        script.onload = resolve;
-                        script.onerror = reject;
-                        script.src = 'public/cFunctions/cFunctions.js';
-                        document.head.appendChild(script);
-                        console.log("C functions loaded!");
-                    });
+            function checkCompatibility(){
+                if (typeof navigator === "undefined" || typeof navigator.userAgent === "undefined") {
+                    alert("navigator.userAgent is undefined");
+                    return;
                 }
-                loadCFunctionsFFT();
+                let userAgent = navigator.userAgent;
+                let browserName;
+                 
+                if(userAgent.match(/chrome|chromium|crios/i)){
+                    browserName = "chrome";
+                }
+                else if(userAgent.match(/firefox|fxios/i)){
+                    browserName = "firefox";
+                    const isMobile = navigator.userAgent.mobile;
+                    if (isMobile){
+                        alert("O navegador Firefox não parece ser compatível com algumas de nossas funcionalidades. Para melhor experiência altere o navegador.");
+                    }
+                }  
+                else if(userAgent.match(/safari/i)){
+                    browserName = "safari";
+                }
+                else if(userAgent.match(/opr\//i)){
+                    browserName = "opera";
+                } 
+                else if(userAgent.match(/edg/i)){
+                    browserName = "edge";
+                }
+                else{
+                    browserName="No browser detection";
+                }
+                if (/Mobi|Android/i.test(navigator.userAgent) == true && browserName == "firefox") {
+                    alert("O navegador Firefox não parece ser compatível com algumas requisitos de nossa obra (Moteto). Para melhor experiência altere o navegador.");
+                }
+            }
+            checkCompatibility();
+
+            var host = window.location.hostname;
+            var onWebSite = false;
+            // if host has charlesneimog.com, then it is on website
+            if (host.includes("charlesneimog.com")) {
+                onWebSite = true;
+                imgNote = document.getElementById("imgNote");
+                imgNote.src = "public/none.png";
+                console.log("On website");
+            }
+            else {
+                // console.log("Not on website");
+            }
+
+            
+            function loadCFunctionsFFT() {
+                return new Promise((resolve, reject) => {
+                    var script = document.createElement('script');
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    script.src = 'public/cFunctions/cFunctions.js';
+                    document.head.appendChild(script);
+                    console.log("C functions loaded!");
+                });
+            }
+            loadCFunctionsFFT();
 
             function chooseNaipe() {
                 var selectedNaipe = document.getElementById("naipe-select").value;
