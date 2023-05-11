@@ -397,7 +397,6 @@ function updateMeasureBarProgress(duration) {
         if (div_width == 100) {
             clearInterval(interval);
             div.style.width = 100;
-            console.log("Measure bar progress finished");
         }
     }, 30);
 
