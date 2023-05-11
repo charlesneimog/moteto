@@ -1,33 +1,73 @@
-/* Remove the default border, outline, and box-shadow */
 select#naipe-select {
     border: none;
     outline: none;
     box-shadow: none;
-    /* Remove the default dropdown arrow */
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    /* Add padding and background color */
     padding: 0.5rem 1rem;
     background-color: #f2f2f2;
-    /* Add border-radius */
     border-radius: 0.25rem;
-    /* Add transition for smooth animation */
     transition: all 0.2s ease-in-out;
-  }
+}
   
-  /* Style the hover and focus states */
-  select#naipe-select:hover,
-  select#naipe-select:focus {
+select#naipe-select:hover,
+select#naipe-select:focus {
     background-color: #e6e6e6;
-    /* Add box-shadow */
     box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
-  }
+}
 
-    select#naipe-select {
-        text-align: center;
-    }
+select#naipe-select {
+    text-align: center;
+}
   
-    select#naipe-select option:checked {
-        text-align: center;
-    }
+select#naipe-select option:checked {
+    text-align: center;
+}
+
+/* ==================== */
+select#minute-select {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 0.5rem 1rem;
+    background-color: #f2f2f2;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease-in-out;
+}
+  
+select#minute-select:hover,
+select#minute-select:focus {
+    background-color: #e6e6e6;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
+
+select#minute-select {
+    text-align: center;
+}
+  
+select#minute-select option:checked {
+    text-align: center;
+}
+
+
+/* make button in same style */
+button#moteto-global-button {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: 0.5rem 1rem;
+    background-color: #f2f2f2;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease-in-out;
+}
+
+button#moteto-global-button :hover,
+button#moteto-global-button :focus {
+    background-color: #e6e6e6;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
+

@@ -1,35 +1,46 @@
 // =====================================================
 // It requests fullscreen mode
 // =====================================================
-// document.onclick = function (argument) {
-//     var conf = confirm("Fullscreen mode?");
-//     var docelem = document.documentElement;
-//     if (conf == true) {
-//         if (docelem.requestFullscreen) {
-//             docelem.requestFullscreen();
-//             // disable this function
-//             document.onclick = null;
-//         }
-//         else if (docelem.mozRequestFullScreen) {
-//             docelem.mozRequestFullScreen();
-//             document.onclick = null;
-//         }
-//         else if (docelem.webkitRequestFullScreen) {
-//             docelem.webkitRequestFullScreen();
-//             document.onclick = null;
-//         }
-//         else if (docelem.msRequestFullscreen) {
-//             docelem.msRequestFullscreen();
-//             document.onclick = null;
-//         }
-//     }
-// }
-//
+function askForFullScreen() {
+  const doc = window.document;
+  const docEl = doc.documentElement;
+  const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+
+  if (requestFullScreen) {
+    const btn = doc.createElement("button");
+    btn.innerHTML = "Clique para entrar em modo tela cheia.";
+    btn.style.position = "absolute";
+    btn.id = "fullscreenBtn";
+    btn.style.left = "50%";
+    const completePhrase = doc.getElementById("completePhrase");
+    const completePhrasePos = completePhrase.getBoundingClientRect();
+    btn.style.top = `${completePhrasePos.bottom + 60}px`;
+    btn.style.transform = "translate(-50%, -50%)";
+    btn.style.border = "none";
+    btn.style.outline = "none";
+    btn.style.boxShadow = "none";
+    btn.style.padding = "0.5rem 1rem";
+    btn.style.backgroundColor = "#f2f2f2";
+    btn.style.borderRadius = "0.25rem";
+    btn.style.transition = "all 0.2s ease-in-out";
+
+    // Add event listener to button click event
+    btn.addEventListener("click", function() {
+      requestFullScreen.call(docEl);
+        btn.style.display = "none";
+    });
+
+    // Append the button to the body of the document
+    doc.body.appendChild(btn);
+  }
+}
+
+
 
 // ask for audio permission
 const audioContext = new AudioContext();
 const bufferSize = 4096;
-const sampleRate = 44100;
+const sampleRate = 16000;
 var stream = navigator.mediaDevices.getUserMedia({audio: true, video: false});
 
 

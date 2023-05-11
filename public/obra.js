@@ -328,6 +328,12 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     var div = document.getElementById('DurationBar');
     // set the color of the bar
     div.style.color = "red";
+    var imgNotePos = img.getBoundingClientRect();
+    var imgNoteWidth = imgNotePos.width;
+    var imgNoteHeight = imgNotePos.height;
+    completePhrase.style.position = "absolute";
+    completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
+
 
     if (midicent != 0) {
         var pngFile = "respire.png";
@@ -361,6 +367,8 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     img.src = pngPitchFile;
 
     /// Synth the note
+    // see time of execution
+    var t0 = performance.now();
     var durationMs = eventDuration - eventClass.breathTime;
     var durationSec = durationMs / 1000;
     var samples = Math.floor(durationSec * sampleRate);
@@ -380,7 +388,7 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     source.connect(audioContext.destination);
     source.start();
     Module._free(samplesPtr);
-    /// ========================
+    var t1 = performance.now();
     completePhrase.innerHTML = eventClass.completePhrase;
 }
 
@@ -445,11 +453,16 @@ function StartMicroEvent(event, eventDuration) {
         var syllables = event.syllables;
         var syllablesProbabilities = event.syllablesProbabilities;
         var syllable = chooseWithProbabilities(syllables, syllablesProbabilities);
-        var pngFile = "notes/" + note + "-" + syllable + ".png";
+        if (onWebSite == true) {
+            var pngFile = "./public/notes/" + note + "-" + syllable + ".png";
+        }
+        else{
+            var pngFile = "notes/" + note + "-" + syllable + ".png";
+        }
         pngFile = pngFile.replace("#", "s");
     }
     else{
-        var pngFile = "pausa.png";
+        var pngFile = "./public/pausa.png";
         midicent = 0;
     }
     event.duration = eventDuration;
@@ -504,8 +517,13 @@ async function startMacroEvent(eventNumber) {
     }
     else {
         var img = document.getElementById("imgNote");
-        img.src = "fim.png";
+        img.src = "./public/fim.png";
         completePhrase = document.getElementById("completePhrase");
+        var imgNotePos = img.getBoundingClientRect();
+        var imgNoteWidth = imgNotePos.width;
+        var imgNoteHeight = imgNotePos.height;
+        completePhrase.style.position = "absolute";
+        completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
         completePhrase.innerHTML = "Fim da peça!";
     }
 }
@@ -513,22 +531,36 @@ async function startMacroEvent(eventNumber) {
 // ========================================================
 async function delay(ms) {
     completePhrase = document.getElementById("completePhrase");
-    // set color to red
-    completePhrase.style.color = "red";
-    var cicles = Math.floor(ms / 1000)
-    for (let i = cicles; i > 1; i--) {
-        completePhrase.innerHTML = "Iniciando obra em " + Math.floor(i) + " segundos...";
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-    await new Promise((resolve) => setTimeout(resolve, ms % 1000));
-    var pngFile = "respire.png";
     var img = document.getElementById("imgNote");
+    completePhrase.style.color = "red";
+
+    var cicles = Math.floor(ms / 1000);
+    now = new Date().getTime();
+    var end = now + ms;
+    while (now < end) {
+        now = new Date().getTime();
+        var timeLeft = end - now;
+        var ciclesLeft = Math.floor(timeLeft / 1000);
+        completePhrase.innerHTML = "Iniciando obra em " + ciclesLeft + " segundos...";
+        if (ciclesLeft > 29) {
+            completePhrase.style.color = "green";
+        }
+        else if (ciclesLeft > 15 && ciclesLeft <= 29) {
+            completePhrase.style.color = "#FFBF00";
+        }
+        else if (ciclesLeft <= 15) {
+            completePhrase.style.color = "red";
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1));
+    }
+
+
+    var pngFile = "public/respire.png";
     img.src = pngFile;
     completePhrase.innerHTML = "";
     completePhrase.style.color = "black";
     return;
 }
-
 
 // ========================================================
 async function syncStart() {
@@ -536,15 +568,44 @@ async function syncStart() {
         if (thisNaipe == undefined) {
             setTheNaipe();
         }
-        startMacroEvent(1);
+        // Get the current time in milliseconds since the epoch
+        var now = new Date().getTime();
+        var thisHour = new Date().getHours();
+        var thisMinutDec = Math.floor(new Date().getMinutes() / 10) * 10; // decimal of 10 minutes
+        var thisMinutUnit = new Date().getMinutes() % 10; // unit of 10 minutes
+        var minuteSelection = document.getElementById("minute-select").value;
+        minuteSelectionInt = parseInt(minuteSelection);
+        if (thisMinutUnit >= minuteSelection) {
+            thisMinutDec = thisMinutDec + 10 + minuteSelectionInt;
+        }
+        else {
+            thisMinutDec = thisMinutDec + minuteSelectionInt;
+        }
+                
+        var startPieceTime = new Date();
+        startPieceTime.setHours(thisHour, thisMinutDec, 0, 0);
+        var startPieceTimeMs = startPieceTime.getTime();
+
+        var delayTime = startPieceTimeMs - now;
+
+        var completePhrase = document.getElementById("completePhrase");
+
+        delay(delayTime).then(function() {
+            startMacroEvent(1);
+        });
+
     }
     else{
-        readTextFile("start.json" + '?' + new Date().getTime(), function(text){
+        readTextFile("public/start.json" + '?' + new Date().getTime(), function(text){
             var data = JSON.parse(text);
             var now = new Date().getTime();
             var startTime = data.startTime * 1000; // convert time.time from Python to milliseconds
             var delayTime = startTime - now;
             if (startTime != 0 && onWebSite == false) {
+                var fullScreenButton = document.getElementById("fullscreenBtn");
+                if (fullScreenButton != null){
+                    fullScreenButton.style.display = "none";
+                }
                 delay(delayTime).then(function() {
                     startMacroEvent(1);
                 });

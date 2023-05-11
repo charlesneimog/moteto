@@ -67,8 +67,6 @@ def getpitchKey(pitch, cents=0):
         'gb-': ['g', 'accidentalThreeQuarterTonesFlatZimmermann'],
         'ab-': ['a', 'accidentalThreeQuarterTonesFlatZimmermann'],
         'bb-': ['b', 'accidentalThreeQuarterTonesFlatZimmermann'],
-
-
     }
     return note[pitch]
 
@@ -130,35 +128,6 @@ def chord(pitches, silaba):
     if os.name == 'nt':
         notePathName = notePathName.replace("\\", "/")
     return None
-
-
-
-def mensages(silaba):
-    neoscore.setup()
-
-    py4pdTMPfolder = "./public/"
-    Path.rect((Mm(-10), Mm(-10)), None, Mm(42), Mm(42),
-              Brush(Color(255, 255, 255, 255)), Pen(thickness=Mm(0)))
-
-    text = f"""
-        <p style="text-align:center;">
-            <b>{silaba}</b>
-        </p>
-    """
-
-    default_font = neoscore.default_font # Alias just for docs legibility
-    width = Inch(0.7) # set the width of the text area
-    height = Inch(0.7) # set the height of the text area
-    x = Mm(-10) + (Mm(42) - width) / 2 # center the text horizontally
-    y = Mm(-5) + (Mm(42) - height) / 2 # center the text vertically
-    RichText(Point(x=x, y=y), None, text, width, default_font)
-    notePathName = py4pdTMPfolder + "/" + silaba + ".eps"
-    neoscore.render_image(rect=None, dest=notePathName, dpi=600, wait=True)
-    neoscore.shutdown()
-    if os.name == 'nt':
-        notePathName = notePathName.replace("\\", "/")
-    return None
-
 
 # ===============================================
 #   ["Cri", "ou"], ["o", "na", "da"] ["di", "an", "te"], ["tan", "to", "tu", "do"],  ["an", "te"];  ["tu", "do"];

@@ -44,47 +44,6 @@ void generate_sine_wave(float frequency, float samplerate, float duration, doubl
     }
 }
 
-
-/*
-// ===============================
-EMSCRIPTEN_KEEPALIVE
-void generate_sines_wave(float* frequencies, float* amplitudes, int num_freq, float samplerate, float duration, double* output) {
-    // float sample_rate = samplerate; // sample rate of 44.1 kHz
-    float num_samples = samplerate * duration / 1000; // calculate number of samples
-    int fade_samples = samplerate * 300 / 1000;
-    double increment;  // = (double) frequency * 2.0 * PI / (double) sample_rate; // calculate the phase increment
-    double amplitude;
-    double phase; 
-
-    for (int j = 0; j < num_freq; j++) {
-        phase = 0.0;
-        increment = (double)frequencies[j] * 2.0 * PI / (double) samplerate;
-
-        // generate full-amplitude samples
-        for (int i = 0; i < num_samples; i++) {
-            output[i] = (sin(phase) + output[i]) * amplitudes[j];
-            phase += increment;
-        }
-
-        // apply fade-in
-        for (int i = 0; i < fade_samples; i++) {
-            amplitude = (double) i / (double) fade_samples;
-            output[i] = output[i] * amplitude;
-            phase += increment;
-        }
-
-        // apply fade-out
-        for (int i = num_samples - fade_samples; i < num_samples; i++) {
-            amplitude = (double) (num_samples - i) / (double) fade_samples;
-            output[i] = output[i] * amplitude;
-            phase += increment;
-        }
-    }
-}
-
-*/
-
-
 // ===============================
 
 EMSCRIPTEN_KEEPALIVE

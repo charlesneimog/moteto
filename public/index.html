@@ -7,6 +7,16 @@
         <video id="screenOn" autoplay style="height: 2px; width: 2px; position: absolute; top: 0; left: 0; z-index: -1;" controls muted> </video>
     </head>
     <body id="mainBody">
+        <script>
+            var host = window.location.hostname;
+            var onWebSite = false;
+            var thisNaipe = undefined;
+            if (host.includes("charlesneimog.com") || host.includes("192.168.15.8")){
+                onWebSite = true;
+                window.onload = function() {
+                };
+            }    
+        </script>
         <div class="col transport" style="display:none;">
           <label>
             start / stop
@@ -17,8 +27,8 @@
         <link rel="stylesheet" type="text/css" href="style.css">
         <h1 id="PageTitle" style="text-align: center;">Moteto</h1>
         <label id="message4choosenaipe" for="naipe-select" style="position: absolute; left: 50%; transform: translateX(-50%);"></label>
-        <br id="break4choosenaipe">
-        <br id="break4choosenaipe">
+        <!-- <br id="break4choosenaipe"> -->
+        <!-- <br id="break4choosenaipe"> -->
         <select id="naipe-select" onchange="chooseNaipe()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
             <option value="none">Escolha seu Naipe!</option>
             <option value="Soprano">Soprano</option>
@@ -26,12 +36,46 @@
             <option value="Tenor">Tenor</option>
             <option value="Baixo">Baixo</option>
         </select>
-        <img id="imgNote" style="position: relative; left: 50%; transform: translateX(-50%); max-width: 95%; max-height: 50vh; width: auto; height: auto; margin-top: 10%;" src="none.png" alt="Note">
+        <select id="minute-select" onchange="chooseMinute()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
+            <option value="none">Escolha a unidade de minuto.</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+        </select>
+        <img id="imgNote" style="position: absolute; left: 50%; transform: translateX(-50%); max-width: 95%; max-height: 50vh; width: auto; height: auto;" src="none.png" alt="Note">
         <h4 id="completePhrase" style="text-align: center; position: relative; left: 50%; transform: translateX(-50%);"></h4>
         <script id="eventScript" src="events.js"></script> 
         <script>
+            // set naipe-select and minute-select as none
+            const naipeSelection = document.getElementById("naipe-select");
+            const minuteSelection = document.getElementById("minute-select");
+            naipeSelection.value = "none";
+            minuteSelection.value = "none";
 
-    
+            var img = document.getElementById("imgNote");
+            const naipeSelectionPos = naipeSelection.getBoundingClientRect();
+            img.style.top = `${naipeSelectionPos.bottom + 60}px`;
+
+
+            // add completePhrase after imgNote
+            var completePhrase = document.getElementById("completePhrase");
+            var imgNote = document.getElementById("imgNote");
+            imgNote.addEventListener("load", function() {
+                var imgNotePos = imgNote.getBoundingClientRect();
+                var imgNoteWidth = imgNotePos.width;
+                var imgNoteHeight = imgNotePos.height;
+                completePhrase.style.position = "absolute";
+                completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
+            });
+
+        
             function checkCompatibility(){
                 if (typeof navigator === "undefined" || typeof navigator.userAgent === "undefined") {
                     alert("navigator.userAgent is undefined");
@@ -68,22 +112,22 @@
             }
             checkCompatibility();
 
+            if (/Mobi|Android/i.test(navigator.userAgent) == true) {
+                askForFullScreen();
+            }
+
             completePhrase = document.getElementById("completePhrase");
-            completePhrase.style.color = "#FFBF00";
-            completePhrase.innerHTML = "Escolha seu naipe!";
-            var heavyModule = null;
-            var loader = null;    
+            completePhrase.style.color = "red";
+            completePhrase.innerHTML = "Escolha seu naipe e a unidade de minuto.";
+            var imgNotePos = imgNote.getBoundingClientRect();
+            var imgNoteWidth = imgNotePos.width;
+            var imgNoteHeight = imgNotePos.height;
+            completePhrase.style.position = "absolute";
+            completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
             sendMessage();
 
-            var host = window.location.hostname;
-            var onWebSite = false;
-            if (host == "charlesneimog.com") {
-                onWebSite = true;
-                console.log("On website");
-            }
-            else {
-                console.log("Not on website");
-            }
+            // set image as none
+            img.src = "startMessage.png";
             
             function loadCFunctionsFFT() {
                 return new Promise((resolve, reject) => {
@@ -98,6 +142,9 @@
             loadCFunctionsFFT();
 
             function sendMessage() {
+                if (onWebSite){
+                    return;
+                }
                 var xhr = new XMLHttpRequest();
                 var host = window.location.hostname;
                 var port = window.location.port;
@@ -113,13 +160,18 @@
             function chooseNaipe() {
                 var selectedNaipe = document.getElementById("naipe-select").value;
                 window.naipe = selectedNaipe;
-                // start();
+                if (selectedNaipe == "none"){
+                    return;
+                }
                 syncStart();
                 setTheNaipe();
                 AudioStream(); 
-                completePhrase = document.getElementById("completePhrase");
-                completePhrase.style.color = "green";
-                completePhrase.innerHTML = "Aguarde a conexão dos demais performers...";
+                setTheNaipe();
+                img.src = "none.png";
+
+                if (onWebSite){
+                    return;
+                }
                 var xhr = new XMLHttpRequest();
                 var host = window.location.hostname;
                 var port = window.location.port;
@@ -131,6 +183,23 @@
                 const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
                 xhr.send(JSON.stringify({ 'ok': deviceName}));
             }
+
+            function chooseMinute() {
+                var selected = document.getElementById("minute-select").value;
+                if (selected == "none"){
+                    return;
+                }
+                img.src = "naipeMessage.png";
+                window.startMinute = selected;
+                document.getElementById("minute-select").style.display = "none";
+                if (onWebSite){
+                    return;
+                }
+            }
+
+
+
+
         </script>
         <script src="obra.js"></script>
         <div id="DurationBar" style="position: fixed; bottom: 0; left: 0; width: 0%; height: 20px; background-color: black;"></div>
