@@ -337,7 +337,6 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
 
     if (midicent != 0) {
         var pngFile = "respire.png";
-        
         if (onWebSite == true) {
             pngFile = "public/" + pngFile;
         }
@@ -448,16 +447,17 @@ function StartMicroEvent(event, eventDuration) {
         var noteAndMidicent = chooseWithProbabilities(goodNotes, goodNotesProbabilities);
         var note = noteAndMidicent[0];
         var midicent = noteAndMidicent[1];
-
+naipe.png
         // silabas
         var syllables = event.syllables;
         var syllablesProbabilities = event.syllablesProbabilities;
         var syllable = chooseWithProbabilities(syllables, syllablesProbabilities);
         if (onWebSite == true) {
-            var pngFile = "./public/notes/" + note + "-" + syllable + ".png";
+            var noteNameString = note[0]
+            var pngFile = "./notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
         }
         else{
-            var pngFile = "notes/" + note + "-" + syllable + ".png";
+            var pngFile = "./notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
         }
         pngFile = pngFile.replace("#", "s");
     }

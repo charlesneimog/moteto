@@ -90,8 +90,10 @@ def chord(pitches, silaba):
     scriptFolder = os.path.dirname(os.path.realpath(__file__))
     # go one folder up in the script folder
     os.chdir(scriptFolder + "/../")
+    # get first char of silaba
+    firstChar = pitches[0][0]
 
-    py4pdTMPfolder = "./public/notes/"
+    py4pdTMPfolder = "./public/notes/" + firstChar + "/"
     staffSoprano = Staff((Mm(0), Mm(0)), None, Mm(30))
     trebleClef = 'treble'
     Clef(ZERO, staffSoprano, trebleClef)
@@ -122,7 +124,7 @@ def chord(pitches, silaba):
     # replace # by s in thepitch
     thepitch = thepitch.replace('#', 's')
 
-    notePathName = py4pdTMPfolder + "/" + thepitch + "-" + silaba + ".png"
+    notePathName = py4pdTMPfolder + thepitch + "-" + silaba + ".png"
     neoscore.render_image(rect=None, dest=notePathName, dpi=600, wait=True)
     neoscore.shutdown()
     if os.name == 'nt':
@@ -136,6 +138,32 @@ import multiprocessing
 
 processes = []
 processesCalls = 0
+
+# check if notes folder exists
+if not os.path.exists("./public/notes/"):
+    os.makedirs("./public/notes/")
+
+if not os.path.exists("./public/notes/a/"):
+    os.makedirs("./public/notes/a/")
+
+if not os.path.exists("./public/notes/b/"):
+    os.makedirs("./public/notes/b/")
+
+if not os.path.exists("./public/notes/c/"):
+    os.makedirs("./public/notes/c/")
+
+if not os.path.exists("./public/notes/d/"):
+    os.makedirs("./public/notes/d/")
+
+if not os.path.exists("./public/notes/e/"):
+    os.makedirs("./public/notes/e/")
+
+if not os.path.exists("./public/notes/f/"):
+    os.makedirs("./public/notes/f/")
+
+if not os.path.exists("./public/notes/g/"):
+    os.makedirs("./public/notes/g/")
+
 
 def create_note(notename, accidental, octave, silaba):
     print(f"Criação da nota {notename + accidental + str(octave)}-{silaba}.png")
@@ -156,7 +184,6 @@ for silaba in silabas:
                 # excludes all notes that are low that G2
                 if (notename in ["c", "d", "e", "f"] and octave == 2):
                     continue
-                
                 elif(notename in ["e", "f", "g", "a", "b"] and octave == 5):
                     continue
                 else:
