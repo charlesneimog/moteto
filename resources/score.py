@@ -88,6 +88,10 @@ def chord(pitches, silaba):
 
     # make all string with small letters
     pitches = [x.lower() for x in pitches]
+    # get this file path
+    scriptFolder = os.path.dirname(os.path.realpath(__file__))
+    # go one folder up in the script folder
+    os.chdir(scriptFolder + "/../")
 
     py4pdTMPfolder = "./public/notes/"
     staffSoprano = Staff((Mm(0), Mm(0)), None, Mm(30))
@@ -130,10 +134,6 @@ def chord(pitches, silaba):
 
 
 def mensages(silaba):
-    try:
-        neoscore.shutdown()
-    except BaseException:
-        pass
     neoscore.setup()
 
     py4pdTMPfolder = "./public/"
@@ -152,7 +152,7 @@ def mensages(silaba):
     x = Mm(-10) + (Mm(42) - width) / 2 # center the text horizontally
     y = Mm(-5) + (Mm(42) - height) / 2 # center the text vertically
     RichText(Point(x=x, y=y), None, text, width, default_font)
-    notePathName = py4pdTMPfolder + "/" + silaba + ".png"
+    notePathName = py4pdTMPfolder + "/" + silaba + ".eps"
     neoscore.render_image(rect=None, dest=notePathName, dpi=600, wait=True)
     neoscore.shutdown()
     if os.name == 'nt':
@@ -173,26 +173,35 @@ def create_note(notename, accidental, octave, silaba):
     chord(notename + accidental + str(octave), silaba)
 
 
-silabas = ["Cri", "ou", "o", "na", "da", "di", "an", "te", "tan", "to", "tu", "do", "an", "te", "tu", "do"]
+silabas = ["Cri", "ou", "o", "na", "da", "di", "an", "te", "tan", "to", "tu", "do", "an", "te"]
+silabas = list(dict.fromkeys(silabas))
+
 notenames = ["c", "d", "e", "f", "g", "a", "b"]
-totalofIterations = len(silabas) * len(notenames) * 7 * 2
+totalofIterations = len(silabas) * len(notenames) * 7 * 3
 
 for silaba in silabas:
     for notename in notenames:
         accidentals = ["", "+", "-", "#", "b", "#+", "b-"]
         for accidental in accidentals:
-            for octave in range(3, 5):
-                p = multiprocessing.Process(target=create_note, args=(notename, accidental, octave, silaba))
-                processes.append(p)
-                p.start()
-                totalofIterations -= 1
-                processesCalls += 1
-                print(f"Total of iterations: {totalofIterations}")
-                if (processesCalls == 16):
-                    print("Waiting for processes to finish")
-                    for p in processes:
-                        p.join()
-                    processesCalls = 0
-                    processes = []
+            for octave in range(2, 6):
+                # excludes all notes that are low that G2
+                if (notename in ["c", "d", "e", "f"] and octave == 2):
+                    continue
+                
+                elif(notename in ["e", "f", "g", "a", "b"] and octave == 5):
+                    continue
+                else:
+                    p = multiprocessing.Process(target=create_note, args=(notename, accidental, octave, silaba))
+                    processes.append(p)
+                    p.start()
+                    totalofIterations -= 1
+                    processesCalls += 1
+                    print(f"Total of iterations: {totalofIterations}")
+                    if (processesCalls == 16):
+                        print("Waiting for processes to finish")
+                        for p in processes:
+                            p.join()
+                        processesCalls = 0
+                        processes = []
 
 
