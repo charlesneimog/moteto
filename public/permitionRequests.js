@@ -2,37 +2,10 @@
 // It requests fullscreen mode
 // =====================================================
 function askForFullScreen() {
-  const doc = window.document;
-  const docEl = doc.documentElement;
-  const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
-
-  if (requestFullScreen) {
-    const btn = doc.createElement("button");
-    btn.innerHTML = "Clique para entrar em modo tela cheia.";
-    btn.style.position = "absolute";
-    btn.id = "fullscreenBtn";
-    btn.style.left = "50%";
-    const completePhrase = doc.getElementById("completePhrase");
-    const completePhrasePos = completePhrase.getBoundingClientRect();
-    btn.style.top = `${completePhrasePos.bottom + 60}px`;
-    btn.style.transform = "translate(-50%, -50%)";
-    btn.style.border = "none";
-    btn.style.outline = "none";
-    btn.style.boxShadow = "none";
-    btn.style.padding = "0.5rem 1rem";
-    btn.style.backgroundColor = "#f2f2f2";
-    btn.style.borderRadius = "0.25rem";
-    btn.style.transition = "all 0.2s ease-in-out";
-
-    // Add event listener to button click event
-    btn.addEventListener("click", function() {
-      requestFullScreen.call(docEl);
-        btn.style.display = "none";
-    });
-
-    // Append the button to the body of the document
-    doc.body.appendChild(btn);
-  }
+    const doc = window.document;
+    const docEl = doc.documentElement;
+    const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+    return;
 }
 
 

@@ -31,14 +31,14 @@
         <!-- <br id="break4choosenaipe"> -->
         <!-- <br id="break4choosenaipe"> -->
         <select id="naipe-select" onchange="chooseNaipe()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
-            <option value="none">Escolha seu Naipe!</option>
+            <option value="none">Clique Aqui</option>
             <option value="Soprano">Soprano</option>
             <option value="Contralto">Contralto</option>
             <option value="Tenor">Tenor</option>
             <option value="Baixo">Baixo</option>
         </select>
         <select id="minute-select" onchange="chooseMinute()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
-            <option value="none">Escolha a unidade de minuto.</option>
+            <option value="none">Clique Aqui</option>
             <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -51,11 +51,10 @@
             <option value="9">9</option>
         </select>
         <img id="imgNote" style="position: absolute; left: 50%; transform: translateX(-50%); max-width: 95%; max-height: 50vh; width: auto; height: auto;" src="public/none.png" alt="Note">
-        <h4 id="completePhrase" style="text-align: center; position: relative; left: 50%; transform: translateX(-50%);"></h4>
+        <h4 id="completePhrase" style="text-align: center; position: relative;"></h4>
         <script id="eventScript" src="./public/events.js"></script> 
         <script>
             // set naipe-select and minute-select as none
-            alert("Seja bem vindo(a) ao Moteto! Para melhor experiência, utilize o navegador Google Chrome.");
             const naipeSelection = document.getElementById("naipe-select");
             const minuteSelection = document.getElementById("minute-select");
             naipeSelection.value = "none";
@@ -65,10 +64,24 @@
             const naipeSelectionPos = naipeSelection.getBoundingClientRect();
             img.style.top = `${naipeSelectionPos.bottom + 60}px`;
 
+            async function myblick(name){
+                const select = document.getElementById(name);
+                select.focus();
+                await new Promise((resolve) => setTimeout(resolve, 30));
+                select.blur();
+            }
+
+            const imgNote = document.getElementById('imgNote');
+            imgNote.addEventListener('click', function() {
+                const select = document.getElementById("minute-select");
+                select.focus();
+                
+            });
+
+
 
             // add completePhrase after imgNote
             var completePhrase = document.getElementById("completePhrase");
-            var imgNote = document.getElementById("imgNote");
             imgNote.addEventListener("load", function() {
                 var imgNotePos = imgNote.getBoundingClientRect();
                 var imgNoteWidth = imgNotePos.width;
@@ -119,8 +132,8 @@
             }
 
             completePhrase = document.getElementById("completePhrase");
-            completePhrase.style.color = "red";
-            completePhrase.innerHTML = "Escolha seu naipe e a unidade de minuto.";
+            completePhrase.style.color = "black";
+            // completePhrase.innerHTML = "Para iniciar a obra clique no botão abaixo do Título Moteto, você deverá escolher a unidade de minuto combinada, por exemplo se a ideia é começar a obra em 15 minutos, a  unidade de minuto é 5. Após isso escolha seu naipe, na obra essa escolha é aproximada e não estamos utilizando extremos";
             var imgNotePos = imgNote.getBoundingClientRect();
             var imgNoteWidth = imgNotePos.width;
             var imgNoteHeight = imgNotePos.height;
@@ -129,7 +142,7 @@
             sendMessage();
 
             // set image as none
-            img.src = "./public/startMessage.png";
+            img.src = "./public/begin.png";
             
             function loadCFunctionsFFT() {
                 return new Promise((resolve, reject) => {
@@ -188,19 +201,22 @@
 
             function chooseMinute() {
                 var selected = document.getElementById("minute-select").value;
+                var h4 = document.getElementById("completePhrase");
+                h4.style.left = "50%";
+                h4.style.transform = "translateX(-50%)";
                 if (selected == "none"){
                     return;
                 }
-                img.src = "./public/naipeMessage.png";
+                img.src = "./public/naipe.png";
                 window.startMinute = selected;
                 document.getElementById("minute-select").style.display = "none";
+                h4.innerHTML = "Escolha seu naipe";
+                h4.style.color = "blue";
                 if (onWebSite){
                     return;
                 }
+                
             }
-
-
-
 
         </script>
         <script src="./public/obra.js"></script>

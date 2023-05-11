@@ -533,7 +533,6 @@ async function delay(ms) {
     completePhrase = document.getElementById("completePhrase");
     var img = document.getElementById("imgNote");
     completePhrase.style.color = "red";
-
     var cicles = Math.floor(ms / 1000);
     now = new Date().getTime();
     var end = now + ms;
@@ -541,7 +540,7 @@ async function delay(ms) {
         now = new Date().getTime();
         var timeLeft = end - now;
         var ciclesLeft = Math.floor(timeLeft / 1000);
-        completePhrase.innerHTML = "Iniciando obra em " + ciclesLeft + " segundos...";
+        completePhrase.innerHTML = "Aguarde " + ciclesLeft + " segundos...";
         if (ciclesLeft > 29) {
             completePhrase.style.color = "green";
         }
@@ -553,8 +552,6 @@ async function delay(ms) {
         }
         await new Promise((resolve) => setTimeout(resolve, 1));
     }
-
-
     var pngFile = "public/respire.png";
     img.src = pngFile;
     completePhrase.innerHTML = "";

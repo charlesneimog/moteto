@@ -41,9 +41,17 @@ select#minute-select {
   
 select#minute-select:hover,
 select#minute-select:focus {
-    background-color: #e6e6e6;
-    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+  background-color: #C8F0EE;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  animation: 0.2s ease-in-out 0s normal none 1 running fadeInDown, change-color 0.2s 0.2s forwards;
 }
+
+@keyframes change-color {
+  from { background-color: #C8F0EE; }
+  to { background-color: #f2f2f2; }
+  50% { background-color: #C8F0EE; }
+}
+
 
 select#minute-select {
     text-align: center;
