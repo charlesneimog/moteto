@@ -138,7 +138,6 @@ function configFFT(dataArray, sampleRate){
         xhr.send(JSON.stringify({ 'freqs': freqs}));
         // xhr.close();
 
-
         xhr.onreadystatechange = function() {
             if (xhr.readyState == XMLHttpRequest.DONE) {
                 if (xhr.status == 200) {
@@ -360,9 +359,11 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
 
     // show the note image
     img = document.getElementById("imgNote");
+    onWebSite = true;
     if (onWebSite == true) {
         pngPitchFile = "public/" + pngPitchFile;
     }
+    console.log(pngPitchFile);
     img.src = pngPitchFile;
 
     /// Synth the note
@@ -454,15 +455,15 @@ naipe.png
         var syllable = chooseWithProbabilities(syllables, syllablesProbabilities);
         if (onWebSite == true) {
             var noteNameString = note[0]
-            var pngFile = "./notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
+            var pngFile = "/notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
         }
         else{
-            var pngFile = "./notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
+            var pngFile = "/notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
         }
         pngFile = pngFile.replace("#", "s");
     }
     else{
-        var pngFile = "./public/pausa.png";
+        var pngFile = "/pausa.png";
         midicent = 0;
     }
     event.duration = eventDuration;
@@ -572,18 +573,15 @@ async function syncStart() {
         var thisMinutUnit = new Date().getMinutes() % 10; // unit of 10 minutes
         var minuteSelection = document.getElementById("minute-select").value;
         minuteSelectionInt = parseInt(minuteSelection);
-        if (thisMinutUnit >= minuteSelection) {
-            thisMinutDec = thisMinutDec + 10 + minuteSelectionInt;
-        }
-        else {
-            thisMinutDec = thisMinutDec + minuteSelectionInt;
-        }
-                
         var startPieceTime = new Date();
-        startPieceTime.setHours(thisHour, thisMinutDec, 0, 0);
+        if (minuteSelectionInt > 59){
+            thisHour = thisHour + 1;
+            minuteSelectionInt = minuteSelectionInt - 60;
+        }
+        startPieceTime.setHours(thisHour, minuteSelectionInt, 0, 0);
         var startPieceTimeMs = startPieceTime.getTime();
-
         var delayTime = startPieceTimeMs - now;
+
 
         var completePhrase = document.getElementById("completePhrase");
 

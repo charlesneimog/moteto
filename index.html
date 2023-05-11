@@ -28,8 +28,6 @@
         <link rel="stylesheet" type="text/css" href="public/style.css">
         <h1 id="PageTitle" style="text-align: center;">Moteto</h1>
         <label id="message4choosenaipe" for="naipe-select" style="position: absolute; left: 50%; transform: translateX(-50%);"></label>
-        <!-- <br id="break4choosenaipe"> -->
-        <!-- <br id="break4choosenaipe"> -->
         <select id="naipe-select" onchange="chooseNaipe()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
             <option value="none">Clique Aqui</option>
             <option value="Soprano">Soprano</option>
@@ -38,18 +36,30 @@
             <option value="Baixo">Baixo</option>
         </select>
         <select id="minute-select" onchange="chooseMinute()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
-            <option value="none">Clique Aqui</option>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
+            <option id="minute-select-none" value="none">Clique Aqui</option>
+            <option id="minute-select-0" value="0">0</option>
+            <option id="minute-select-1" value="1">1</option>
+            <option id="minute-select-2" value="2">2</option>
+            <option id="minute-select-3" value="3">3</option>
+            <option id="minute-select-4" value="4">4</option>
+            <option id="minute-select-5" value="5">5</option>
+            <option id="minute-select-6" value="6">6</option>
+            <option id="minute-select-7" value="7">7</option>
+            <option id="minute-select-8" value="8">8</option>
+            <option id="minute-select-9" value="9">9</option>
         </select>
+        <script>
+            var thisMinutDec = Math.floor(new Date().getMinutes() / 10) * 10; // decimal of 10 minutes
+            var thisMinutUnit = new Date().getMinutes() % 10; // unit of 10 minutes    
+            var thisMinut = parseInt(thisMinutDec.toString()) + parseInt(thisMinutUnit.toString());
+            // set minute-select as thisMinut
+            for (i = 0; i < 10; i++){
+                const minuteSelect = document.getElementById("minute-select-" + i.toString());
+                minuteSelect.value = parseInt(thisMinut) + 1 + i; 
+                minuteSelect.innerHTML = "Iniciar obra no minuto " + ((parseInt(thisMinut) + 1 + i) % 60).toString().padStart(2, '0') + ".";
+            }
+
+        </script>
         <img id="imgNote" style="position: absolute; left: 50%; transform: translateX(-50%); max-width: 95%; max-height: 50vh; width: auto; height: auto;" src="public/none.png" alt="Note">
         <h4 id="completePhrase" style="text-align: center; position: relative;"></h4>
         <script id="eventScript" src="./public/events.js"></script> 
@@ -204,6 +214,7 @@
                 var h4 = document.getElementById("completePhrase");
                 h4.style.left = "50%";
                 h4.style.transform = "translateX(-50%)";
+                console.log("Selected: ", selected);
                 if (selected == "none"){
                     return;
                 }
