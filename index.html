@@ -56,30 +56,28 @@
             for (i = 0; i < 10; i++){
                 const minuteSelect = document.getElementById("minute-select-" + i.toString());
                 minuteSelect.value = parseInt(thisMinut) + 1 + i; 
-                minuteSelect.innerHTML = "Iniciar obra no minuto " + ((parseInt(thisMinut) + 1 + i) % 60).toString().padStart(2, '0') + ".";
+                thisHour = new Date().getHours();
+                minuteSelect.innerHTML = "Iniciar obra às " + thisHour + ":" + ((parseInt(thisMinut) + 1 + i) % 60).toString().padStart(2, '0') + ".";
             }
 
         </script>
         <img id="imgNote" style="position: absolute; left: 50%; transform: translateX(-50%); max-width: 95%; max-height: 50vh; width: auto; height: auto;" src="public/none.png" alt="Note">
         <h4 id="completePhrase" style="text-align: center; position: relative;"></h4>
+        <br>
+        <h4 id="infoPhrase" style="text-align: center; position: relative;"></h4>
         <script id="eventScript" src="./public/events.js"></script> 
         <script>
             // set naipe-select and minute-select as none
             const naipeSelection = document.getElementById("naipe-select");
             const minuteSelection = document.getElementById("minute-select");
+            const infoPhrase = document.getElementById("infoPhrase");
             naipeSelection.value = "none";
             minuteSelection.value = "none";
+
 
             var img = document.getElementById("imgNote");
             const naipeSelectionPos = naipeSelection.getBoundingClientRect();
             img.style.top = `${naipeSelectionPos.bottom + 60}px`;
-
-            async function myblick(name){
-                const select = document.getElementById(name);
-                select.focus();
-                await new Promise((resolve) => setTimeout(resolve, 30));
-                select.blur();
-            }
 
             const imgNote = document.getElementById('imgNote');
             imgNote.addEventListener('click', function() {
@@ -98,6 +96,19 @@
                 var imgNoteHeight = imgNotePos.height;
                 completePhrase.style.position = "absolute";
                 completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
+                completePhrase.style.textAlign = "center";
+
+                            
+                var completePhraseBound = completePhrase.getBoundingClientRect();
+                infoPhrase.innerHTML = "Todos os(as) performers devem escolher o mesmo minuto para iniciar a obra.";
+                infoPhrase.style.fontStyle = "italic";
+                infoPhrase.style.fontWeight = "normal";
+                infoPhrase.style.position = "relative";
+                infoPhrase.style.color = "#21A5FF";
+                infoPhrase.style.top = `${completePhraseBound.bottom + 20}px`;
+
+
+
             });
 
         
@@ -214,7 +225,7 @@
                 var h4 = document.getElementById("completePhrase");
                 h4.style.left = "50%";
                 h4.style.transform = "translateX(-50%)";
-                console.log("Selected: ", selected);
+                infoPhrase.style.display = "none";
                 if (selected == "none"){
                     return;
                 }

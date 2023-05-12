@@ -510,9 +510,6 @@ async function startMacroEvent(eventNumber) {
     }
     eventNumber = eventNumber + 1;
 
-    // console.log("eventNumber: " + eventNumber);
-    // console.log("pieceEvents.length: " + pieceEvents.length);
-
     if (eventNumber <= pieceEvents.length) {
         startMacroEvent(eventNumber);
     }
