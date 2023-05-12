@@ -27,16 +27,16 @@
                 
         <link rel="stylesheet" type="text/css" href="public/style.css">
         <h1 id="PageTitle" style="text-align: center;">Moteto</h1>
-        <label id="message4choosenaipe" for="naipe-select" style="position: absolute; left: 50%; transform: translateX(-50%);"></label>
+        <label id="message4choosenaipe" for="naipe-select" style="position: absolute; left: 50%; transform: translateX(-50%); text-align: center;"></label>
         <select id="naipe-select" onchange="chooseNaipe()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
-            <option value="none">Clique Aqui</option>
+            <option value="none">Selecione seu naipe</option>
             <option value="Soprano">Soprano</option>
             <option value="Contralto">Contralto</option>
             <option value="Tenor">Tenor</option>
             <option value="Baixo">Baixo</option>
         </select>
         <select id="minute-select" onchange="chooseMinute()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
-            <option id="minute-select-none" value="none">Clique Aqui</option>
+            <option id="minute-select-none" value="none">Selecione quanto iniciar a obra.</option>
             <option id="minute-select-0" value="0">0</option>
             <option id="minute-select-1" value="1">1</option>
             <option id="minute-select-2" value="2">2</option>
@@ -52,13 +52,15 @@
             var thisMinutDec = Math.floor(new Date().getMinutes() / 10) * 10; // decimal of 10 minutes
             var thisMinutUnit = new Date().getMinutes() % 10; // unit of 10 minutes    
             var thisMinut = parseInt(thisMinutDec.toString()) + parseInt(thisMinutUnit.toString());
-            // set minute-select as thisMinut
             for (i = 0; i < 10; i++){
                 const minuteSelect = document.getElementById("minute-select-" + i.toString());
                 minuteSelect.value = parseInt(thisMinut) + 1 + i; 
                 thisHour = new Date().getHours();
                 minuteSelect.innerHTML = "Iniciar obra às " + thisHour + ":" + ((parseInt(thisMinut) + 1 + i) % 60).toString().padStart(2, '0') + ".";
             }
+            // hidde naipe-select
+            const naipeSelectionStart = document.getElementById("naipe-select");
+            naipeSelectionStart.style.display = "none";
 
         </script>
         <img id="imgNote" style="position: absolute; left: 50%; transform: translateX(-50%); max-width: 95%; max-height: 50vh; width: auto; height: auto;" src="public/none.png" alt="Note">
@@ -67,16 +69,17 @@
         <h4 id="infoPhrase" style="text-align: center; position: relative;"></h4>
         <script id="eventScript" src="./public/events.js"></script> 
         <script>
-            // set naipe-select and minute-select as none
-            const naipeSelection = document.getElementById("naipe-select");
-            const minuteSelection = document.getElementById("minute-select");
-            const infoPhrase = document.getElementById("infoPhrase");
+
+            // set naipe-select and minute-select asinline-block" none
+            var naipeSelection = document.getElementById("naipe-select");
+            var minuteSelection = document.getElementById("minute-select");
+            var infoPhrase = document.getElementById("infoPhrase");
+            var img = document.getElementById("imgNote");
+
             naipeSelection.value = "none";
             minuteSelection.value = "none";
-
-
-            var img = document.getElementById("imgNote");
-            const naipeSelectionPos = naipeSelection.getBoundingClientRect();
+            
+            const naipeSelectionPos = minuteSelection.getBoundingClientRect();
             img.style.top = `${naipeSelectionPos.bottom + 60}px`;
 
             const imgNote = document.getElementById('imgNote');
@@ -85,9 +88,6 @@
                 select.focus();
                 
             });
-
-
-
             // add completePhrase after imgNote
             var completePhrase = document.getElementById("completePhrase");
             imgNote.addEventListener("load", function() {
@@ -97,17 +97,14 @@
                 completePhrase.style.position = "absolute";
                 completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
                 completePhrase.style.textAlign = "center";
-
-                            
                 var completePhraseBound = completePhrase.getBoundingClientRect();
                 infoPhrase.innerHTML = "Todos os(as) performers devem escolher o mesmo minuto para iniciar a obra.";
                 infoPhrase.style.fontStyle = "italic";
                 infoPhrase.style.fontWeight = "normal";
                 infoPhrase.style.position = "relative";
                 infoPhrase.style.color = "#21A5FF";
-                infoPhrase.style.top = `${completePhraseBound.bottom + 20}px`;
-
-
+                // put this infoPhrase below the Title
+                infoPhrase.style.top = `${imgNotePos.top - 170}px`;
 
             });
 
@@ -154,7 +151,6 @@
 
             completePhrase = document.getElementById("completePhrase");
             completePhrase.style.color = "black";
-            // completePhrase.innerHTML = "Para iniciar a obra clique no botão abaixo do Título Moteto, você deverá escolher a unidade de minuto combinada, por exemplo se a ideia é começar a obra em 15 minutos, a  unidade de minuto é 5. Após isso escolha seu naipe, na obra essa escolha é aproximada e não estamos utilizando extremos";
             var imgNotePos = imgNote.getBoundingClientRect();
             var imgNoteWidth = imgNotePos.width;
             var imgNoteHeight = imgNotePos.height;
@@ -163,7 +159,7 @@
             sendMessage();
 
             // set image as none
-            img.src = "./public/begin.png";
+            // img.src = "./public/begin.png";
             
             function loadCFunctionsFFT() {
                 return new Promise((resolve, reject) => {
@@ -229,10 +225,12 @@
                 if (selected == "none"){
                     return;
                 }
-                img.src = "./public/naipe.png";
+                // img.src = "./public/naipe.png";
                 window.startMinute = selected;
                 document.getElementById("minute-select").style.display = "none";
-                h4.innerHTML = "Agora escolha seu naipe!";
+                document.getElementById("naipe-select").style.display = "inline-block";
+
+                h4.innerHTML = "Clique para escolher seu naipe!";
                 h4.style.color = "#21A5FF";
                 if (onWebSite){
                     return;

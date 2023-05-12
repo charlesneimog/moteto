@@ -1,66 +1,62 @@
 select#naipe-select {
-    border: none;
-    outline: none;
-    box-shadow: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    padding: 0.5rem 1rem;
-    background-color: #f2f2f2;
-    border-radius: 0.25rem;
-    transition: all 0.2s ease-in-out;
-}
-  
-select#naipe-select:hover,
-select#naipe-select:focus {
-    background-color: #e6e6e6;
-    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease,transform 0.15s ease;
+    will-change: box-shadow,transform;
+    text-align: center;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 4px rgb(45 35 66 / 40%), 0px 4px 2px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #E2E2EE;
+    height: 46px;
+    padding: 0 30px;
+    font-size: 16px;
+    border-radius: 6px; 
+    color: #000000;
+    transition: box-shadow 0.15s ease,transform 0.15s ease;
+    :hover {
+        box-shadow: 0px 4px 4px rgb(45 35 66 / 40%), 0px 6px 10px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #E2E2EE;
+        transform: translateY(-2px);
+    }
+    :active{
+        box-shadow: inset 0px 3px 7px #E2E2EE;
+        transform: translateY(20px);
+    }
 }
 
 select#naipe-select {
-    text-align: center;
+  display: none;
 }
-  
-select#naipe-select option:checked {
-    text-align: center;
-}
+
+
 
 /* ==================== */
 select#minute-select {
-    border: none;
-    outline: none;
-    box-shadow: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    padding: 0.5rem 1rem;
-    background-color: #f2f2f2;
-    border-radius: 0.25rem;
-    transition: all 0.2s ease-in-out;
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    text-align: center;
+    transition: box-shadow 0.15s ease,transform 0.15s ease;
+    will-change: box-shadow,transform;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 4px rgb(45 35 66 / 40%), 0px 4px 2px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #E2E2EE;
+    height: 46px;
+    padding: 0 30px;
+    font-size: 16px;
+    border-radius: 6px; 
+    color: #000000;
+    transition: box-shadow 0.15s ease,transform 0.15s ease;
+    :hover {
+        box-shadow: 0px 4px 4px rgb(45 35 66 / 40%), 0px 6px 10px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #E2E2EE;
+        transform: translateY(-2px);
+    }
+    :active{
+        box-shadow: inset 0px 3px 7px #E2E2EE;
+        transform: translateY(20px);
+    }
 }
   
-select#minute-select:hover,
-select#minute-select:focus {
-  background-color: #C8F0EE;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-  animation: 0.2s ease-in-out 0s normal none 1 running fadeInDown, change-color 0.2s 0.2s forwards;
-}
-
-@keyframes change-color {
-  from { background-color: #C8F0EE; }
-  to { background-color: #f2f2f2; }
-  50% { background-color: #C8F0EE; }
-}
-
-
-select#minute-select {
-    text-align: center;
-}
-  
-select#minute-select option:checked {
-    text-align: center;
-}
-
 
 /* make button in same style */
 button#moteto-global-button {
@@ -78,4 +74,5 @@ button#moteto-global-button :focus {
     background-color: #e6e6e6;
     box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
 }
+
 
