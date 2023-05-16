@@ -246,7 +246,7 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     var img = document.getElementById("imgNote");
     completePhrase = document.getElementById("completePhrase");
     var div = document.getElementById('DurationBar');
-    div.style.color = "red";
+    // div.style.color = "red";
     var imgNotePos = img.getBoundingClientRect();
     var imgNoteWidth = imgNotePos.width;
     var imgNoteHeight = imgNotePos.height;
@@ -269,7 +269,7 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     }
     completePhrase.innerHTML = "";
 
-    // delay for 500ms
+    // delay for breathTime
     await new Promise((resolve) => setTimeout(resolve, eventClass.breathTime)); // TODO: rethink about this
     var div = document.getElementById('DurationBar');
 
@@ -297,22 +297,24 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
         var playValues = [midicent, durationMs];
         xhr.send(JSON.stringify({'play': playValues}));
     }
+    else{
+        Module.HEAPF64.set(samples, samplesPtr >> 3);
+        Module.ccall(   
+            'generate_sine_wave', 'number', ['number', 'number', 'number', 'number'], 
+            [midicent2Freq(midicent), sampleRate, eventDuration - eventClass.breathTime, samplesPtr]);
+        var samples = new Float64Array(Module.HEAPF64.buffer, samplesPtr, samples.length);
+        var audioContext = new AudioContext();
+        var buffer = audioContext.createBuffer(1, samples.length, sampleRate);
+        var channelData = buffer.getChannelData(0);
+        channelData.set(Float32Array.from(samples));
+        var source = audioContext.createBufferSource();
+        source.buffer = buffer;
+        source.connect(audioContext.destination);
+        source.start();
+        Module._free(samplesPtr);
+    }
+    completePhrase.innerHTML = eventClass.completePhrase; //     TODO: SHOW THE PHRASE AND BOLD SYLLABLES
 
-    Module.HEAPF64.set(samples, samplesPtr >> 3);
-    Module.ccall(   
-        'generate_sine_wave', 'number', ['number', 'number', 'number', 'number'], 
-        [midicent2Freq(midicent), sampleRate, eventDuration - eventClass.breathTime, samplesPtr]);
-    var samples = new Float64Array(Module.HEAPF64.buffer, samplesPtr, samples.length);
-    var audioContext = new AudioContext();
-    var buffer = audioContext.createBuffer(1, samples.length, sampleRate);
-    var channelData = buffer.getChannelData(0);
-    channelData.set(Float32Array.from(samples));
-    var source = audioContext.createBufferSource();
-    source.buffer = buffer;
-    source.connect(audioContext.destination);
-    source.start();
-    Module._free(samplesPtr);
-    completePhrase.innerHTML = eventClass.completePhrase;
 }
 
 // ++++++++++++++++++++++++
@@ -328,8 +330,9 @@ function updateMeasureBarProgress(duration) {
         if (div_width == 100) {
             clearInterval(interval);
             div.style.width = 100;
+            // console.log("Fim do evento");
         }
-    }, 30);
+    }, 15);
 
 }
 
@@ -349,13 +352,13 @@ function StartMicroEvent(event, eventDuration) {
 
     var goodNotes = [];
     var goodNotesProbabilities = [];
-    var sendPartialTracking = Math.random();
+    // var sendPartialTracking = Math.random();
 
     // ========================================================
     //  NOTE: Here is where I execute the partial tracking
-    if (sendPartialTracking > 0.1 && event.mkPartialTracking == true && onWebSite == false) {
-        streamAudioForPartialTracking = true;
-    }
+    // if (sendPartialTracking > 0.1 && event.mkPartialTracking == true && onWebSite == false) {
+        // streamAudioForPartialTracking = true;
+    // }
     // ========================================================
 
     // remove not valid notes
@@ -375,13 +378,8 @@ function StartMicroEvent(event, eventDuration) {
         var syllables = event.syllables;
         var syllablesProbabilities = event.syllablesProbabilities;
         var syllable = chooseWithProbabilities(syllables, syllablesProbabilities);
-        if (onWebSite == true) {
-            var noteNameString = note[0]
-            var pngFile = "/notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
-        }
-        else{
-            var pngFile = "/notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
-        }
+        var noteNameString = note[0]
+        var pngFile = "/notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
         pngFile = pngFile.replace("#", "s");
     }
     else{
@@ -395,25 +393,18 @@ function StartMicroEvent(event, eventDuration) {
 
 // ========================================================
 async function startMacroEvent(eventNumber) {
-    var start = new Date().getTime();
-    // convert to São Paulo time
-    // start = start - 10800000;
-    // var startString = new Date(start).toISOString().slice(11, -1);
-
     if (eventNumber == undefined) {
         eventNumber = 1;
     }
-    completePhrase = document.getElementById("completePhrase");
-    completePhrase.innerHTML = "Evento " + eventNumber + " de " + pieceEvents.length;
-
     var mediumEvent = pieceEvents.find(event => event.eventNumber === eventNumber);
     var length = mediumEvent.MicroEvents.length;
     var possibleDurationsLength = mediumEvent.MicroEvents[0].possibleDurations.length;
     var durationIndex = Math.floor(Math.random() * possibleDurationsLength);
     for (var i = 0; i < length; i++) {
-        console.log("MacroEvent: " + eventNumber + " MicroEvent: " + (i + 1));
         var event = mediumEvent.MicroEvents[i];
         var eventDuration = event.possibleDurations[durationIndex];
+        console.log("=============================");
+        console.log("MacroEvent: " + eventNumber + " MicroEvent: " + (i + 1) + " Duration: " + eventDuration);
         StartMicroEvent(event, eventDuration);
         await new Promise((resolve) => setTimeout(resolve, eventDuration));
     }
@@ -431,7 +422,18 @@ async function startMacroEvent(eventNumber) {
         var imgNoteHeight = imgNotePos.height;
         completePhrase.style.position = "absolute";
         completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
-        completePhrase.innerHTML = "Fim da peça!";
+        completePhrase.innerHTML = "Fim da peça! Obrigado!";
+        
+        if (onWebSite == false) {
+            var xhr = new XMLHttpRequest();
+            var host = window.location.hostname;
+            var port = window.location.port;
+            var protocol = window.location.protocol;
+            var url = protocol + '//' + host + ':' + port + '/send2pd'; 
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({'fim': "bang"}));
+        }
     }
 }
 
