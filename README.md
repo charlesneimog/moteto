@@ -7,9 +7,9 @@ A obra `Moteto` é exatamente isso, além de sobreposições de vozes independen
 O texto utilizado uma distorção (pelo ChatGpt) do poema de Mia Couto intitulado `Avesso Bíblico`: 
 
 ``` txt
-Já havia tudo.
+Havia tudo.
 Criou-se o Nada, 
-diante de tanto tudo.
+tanto tudo.
 
 Tocou a água,
 Achou,
