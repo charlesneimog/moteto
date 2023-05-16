@@ -127,33 +127,32 @@ function configFFT(dataArray, sampleRate){
         Module._free(outPtr);
         Module._free(inPtr);
 
-        var xhr = new XMLHttpRequest();
-        var host = window.location.hostname;
-        var port = window.location.port;
-        var protocol = window.location.protocol;
-        var url = protocol + '//' + host + ':' + port + '/send2pd'; 
+        if (onWebSite == false) {
+            var xhr = new XMLHttpRequest();
+            var host = window.location.hostname;
+            var port = window.location.port;
+            var protocol = window.location.protocol;
+            var url = protocol + '//' + host + ':' + port + '/send2pd'; 
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({'freqs': freqs}));
 
-        xhr.open('POST', url, true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({ 'freqs': freqs}));
-        // xhr.close();
-
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == XMLHttpRequest.DONE) {
-                if (xhr.status == 200) {
-                    console.log("Sent to PureData");
-                }
-                else {
-                    console.log("Error sending to PD");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status == 200) {
+                        console.log("Sent to PureData");
+                    }
+                    else {
+                        console.log("Error sending to PD");
+                    }
                 }
             }
-        }
 
-        var xhrAmps = new XMLHttpRequest();
-        xhrAmps.open('POST', url, true);
-        xhrAmps.setRequestHeader('Content-Type', 'application/json');
-        xhrAmps.send(JSON.stringify({ 'amps': amps}));
-        // xhr.close();
+            var xhrAmps = new XMLHttpRequest();
+            xhrAmps.open('POST', url, true);
+            xhrAmps.setRequestHeader('Content-Type', 'application/json');
+            xhrAmps.send(JSON.stringify({ 'amps': amps}));
+        }
 
         return;
     }
@@ -240,92 +239,13 @@ function chooseWithProbabilities(elements, probabilities) {
     return elements[index];
 }
 
-// ++++++++++++++++++++++++
-
-/*
-async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
-    // show the breath image
-    var img = document.getElementById("imgNote");
-    completePhrase = document.getElementById("completePhrase");
-    if (midicent != 0) {
-        var pngFile = "respire.png";
-        if (onWebSite == true) {
-            pngFile = "public/" + pngFile;
-        }
-        var eventDuration = eventClass.duration;
-        img.src = pngFile;
-    }
-    else{
-        img.src = pngPitchFile; 
-        completePhrase.innerHTML = "Nenhuma nota encontrada.";
-        await new Promise((resolve) => setTimeout(resolve, eventClass.breathTime));
-        return;
-
-    }
-    completePhrase.innerHTML = "";
-
-    // delay for 500ms
-    await new Promise((resolve) => setTimeout(resolve, eventClass.breathTime)); // TODO: rethink about this
-
-    // show the note image
-    img = document.getElementById("imgNote");
-    if (onWebSite == true) {
-        pngPitchFile = "public/" + pngPitchFile;
-    }
-
-    img.src = pngPitchFile;
-
-    // malloc new array for double samples with eventDuration - eventClass.breathTime
-
-    // convert ms to samples
-    var durationMs = eventDuration - eventClass.breathTime;
-    var durationSec = durationMs / 1000;
-    var samples = Math.floor(durationSec * sampleRate);
-
-    var samples = new Float64Array(samples);
-    var samplesPtr = Module._malloc(samples.length * samples.BYTES_PER_ELEMENT);
-    Module.HEAPF64.set(samples, samplesPtr >> 3);
-
-    // Allocate memory for the frequency array and copy values
-    const freqList = [midicent2Freq(midicent) * 1, midicent2Freq(midicent) * 2, midicent2Freq(midicent) * 3, midicent2Freq(midicent) * 4];
-    const ampList = [0.7, 0.1, 0.05, 0.05];
-    const freqPtr = Module._malloc(freqList.length * Float32Array.BYTES_PER_ELEMENT);
-    Module.HEAPF32.set(freqList, freqPtr / Float32Array.BYTES_PER_ELEMENT);
-    const ampPtr = Module._malloc(ampList.length * Float32Array.BYTES_PER_ELEMENT);
-    Module.HEAPF32.set(ampList, ampPtr / Float32Array.BYTES_PER_ELEMENT);
-    // Call the C function
-    Module.ccall('generate_sines_wave', 'number', ['number', 'number', 'number', 'number', 'number', 'number'],
-            [freqPtr, ampPtr, freqList.length, sampleRate, eventDuration - eventClass.breathTime, samplesPtr]);            
-
-
-    // Get the output data from the buffer
-    var samples = new Float64Array(Module.HEAPF64.buffer, samplesPtr, samples.length);
-
-    // =====================
-    var audioContext = new AudioContext();
-    var buffer = audioContext.createBuffer(1, samples.length, sampleRate);
-    var channelData = buffer.getChannelData(0);
-    channelData.set(Float32Array.from(samples));
-    var source = audioContext.createBufferSource();
-    source.buffer = buffer;
-    source.connect(audioContext.destination);
-    source.start();
-
-    // free memory
-    Module._free(samplesPtr);
-    Module._free(freqPtr);
-    Module._free(ampPtr);
-    completePhrase.innerHTML = eventClass.completePhrase;
-}
-*/
-
 // ========================================================
 async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
+
     // show the breath image
     var img = document.getElementById("imgNote");
     completePhrase = document.getElementById("completePhrase");
     var div = document.getElementById('DurationBar');
-    // set the color of the bar
     div.style.color = "red";
     var imgNotePos = img.getBoundingClientRect();
     var imgNoteWidth = imgNotePos.width;
@@ -333,12 +253,10 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     completePhrase.style.position = "absolute";
     completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
 
-
+    // set the color of the bar
     if (midicent != 0) {
         var pngFile = "respire.png";
-        if (onWebSite == true) {
-            pngFile = "public/" + pngFile;
-        }
+        pngFile = "public/" + pngFile;
         var eventDuration = eventClass.duration;
         img.src = pngFile;
     }
@@ -353,27 +271,33 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
 
     // delay for 500ms
     await new Promise((resolve) => setTimeout(resolve, eventClass.breathTime)); // TODO: rethink about this
-
     var div = document.getElementById('DurationBar');
-    // div.style.color = "black";
 
     // show the note image
     img = document.getElementById("imgNote");
-    onWebSite = true;
-    if (onWebSite == true) {
-        pngPitchFile = "public/" + pngPitchFile;
-    }
-    console.log(pngPitchFile);
+    pngPitchFile = "public/" + pngPitchFile;
     img.src = pngPitchFile;
-
-    /// Synth the note
-    // see time of execution
-    var t0 = performance.now();
     var durationMs = eventDuration - eventClass.breathTime;
     var durationSec = durationMs / 1000;
     var samples = Math.floor(durationSec * sampleRate);
     var samples = new Float64Array(samples);
     var samplesPtr = Module._malloc(samples.length * samples.BYTES_PER_ELEMENT);
+
+    // Send to PureData
+    // =====================
+    
+    if (onWebSite == false) {
+        var xhr = new XMLHttpRequest();
+        var host = window.location.hostname;
+        var port = window.location.port;
+        var protocol = window.location.protocol;
+        var url = protocol + '//' + host + ':' + port + '/send2pd'; 
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        var playValues = [midicent, durationMs];
+        xhr.send(JSON.stringify({'play': playValues}));
+    }
+
     Module.HEAPF64.set(samples, samplesPtr >> 3);
     Module.ccall(   
         'generate_sine_wave', 'number', ['number', 'number', 'number', 'number'], 
@@ -388,7 +312,6 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     source.connect(audioContext.destination);
     source.start();
     Module._free(samplesPtr);
-    var t1 = performance.now();
     completePhrase.innerHTML = eventClass.completePhrase;
 }
 
@@ -448,7 +371,6 @@ function StartMicroEvent(event, eventDuration) {
         var noteAndMidicent = chooseWithProbabilities(goodNotes, goodNotesProbabilities);
         var note = noteAndMidicent[0];
         var midicent = noteAndMidicent[1];
-naipe.png
         // silabas
         var syllables = event.syllables;
         var syllablesProbabilities = event.syllablesProbabilities;
@@ -475,21 +397,8 @@ naipe.png
 async function startMacroEvent(eventNumber) {
     var start = new Date().getTime();
     // convert to São Paulo time
-    start = start - 10800000;
-    var startString = new Date(start).toISOString().slice(11, -1);
-
-    /*
-    var xhr = new XMLHttpRequest();
-    var host = window.location.hostname;
-    var port = window.location.port;
-    var protocol = window.location.protocol;
-    var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
-    xhr.open('POST', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    const userAgent = navigator.userAgent;
-    const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
-    xhr.send(JSON.stringify({ 'started': startString}));
-    */
+    // start = start - 10800000;
+    // var startString = new Date(start).toISOString().slice(11, -1);
 
     if (eventNumber == undefined) {
         eventNumber = 1;
@@ -559,55 +468,30 @@ async function delay(ms) {
 
 // ========================================================
 async function syncStart() {
-    if (onWebSite == true){
-        if (thisNaipe == undefined) {
-            setTheNaipe();
-        }
-        // Get the current time in milliseconds since the epoch
-        var now = new Date().getTime();
-        var thisHour = new Date().getHours();
-        var thisMinutDec = Math.floor(new Date().getMinutes() / 10) * 10; // decimal of 10 minutes
-        var thisMinutUnit = new Date().getMinutes() % 10; // unit of 10 minutes
-        var minuteSelection = document.getElementById("minute-select").value;
-        minuteSelectionInt = parseInt(minuteSelection);
-        var startPieceTime = new Date();
-        if (minuteSelectionInt > 59){
-            thisHour = thisHour + 1;
-            minuteSelectionInt = minuteSelectionInt - 60;
-        }
-        startPieceTime.setHours(thisHour, minuteSelectionInt, 0, 0);
-        var startPieceTimeMs = startPieceTime.getTime();
-        var delayTime = startPieceTimeMs - now;
-
-
-        var completePhrase = document.getElementById("completePhrase");
-
-        delay(delayTime).then(function() {
-            startMacroEvent(1);
-        });
-
+    if (thisNaipe == undefined) {
+        setTheNaipe();
     }
-    else{
-        readTextFile("public/start.json" + '?' + new Date().getTime(), function(text){
-            var data = JSON.parse(text);
-            var now = new Date().getTime();
-            var startTime = data.startTime * 1000; // convert time.time from Python to milliseconds
-            var delayTime = startTime - now;
-            if (startTime != 0 && onWebSite == false) {
-                var fullScreenButton = document.getElementById("fullscreenBtn");
-                if (fullScreenButton != null){
-                    fullScreenButton.style.display = "none";
-                }
-                delay(delayTime).then(function() {
-                    startMacroEvent(1);
-                });
-            }
-            else{   
-                setTimeout(function() {
-                    syncStart(); // Call syncStart() again after 500 ms
-                }, 1);
-            }
-        });
+    // Get the current time in milliseconds since the epoch
+    var now = new Date().getTime();
+    var thisHour = new Date().getHours();
+    var thisMinutDec = Math.floor(new Date().getMinutes() / 10) * 10; // decimal of 10 minutes
+    var thisMinutUnit = new Date().getMinutes() % 10; // unit of 10 minutes
+    var minuteSelection = document.getElementById("minute-select").value;
+    minuteSelectionInt = parseInt(minuteSelection);
+    var startPieceTime = new Date();
+    if (minuteSelectionInt > 59){
+        thisHour = thisHour + 1;
+        minuteSelectionInt = minuteSelectionInt - 60;
     }
+    startPieceTime.setHours(thisHour, minuteSelectionInt, 0, 0);
+    var startPieceTimeMs = startPieceTime.getTime();
+    var delayTime = startPieceTimeMs - now;
+
+
+    var completePhrase = document.getElementById("completePhrase");
+
+    delay(delayTime).then(function() {
+        startMacroEvent(1);
+    });
 }
 
