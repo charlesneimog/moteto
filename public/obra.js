@@ -346,6 +346,10 @@ function StartMicroEvent(event, eventDuration) {
         setTheNaipe();
     }
 
+    // print microevent
+
+    console.log("Iniciando o Evento: " + event.microEventString);
+
     var higherNote = thisNaipe.higherNote;
     var lowerNote = thisNaipe.lowerNote;
     var validEvents = [];
@@ -392,26 +396,31 @@ function StartMicroEvent(event, eventDuration) {
 }
 
 // ========================================================
-async function startMacroEvent(eventNumber) {
+async function startMediumEvents(eventNumber) {
     if (eventNumber == undefined) {
         eventNumber = 1;
     }
-    var mediumEvent = pieceEvents.find(event => event.eventNumber === eventNumber);
+    if (window.pieceEvents.length == 0) {
+        for (var i = 0; i < pieceEvents.allMacroEvents.length; i++) {
+            var thisMacroEvent = pieceEvents.allMacroEvents[i];
+            for (var j = 0; j < thisMacroEvent.MediumEvents.length; j++) {
+                window.pieceEvents.push(thisMacroEvent.MediumEvents[j]);
+            }
+        }
+    }
+    var mediumEvent = window.pieceEvents[eventNumber - 1];
     var length = mediumEvent.MicroEvents.length;
-    var possibleDurationsLength = mediumEvent.MicroEvents[0].possibleDurations.length;
-    var durationIndex = Math.floor(Math.random() * possibleDurationsLength);
     for (var i = 0; i < length; i++) {
         var event = mediumEvent.MicroEvents[i];
-        var eventDuration = event.possibleDurations[durationIndex];
+        var eventDuration = event.possibleDurations[0];
         console.log("=============================");
-        console.log("MacroEvent: " + eventNumber + " MicroEvent: " + (i + 1) + " Duration: " + eventDuration);
         StartMicroEvent(event, eventDuration);
         await new Promise((resolve) => setTimeout(resolve, eventDuration));
     }
     eventNumber = eventNumber + 1;
 
-    if (eventNumber <= pieceEvents.length) {
-        startMacroEvent(eventNumber);
+    if (eventNumber <= window.pieceEvents.length) {
+        startMediumEvents(eventNumber);
     }
     else {
         var img = document.getElementById("imgNote");
@@ -488,12 +497,12 @@ async function syncStart() {
     startPieceTime.setHours(thisHour, minuteSelectionInt, 0, 0);
     var startPieceTimeMs = startPieceTime.getTime();
     var delayTime = startPieceTimeMs - now;
-
-
     var completePhrase = document.getElementById("completePhrase");
+    var allMediumEvents;
+    // delayTime = 0;
 
     delay(delayTime).then(function() {
-        startMacroEvent(1);
+        startMediumEvents(1);
     });
 }
 
