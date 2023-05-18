@@ -22,14 +22,14 @@
         <h1 id="PageTitle" style="text-align: center;">Moteto</h1>
         <label id="message4choosenaipe" for="naipe-select" style="position: absolute; left: 50%; transform: translateX(-50%); text-align: center;"></label>
         <select id="naipe-select" onchange="chooseNaipe()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
-            <option value="none">Selecione seu naipe</option>
+            <option value="none">Selecione o seu naipe de voz.</option>
             <option value="Soprano">Soprano</option>
             <option value="Contralto">Contralto</option>
             <option value="Tenor">Tenor</option>
             <option value="Baixo">Baixo</option>
         </select>
         <select id="minute-select" onchange="chooseMinute()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
-            <option id="minute-select-none" value="none">Selecione quanto iniciar a obra.</option>
+            <option id="minute-select-none" value="none">Selecione o horário para início da obra.</option>
             <option id="minute-select-0" value="0">0</option>
             <option id="minute-select-1" value="1">1</option>
             <option id="minute-select-2" value="2">2</option>
@@ -63,6 +63,7 @@
         <script id="eventScript" src="./public/events.js"></script> 
         <script>
 
+            window.pieceEvents = [];
             // set naipe-select and minute-select asinline-block" none
             var naipeSelection = document.getElementById("naipe-select");
             var minuteSelection = document.getElementById("minute-select");

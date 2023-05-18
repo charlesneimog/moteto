@@ -14,21 +14,15 @@ select#naipe-select {
     border-radius: 6px; 
     color: #000000;
     transition: box-shadow 0.15s ease,transform 0.15s ease;
-    :hover {
-        box-shadow: 0px 4px 4px rgb(45 35 66 / 40%), 0px 6px 10px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #E2E2EE;
-        transform: translateY(-2px);
-    }
-    :active{
-        box-shadow: inset 0px 3px 7px #E2E2EE;
-        transform: translateY(20px);
-    }
 }
-
-select#naipe-select {
-  display: none;
+select#naipe-select:hover {
+    box-shadow: 0px 4px 4px rgb(45 35 66 / 40%), 0px 6px 10px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #E2E2EE;
+    transform: translateY(-2px);
 }
-
-
+select#naipe-select:active {
+    box-shadow: inset 0px 3px 7px #E2E2EE;
+    transform: translateY(20px);
+}
 
 /* ==================== */
 select#minute-select {
@@ -47,18 +41,21 @@ select#minute-select {
     border-radius: 6px; 
     color: #000000;
     transition: box-shadow 0.15s ease,transform 0.15s ease;
-    :hover {
-        box-shadow: 0px 4px 4px rgb(45 35 66 / 40%), 0px 6px 10px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #E2E2EE;
-        transform: translateY(-2px);
-    }
-    :active{
-        box-shadow: inset 0px 3px 7px #E2E2EE;
-        transform: translateY(20px);
-    }
 }
-  
+select#minute-select:hover {
+    box-shadow: 0px 4px 4px rgb(45 35 66 / 40%), 0px 6px 10px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #E2E2EE;
+    transform: translateY(-2px);
+}
+select#minute-select:active {
+    box-shadow: inset 0px 3px 7px #E2E2EE;
+    transform: translateY(20px);
+}
 
-/* make button in same style */
+  
+/* ==================== */
+/* ==================== */
+/* ==================== */
+
 button#moteto-global-button {
     border: none;
     outline: none;

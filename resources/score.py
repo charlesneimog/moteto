@@ -170,7 +170,7 @@ def create_note(notename, accidental, octave, silaba):
     chord(notename + accidental + str(octave), silaba)
 
 
-silabas = ["Cri", "ou", "o", "na", "da", "di", "an", "te", "tan", "to", "tu", "do", "an", "te"]
+silabas = ["Ha", "vi", "a", "tu", "do", "Cri", "ou", "se", "o", "na", "da", "tan", "to", "tu", "do", "to", "cou", "a", "á", "gua", "a", "chou", "vi", "da", "ao", "o", "ce", "a", "no", "fun", "da", "do", "chão", "pen", "sou", "que", "a", "ter", "ra", "nas", "ceu"]
 silabas = list(dict.fromkeys(silabas))
 
 notenames = ["c", "d", "e", "f", "g", "a", "b"]
