@@ -157,9 +157,6 @@ let microEvent;
 
 pieceEvents = createPieceEvents();
 
-
-/*
-
 // ++++++++++++++++++++++++++++++++
 // ++++++++++ MACRO Event 1 +++++++
 // ++++++++++++++++++++++++++++++++
@@ -795,34 +792,30 @@ if (pieceEvents.getDuration() != 100000){
     alert("Algum erro aconteceu, recarregue a página");
 }
 
-*/
-
-
 // ++++++++++++++++++++++++++++++++
 // ++++++++++ MACRO Event 3 +++++++
 // ++++++++++++++++++++++++++++++++
 
 macroEvent = createMacroEvent(3);
-microEventTuplet = 1;  //randomInt(1, 1);
+microEventTuplet = randomInt(1, 3);
 console.log("Tuplet variation of Macro event 3: " + microEventTuplet);
 
 if (microEventTuplet == 1) {
     // -------- microEvent 3.1 --------
-    mediumEvent = createMediumEvent(5);
+    mediumEvent = createMediumEvent(9);
     var tupletValue = randomInt(6, 10);
-    totalDuration = 0;
     var breathTimeValue = 500;
     for (var i = 0; i < tupletValue; i++) {
-        var tupletValueMs = 30000 / tupletValue;
+        var tupletValueMs = 27500 / tupletValue;
         totalDuration += tupletValueMs;
         microEvent = createMicroEvent(i + 1);
         microEvent.mkPartialTracking = true;
         microEvent.notes = [["e4+", 6413], ["b3+", 5915], ["g#4", 6800], ["d3-", 4982], ["f#3+", 5417], ["a#3-", 5765], ["c#4-", 6054], ["d#4+", 6301]];
-        microEvent.notesProbabilities = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]; 
-        microEvent.syllables = ["tu", "do"];
-        microEvent.syllablesProbabilities = [0.5, 0.5];
-        microEvent.notes2replace = [6000, 6701.96, 6386.31, 6968.83, 6203.91, 6551.32];
-        microEvent.completePhrase = "tudo.";
+        microEvent.notesProbabilities = [0.1, 0.1, 0.1, 0.1, 0.1, 0.15, 0.15, 0.1];
+        microEvent.syllables = ["a", "chou", "vi", "da", "ao", "o", "ce", "a", "no", "fun", "da", "do"];
+        microEvent.syllablesProbabilities = [0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08];
+        microEvent.notes2replace = [6413, 7115, 6800, 6182, 6617, 6965, 6054, 6301];
+        microEvent.completePhrase = "Achou, Vida ao oceano, fundado.";
         microEvent.breathTime = breathTimeValue;
         microEvent.replaceNotes = true;
         microEvent.possibleDurations = [tupletValueMs];
@@ -830,7 +823,206 @@ if (microEventTuplet == 1) {
         mediumEvent.add(microEvent);
     }
     macroEvent.add(mediumEvent);
+
+    // -------- microEvent 3.2 --------
+    mediumEvent = createMediumEvent(10);
+    var tupletValue = randomInt(6, 10);
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 20000 / tupletValue;
+        totalDuration += tupletValueMs;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.notes = [["e4", 6413], ["b3", 5915], ["g#4", 6800], ["d3", 4982], ["f#3", 5417], ["a#+3", 5765], ["c+4", 6054], ["d#4", 6301]];
+        microEvent.notesProbabilities = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]; 
+        // "Chão, pensou que a terra nasceu."
+        microEvent.syllables = ["chão", "pen", "sou", "que", "a", "ter", "ra", "nas", "ceu"]; 
+        microEvent.syllablesProbabilities = [0.111, 0.111, 0.111, 0.111, 0.111, 0.111, 0.111, 0.111, 0.111];
+        microEvent.notes2replace = [6386, 7087, 6772, 6154, 6589, 6937, 6026, 6274, 6490];
+        microEvent.completePhrase = "Chão, pensou que a terra nasceu.";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.replaceNotes = true;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "3.2." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 3.3 --------
+    mediumEvent = createMediumEvent(11);
+    var tupletValue = randomInt(6, 10);
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 20000 / tupletValue;
+        totalDuration += tupletValueMs;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.notes = [["e4", 6386], ["b4", 7087.96], ["g#4", 6772.31], ["c#+4", 6154.83], ["f#+4", 6589.91], ["a4", 6937.32], ["c+4", 6026.53], ["d#4", 6274.27]];
+        microEvent.notesProbabilities = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]; 
+        //Tocou-se, ilusão,
+        microEvent.syllables = ["to", "cou", "se", "i", "lu", "são"];
+        microEvent.syllablesProbabilities = [0.166, 0.166, 0.166, 0.166, 0.166, 0.166];
+        microEvent.notes2replace = [6386, 7087, 6772, 6154, 6589, 6937, 6026, 6274, 6490, 6683, 6856, 7014, 7158];
+        microEvent.completePhrase = "Tocou-se, ilusão,";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.replaceNotes = true;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "3.3." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
     pieceEvents.add(macroEvent);
 }
 
+else if (microEventTuplet == 2) {
+    // -------- microEvent 3.1 --------
+    mediumEvent = createMediumEvent(9);
+    var tupletValue = randomInt(6, 10);
+    totalDuration = 0;
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 22500 / tupletValue;
+        totalDuration += tupletValueMs;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.notes = [["e4+", 6413], ["b3+", 5915], ["g#4", 6800], ["d3-", 4982], ["f#3+", 5417], ["a#3-", 5765], ["c#4-", 6054], ["d#4+", 6301]];
+        microEvent.notesProbabilities = [0.1, 0.1, 0.1, 0.1, 0.1, 0.15, 0.15, 0.1];
+        microEvent.syllables = ["a", "chou", "vi", "da", "ao", "o", "ce", "a", "no", "fun", "da", "do"];
+        microEvent.syllablesProbabilities = [0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08];
+        microEvent.notes2replace = [6413, 7115, 6800, 6182, 6617, 6965, 6054, 6301];
+        microEvent.completePhrase = "Achou, Vida ao oceano, fundado.";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.replaceNotes = true;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "3.1." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
 
+    // -------- microEvent 3.2 --------
+    mediumEvent = createMediumEvent(10);
+    var tupletValue = randomInt(6, 10);
+    totalDuration = 0;
+    var breathTimeValue = 500;
+        for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 20000 / tupletValue;
+        totalDuration += tupletValueMs;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.notes = [["e4", 6413], ["b3", 5915], ["g#4", 6800], ["d3", 4982], ["f#3", 5417], ["a#+3", 5765], ["c+4", 6054], ["d#4", 6301]];
+        microEvent.notesProbabilities = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]; 
+        // "Chão, pensou que a terra nasceu."
+        microEvent.syllables = ["chão", "pen", "sou", "que", "a", "ter", "ra", "nas", "ceu"]; 
+        microEvent.syllablesProbabilities = [0.111, 0.111, 0.111, 0.111, 0.111, 0.111, 0.111, 0.111, 0.111];
+        microEvent.notes2replace = [6386, 7087, 6772, 6154, 6589, 6937, 6026, 6274, 6490];
+        microEvent.completePhrase = "Chão, pensou que a terra nasceu.";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.replaceNotes = true;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "3.2." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 3.3 --------
+    mediumEvent = createMediumEvent(11);
+    var tupletValue = randomInt(6, 10);
+    totalDuration = 0;
+    var breathTimeValue = 500;
+        for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 25000 / tupletValue;
+        totalDuration += tupletValueMs;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.notes = [["e4", 6386], ["b4", 7087.96], ["g#4", 6772.31], ["c#+4", 6154.83], ["f#+4", 6589.91], ["a4", 6937.32], ["c+4", 6026.53], ["d#4", 6274.27]];
+        microEvent.notesProbabilities = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]; 
+        microEvent.syllables = ["sen", "tiu", "se", "cen", "tro"];
+        microEvent.syllablesProbabilities = [0.166, 0.166, 0.166, 0.166, 0.166, 0.166];
+        microEvent.notes2replace = [6386, 7087, 6772, 6154, 6589, 6937, 6026, 6274, 6490, 6683, 6856, 7014, 7158];
+        microEvent.completePhrase = "sentiu-se centro.";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.replaceNotes = true;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "3.3." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+    pieceEvents.add(macroEvent);
+}
+
+else if (microEventTuplet == 3) {
+    // -------- microEvent 3.1 --------
+    mediumEvent = createMediumEvent(9);
+    var tupletValue = randomInt(6, 10);
+    totalDuration = 0;
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 37500 / tupletValue;
+        totalDuration += tupletValueMs;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.notes = [["e4+", 6413], ["b3+", 5915], ["g#4", 6800], ["d3-", 4982], ["f#3+", 5417], ["a#3-", 5765], ["c#4-", 6054], ["d#4+", 6301]];
+        microEvent.notesProbabilities = [0.1, 0.1, 0.1, 0.1, 0.1, 0.15, 0.15, 0.1];
+        microEvent.syllables = ["a", "chou", "vi", "da", "ao", "o", "ce", "a", "no", "fun", "da", "do"];
+        microEvent.syllablesProbabilities = [0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08];
+        microEvent.notes2replace = [6413, 7115, 6800, 6182, 6617, 6965, 6054, 6301];
+        microEvent.completePhrase = "Achou, Vida ao oceano, fundado.";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.replaceNotes = true;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "3.1." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 3.2 --------
+    mediumEvent = createMediumEvent(10);
+    var tupletValue = randomInt(6, 10);
+    totalDuration = 0;
+    var breathTimeValue = 500;
+        for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 15000 / tupletValue;
+        totalDuration += tupletValueMs;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.notes = [["e4", 6413], ["b3", 5915], ["g#4", 6800], ["d3", 4982], ["f#3", 5417], ["a#+3", 5765], ["c+4", 6054], ["d#4", 6301]];
+        microEvent.notesProbabilities = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]; 
+        microEvent.syllables = ["chão", "pen", "sou", "que", "a", "ter", "ra", "nas", "ceu"]; 
+        microEvent.syllablesProbabilities = [0.111, 0.111, 0.111, 0.111, 0.111, 0.111, 0.111, 0.111, 0.111];
+        microEvent.notes2replace = [6386, 7087, 6772, 6154, 6589, 6937, 6026, 6274, 6490];
+        microEvent.completePhrase = "Chão, pensou que a terra nasceu.";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.replaceNotes = true;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "3.2." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 3.3 --------
+    mediumEvent = createMediumEvent(11);
+    var tupletValue = randomInt(6, 10);
+    totalDuration = 0;
+    var breathTimeValue = 500;
+        for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 15000 / tupletValue;
+        totalDuration += tupletValueMs;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.notes = [["e4", 6386], ["b4", 7087.96], ["g#4", 6772.31], ["c#+4", 6154.83], ["f#+4", 6589.91], ["a4", 6937.32], ["c+4", 6026.53], ["d#4", 6274.27]];
+        microEvent.notesProbabilities = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]; 
+        microEvent.syllables = ["jul", "gou", "se", "di", "vi", "no"];
+        microEvent.syllablesProbabilities = [0.166, 0.166, 0.166, 0.166, 0.166, 0.166];
+        microEvent.notes2replace = [6386, 7087, 6772, 6154, 6589, 6937, 6026, 6274, 6490, 6683, 6856, 7014, 7158];
+        microEvent.completePhrase = "Julgou-se divino";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.replaceNotes = true;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "3.3." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+    pieceEvents.add(macroEvent);
+}
+
+if (pieceEvents.getDuration() != 167500){
+    alert("Algum erro aconteceu, duração total: " + pieceEvents.getDuration());
+}

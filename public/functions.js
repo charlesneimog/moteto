@@ -43,7 +43,7 @@ function replaceByNearNote(input, notes2replace){
     // check is notes2replace range is correct
     for (var i = 0; i < notes2replace.length; i++){
         if (notes2replace[i] < 6000 || notes2replace[i] > 7200){
-            alert("Error: notes2replace range is incorrect");
+            alert("Error: notes2replace the note " + notes2replace[i] + " is out of range (from 6000 to 7200)");
             return;
         }
     }
@@ -61,11 +61,6 @@ function replaceByNearNote(input, notes2replace){
     return output;
 }
     
-
-
-
-
-
 // ========================================================
 function readTextFile(file, callback) {
     var rawFile = new XMLHttpRequest();
@@ -151,7 +146,14 @@ function midicent2note(midicent){
         noteString = noteString + "+" + octave;
     } 
     else if (diff < -40 && diff > -60){
-        noteString = noteString + "-" + octave;
+        // if noteString has #, then replace # by -
+        if (noteString.includes("#")){
+            noteString = noteString.replace("#", "+");
+            noteString = noteString + octave;
+        }
+        else {
+            noteString = noteString + "-" + octave;
+        }
     }
     else {
         noteString = noteString + octave;

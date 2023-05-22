@@ -255,21 +255,15 @@ function StartMicroEvent(event, eventDuration) {
                     notesAlreadyAdded.push(Math.round(midicentsFromPartialTracking[i]));
                 }
             }
-            // console.log("Array not empty");
-            // get title
-            var title = document.getElementById("PageTitle");
-            title.innerHTML = "Array not empty";
+            console.log("Array not empty");
         }
         else{
             console.log("Array empty");
-            var title = document.getElementById("PageTitle");
-            title.innerHTML = "Array empty";
         }
     }
     // ========================================================
     // console.log("notes: " + notes);
     // ========================================================
-
     for (var i = 0; i < notes.length; i++) {
         if (notes[i][1] <= higherNote && notes[i][1] >= lowerNote) {
             var note = notes[i][0];
@@ -286,8 +280,6 @@ function StartMicroEvent(event, eventDuration) {
         }
         else{
             var randomIndex = Math.floor(Math.random() * goodNotes.length);
-            console.log("randomIndex: " + randomIndex);
-            console.log("goodNotes: " + goodNotes);
             var noteAndMidicent = goodNotes[randomIndex];
         }
         var note = noteAndMidicent[0];
@@ -347,17 +339,6 @@ async function startMediumEvents(eventNumber) {
         completePhrase.style.position = "absolute";
         completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
         completePhrase.innerHTML = "Fim da peça! Obrigado!";
-        
-        if (onWebSite == false) {
-            var xhr = new XMLHttpRequest();
-            var host = window.location.hostname;
-            var port = window.location.port;
-            var protocol = window.location.protocol;
-            var url = protocol + '//' + host + ':' + port + '/send2pd'; 
-            xhr.open('POST', url, true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify({'fim': "bang"}));
-        }
     }
 }
 
