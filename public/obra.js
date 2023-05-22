@@ -2,101 +2,14 @@
 
 // set global variables
 var streamAudioForPartialTracking = false;
-
-// =====================================================
-//  TODO: put this in the right place
-function midicent2Freq(midicent) {
-    var freq = 440 * Math.pow(2, (midicent - 6900) / 1200);
-    return freq;
-}
-
-// ========================================================
-function readTextFile(file, callback) {
-    var rawFile = new XMLHttpRequest();
-    rawFile.overrideMimeType("application/json");
-    rawFile.open("GET", file, true);
-    rawFile.onreadystatechange = function() {
-        if (rawFile.readyState === 4 && rawFile.status == "200") {
-            callback(rawFile.responseText);
-        }
-    }
-    rawFile.send(null);
-}
-
-// =====================================================
-function getFreqsFromPartialTracking(typeOfCalculation) {
-    // if typeOfCalculation == "down" then down amplitudes get higher probability
-    readTextFile("partialtracking.json" + '?' + new Date().getTime(), function(text){
-        var data = JSON.parse(text);
-        var freqs = data.f;
-        var amps = data.a;
-        
-        if (freqs == undefined || amps == undefined) {
-            console.log("No data from partial tracking");
-            return;
-        }
-
-        if (typeOfCalculation == "down") {
-            console.log("Calculating down");
-            const sumAbsAmps = amps.reduce((sum, amp) => sum + Math.abs(amp), 0);
-            const freqProbs = freqs.map((freq, i) => ({
-              frequency: freq,
-              amplitude: amps[i],
-              probability: Math.abs(amps[i]) / sumAbsAmps
-            }));
-            freqProbs.sort((a, b) => b.probability - a.probability);
-            return freqProbs;
-        }
-
-        else if (typeOfCalculation == "up") {
-            // python poor translation
-            var normalized_amps = [];
-            var minAmp = Math.min(...amps);
-            var maxAmp = Math.max(...amps);
-            for (var i = 0; i < amps.length; i++) {
-                normalized_amps.push((amps[i] - minAmp) / (maxAmp - minAmp));
-            }
-            var freq_amp_dict = {};
-            for (var i = 0; i < freqs.length; i++) {
-                freq_amp_dict[freqs[i]] = normalized_amps[i];
-            }
-            var sorted_freq_amp = [];
-            for (var key in freq_amp_dict) {
-                sorted_freq_amp.push([key, freq_amp_dict[key]]);
-            }
-            sorted_freq_amp.sort(function(a, b) {
-                    return b[1] - a[1];
-                }
-            );
-            var n = freqs.length;
-            var rank_probs = [];
-            for (var i = 1; i < n + 1; i++) {
-                rank_probs.push(1 / i);
-            }
-            var sumRankProbs = rank_probs.reduce((sum, prob) => sum + prob, 0);
-            rank_probs = rank_probs.map((prob) => prob / sumRankProbs);
-            var freq_prob_dict = {};
-            for (var i = 0; i < sorted_freq_amp.length; i++) {
-                freq_prob_dict[sorted_freq_amp[i][0]] = rank_probs[i];
-            }
-            var table = [];
-            for (var i = 0; i < freqs.length; i++) {
-                table.push([freqs[i], freq_prob_dict[freqs[i]]]);
-            }
-            return table;
-        }
-    });
-}
+var clearPartialTracking = false;
+var midicentsFromPartialTracking = [];
 
 
 // =====================================================
 function configFFT(dataArray, sampleRate){ 
-    console.log("Running Partial Tracking");
     var fftSize = 4096;
     if (dataArray.length != fftSize) {
-        return;
-    }
-    else if (onWebSite == true){
         return;
     }
     else {
@@ -127,33 +40,15 @@ function configFFT(dataArray, sampleRate){
         Module._free(outPtr);
         Module._free(inPtr);
 
-        if (onWebSite == false) {
-            var xhr = new XMLHttpRequest();
-            var host = window.location.hostname;
-            var port = window.location.port;
-            var protocol = window.location.protocol;
-            var url = protocol + '//' + host + ':' + port + '/send2pd'; 
-            xhr.open('POST', url, true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify({'freqs': freqs}));
-
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == XMLHttpRequest.DONE) {
-                    if (xhr.status == 200) {
-                        console.log("Sent to PureData");
-                    }
-                    else {
-                        console.log("Error sending to PD");
-                    }
-                }
-            }
-
-            var xhrAmps = new XMLHttpRequest();
-            xhrAmps.open('POST', url, true);
-            xhrAmps.setRequestHeader('Content-Type', 'application/json');
-            xhrAmps.send(JSON.stringify({ 'amps': amps}));
+        
+        if (freqs.length != 0 && clearPartialTracking == true) {
+            midicentsFromPartialTracking = [];
         }
 
+
+        for (var i = 0; i < freqs.length; i++) {
+            midicentsFromPartialTracking.push(freq2MidiCent(freqs[i]));
+        }
         return;
     }
 }
@@ -189,30 +84,8 @@ function AudioStream() {
 }
 
 // ========================================================
-function setTheNaipe(){
-    if (window.naipe == "Baixo") {
-        thisNaipe = new Baixo();
-    }
-    else if (window.naipe == "Tenor") {
-        thisNaipe = new Tenor();
-    }
-    else if (window.naipe == "Contralto") {
-        thisNaipe = new Contralto();
-    }
-    else if (window.naipe == "Soprano") {
-        thisNaipe = new Soprano();
-    }
-    else {
-        alert("Não foi possível identificar o naipe, por favor, avise o Charles :).");
-    }
-}
-
-// ========================================================
 // ======================  Functions  =====================
 // ========================================================
-
-
-
 // ++++++++++++++++++++++++
 function chooseWithProbabilities(elements, probabilities) {
     // adapt probabilities to always sum 1
@@ -270,10 +143,12 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     completePhrase.innerHTML = "";
 
     // delay for breathTime
+    // =====================
     await new Promise((resolve) => setTimeout(resolve, eventClass.breathTime)); // TODO: rethink about this
     var div = document.getElementById('DurationBar');
 
     // show the note image
+    // =====================
     img = document.getElementById("imgNote");
     pngPitchFile = "public/" + pngPitchFile;
     img.src = pngPitchFile;
@@ -283,9 +158,8 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     var samples = new Float64Array(samples);
     var samplesPtr = Module._malloc(samples.length * samples.BYTES_PER_ELEMENT);
 
-    // Send to PureData
+    // Send to PureData (simulating)
     // =====================
-    
     if (onWebSite == false) {
         var xhr = new XMLHttpRequest();
         var host = window.location.hostname;
@@ -327,13 +201,11 @@ function updateMeasureBarProgress(duration) {
         var div_width = Math.min(progress / duration * 100, 100);
         measureDivWidth = div_width;
         div.style.width =  div_width + '%';
-        if (div_width == 100) {
+        if (div_width > 99.5) {
             clearInterval(interval);
-            div.style.width = 100;
-            // console.log("Fim do evento");
+            div.style.width = 100 + '%';
         }
     }, 15);
-
 }
 
 // ++++++++++++++++++++++++
@@ -341,13 +213,18 @@ function StartMicroEvent(event, eventDuration) {
     // notas
     var notes = event.notes; 
     var notesProbabilities = event.notesProbabilities;
+    if (event.clearPartialTracking == true){
+        clearPartialTracking = true;
+    }
+    else{
+        clearPartialTracking = false;
+    }
 
     if (thisNaipe == undefined){
         setTheNaipe();
     }
 
     // print microevent
-
     console.log("Iniciando o Evento: " + event.microEventString);
 
     var higherNote = thisNaipe.higherNote;
@@ -356,16 +233,43 @@ function StartMicroEvent(event, eventDuration) {
 
     var goodNotes = [];
     var goodNotesProbabilities = [];
-    // var sendPartialTracking = Math.random();
+    var sendPartialTracking = Math.random();
 
     // ========================================================
-    //  NOTE: Here is where I execute the partial tracking
-    // if (sendPartialTracking > 0.1 && event.mkPartialTracking == true && onWebSite == false) {
-        // streamAudioForPartialTracking = true;
-    // }
+     // NOTE: Here is where I execute the partial tracking
+    if (event.mkPartialTracking == true) {
+        streamAudioForPartialTracking = true;
+        if (midicentsFromPartialTracking.length != 0){
+            notes = [];
+            var notesAlreadyAdded = [];
+            for (var i = 0; i < midicentsFromPartialTracking.length; i++) {
+                if (event.replaceNotes = true){
+                    midicentsFromPartialTracking[i] = replaceByNearNote([midicentsFromPartialTracking[i]], event.notes2replace)[0];
+                }
+                var partialtrackingnotes = [];
+                // check if note is already inside the array notes
+                if (!notesAlreadyAdded.includes(Math.round(midicentsFromPartialTracking[i]))){ // all notes have the same probability
+                    partialtrackingnotes.push(midicent2note(midicentsFromPartialTracking[i]));
+                    partialtrackingnotes.push(Math.round(midicentsFromPartialTracking[i]));
+                    notes.push(partialtrackingnotes);
+                    notesAlreadyAdded.push(Math.round(midicentsFromPartialTracking[i]));
+                }
+            }
+            // console.log("Array not empty");
+            // get title
+            var title = document.getElementById("PageTitle");
+            title.innerHTML = "Array not empty";
+        }
+        else{
+            console.log("Array empty");
+            var title = document.getElementById("PageTitle");
+            title.innerHTML = "Array empty";
+        }
+    }
+    // ========================================================
+    // console.log("notes: " + notes);
     // ========================================================
 
-    // remove not valid notes
     for (var i = 0; i < notes.length; i++) {
         if (notes[i][1] <= higherNote && notes[i][1] >= lowerNote) {
             var note = notes[i][0];
@@ -374,20 +278,31 @@ function StartMicroEvent(event, eventDuration) {
             goodNotesProbabilities.push(notesProbabilities[i]);
         }
     }
+    // console.log("Good notes: " + goodNotes);
     if (goodNotes.length > 0) {
-        var noteAndMidicent = chooseWithProbabilities(goodNotes, goodNotesProbabilities);
+        // notes
+        if (event.mkPartialTracking == false) {
+            var noteAndMidicent = chooseWithProbabilities(goodNotes, goodNotesProbabilities);
+        }
+        else{
+            var randomIndex = Math.floor(Math.random() * goodNotes.length);
+            console.log("randomIndex: " + randomIndex);
+            console.log("goodNotes: " + goodNotes);
+            var noteAndMidicent = goodNotes[randomIndex];
+        }
         var note = noteAndMidicent[0];
         var midicent = noteAndMidicent[1];
+
         // silabas
         var syllables = event.syllables;
         var syllablesProbabilities = event.syllablesProbabilities;
         var syllable = chooseWithProbabilities(syllables, syllablesProbabilities);
         var noteNameString = note[0]
-        var pngFile = "/notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
+        var pngFile = "notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
         pngFile = pngFile.replace("#", "s");
     }
     else{
-        var pngFile = "/pausa.png";
+        var pngFile = "public/pausa.png";
         midicent = 0;
     }
     event.duration = eventDuration;
@@ -499,7 +414,7 @@ async function syncStart() {
     var delayTime = startPieceTimeMs - now;
     var completePhrase = document.getElementById("completePhrase");
     var allMediumEvents;
-    // delayTime = 0;
+    delayTime = 0;
 
     delay(delayTime).then(function() {
         startMediumEvents(1);

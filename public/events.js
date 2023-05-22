@@ -50,6 +50,9 @@ class MicroEvent {
         this.microEventString = "";
         this.possibleDurations = [];
         this.mkPartialTracking = false;
+        this.clearPartialTracking = false;
+        this.replaceNotes = false;
+        this.notes2replace = [];
     }
     
     getDuration(){
@@ -140,23 +143,6 @@ function createPieceEvents(eventNumber) {
     return new PieceEvent(eventNumber);    
 }
 
-
-
-
-
-// =====================================
-
-// ++++++++++++++++++++++++++++++++
-function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-// // ++++++++++++++++++++++++++++++++
-// function listRandom(list){
-//     var index = randomInt(0, list.length - 1);
-//     return list[index];
-// }
-
 // =========================================================== //
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++ ALL EVENTS ++++++++++++++++ ALL EVENTS +++++++++ //
@@ -171,10 +157,12 @@ let microEvent;
 
 pieceEvents = createPieceEvents();
 
+
+/*
+
 // ++++++++++++++++++++++++++++++++
 // ++++++++++ MACRO Event 1 +++++++
 // ++++++++++++++++++++++++++++++++
-
 macroEvent = createMacroEvent(1);
 let microEventTuplet= randomInt(1, 3);
 console.log("Tuplet variation of Macro event 1: " + microEventTuplet);
@@ -806,3 +794,43 @@ pieceEvents.add(macroEvent);
 if (pieceEvents.getDuration() != 100000){
     alert("Algum erro aconteceu, recarregue a página");
 }
+
+*/
+
+
+// ++++++++++++++++++++++++++++++++
+// ++++++++++ MACRO Event 3 +++++++
+// ++++++++++++++++++++++++++++++++
+
+macroEvent = createMacroEvent(3);
+microEventTuplet = 1;  //randomInt(1, 1);
+console.log("Tuplet variation of Macro event 3: " + microEventTuplet);
+
+if (microEventTuplet == 1) {
+    // -------- microEvent 3.1 --------
+    mediumEvent = createMediumEvent(5);
+    var tupletValue = randomInt(6, 10);
+    totalDuration = 0;
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 30000 / tupletValue;
+        totalDuration += tupletValueMs;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.notes = [["e4+", 6413], ["b3+", 5915], ["g#4", 6800], ["d3-", 4982], ["f#3+", 5417], ["a#3-", 5765], ["c#4-", 6054], ["d#4+", 6301]];
+        microEvent.notesProbabilities = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]; 
+        microEvent.syllables = ["tu", "do"];
+        microEvent.syllablesProbabilities = [0.5, 0.5];
+        microEvent.notes2replace = [6000, 6701.96, 6386.31, 6968.83, 6203.91, 6551.32];
+        microEvent.completePhrase = "tudo.";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.replaceNotes = true;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "3.1." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+    pieceEvents.add(macroEvent);
+}
+
+
