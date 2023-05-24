@@ -18,7 +18,7 @@ Chão,
 pensou que a terra nasceu.
 
 Tocou-se, ilusão,
-Sentiu-se centro do Todo,
+Sentiu-se centro,
 Julgou-se divino.
 
 Homem criado.

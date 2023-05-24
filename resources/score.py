@@ -123,7 +123,6 @@ def chord(pitches, silaba):
     thepitch = pitches[0]
     # replace # by s in thepitch
     thepitch = thepitch.replace('#', 's')
-
     notePathName = py4pdTMPfolder + thepitch + "-" + silaba + ".png"
     neoscore.render_image(rect=None, dest=notePathName, dpi=600, wait=True)
     neoscore.shutdown()
@@ -170,7 +169,8 @@ def create_note(notename, accidental, octave, silaba):
     chord(notename + accidental + str(octave), silaba)
 
 
-silabas = ["Ha", "vi", "a", "tu", "do", "Cri", "ou", "se", "o", "na", "da", "tan", "to", "tu", "do", "to", "cou", "a", "á", "gua", "a", "chou", "vi", "da", "ao", "o", "ce", "a", "no", "fun", "da", "do", "chão", "pen", "sou", "que", "a", "ter", "ra", "nas", "ceu"]
+silabas = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+
 silabas = list(dict.fromkeys(silabas))
 
 notenames = ["c", "d", "e", "f", "g", "a", "b"]
@@ -178,7 +178,7 @@ totalofIterations = len(silabas) * len(notenames) * 7 * 3
 
 for silaba in silabas:
     for notename in notenames:
-        accidentals = ["", "+", "-", "#", "b", "#+", "b-"]
+        accidentals = ["", "+", "#", "#+"]
         for accidental in accidentals:
             for octave in range(2, 6):
                 # excludes all notes that are low that G2
