@@ -100,7 +100,7 @@ function midicent2note(midicent){
     var midi = Math.round(midi);
     var diff = ((midicent * 0.01) - midi) * 100;
     var noteString = "";
-    var classNote = midi % 12;
+    var classNote = Math.floor(midi % 12);
     var octave = Math.floor(midi / 12) - 1;
     if (classNote == 0){
         noteString = "c";
@@ -139,7 +139,7 @@ function midicent2note(midicent){
         noteString = "b";
     }
     else {
-        alert("Erro ao identificar a nota");
+        alert("Erro ao identificar a nota musical. ClassNote: " + classNote + " Midi: " + midicent);
     }
     
     if (diff > 40 && diff < 60){
@@ -159,4 +159,35 @@ function midicent2note(midicent){
         noteString = noteString + octave;
     }
     return noteString;
+}
+
+// ========================================================
+async function delay(ms) {
+    completePhrase = document.getElementById("completePhrase");
+    var img = document.getElementById("imgNote");
+    completePhrase.style.color = "red";
+    var cicles = Math.floor(ms / 1000);
+    now = new Date().getTime();
+    var end = now + ms;
+    while (now < end) {
+        now = new Date().getTime();
+        var timeLeft = end - now;
+        var ciclesLeft = Math.floor(timeLeft / 1000);
+        completePhrase.innerHTML = "Aguarde " + ciclesLeft + " segundos...";
+        if (ciclesLeft > 29) {
+            completePhrase.style.color = "green";
+        }
+        else if (ciclesLeft > 15 && ciclesLeft <= 29) {
+            completePhrase.style.color = "#FFBF00";
+        }
+        else if (ciclesLeft <= 15) {
+            completePhrase.style.color = "red";
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1));
+    }
+    var pngFile = "public/respire.png";
+    img.src = pngFile;
+    completePhrase.innerHTML = "";
+    completePhrase.style.color = "black";
+    return;
 }

@@ -3,7 +3,9 @@
 // set global variables
 var streamAudioForPartialTracking = false;
 var clearPartialTracking = false;
-var midicentsFromPartialTracking = [];
+// const midicentsFromPartialTracking = [];
+window.midicentsFromPartialTracking = [];
+window.doingPartialTracking = false;
 
 
 // =====================================================
@@ -26,29 +28,33 @@ function configFFT(dataArray, sampleRate){
         Module.ccall('fft', 'number', ['number', 'number', 'number', 'number', 'number'], [inPtr, fftSize, 0, outPtr, sampleRate]);
 
         // `outHeap` now contains the output of the FFT
-        const result = new Float32Array(Module.HEAPF32.buffer, outPtr, outArray.length);
+        const resultC = new Float32Array(Module.HEAPF32.buffer, outPtr, outArray.length);
+        const result = resultC.slice(0);
         var freqs = [];
         var amps = [];
         for (var i = 0; i < result.length / 2; i++) {
             if (result[2 * i] !=  0) {
                 var freq = result[2 * i];
                 var amp = result[2 * i + 1];
-                freqs.push(freq);
-                amps.push(amp);
+                if (freq != undefined && amp != undefined) {
+                    // copy the values to the array, I will free the memory later
+                    freqs.push(freq);
+                    amps.push(amp);
+                }
             }
         }
+        for (var a = 0; a < freqs.length; a++) {
+            var partialTrackingResult = freq2MidiCent(freqs[a]);
+            if (partialTrackingResult !== undefined) {
+                window.midicentsFromPartialTracking.push(partialTrackingResult);
+            }
+
+        }
+        console.log(window.midicentsFromPartialTracking);
         Module._free(outPtr);
         Module._free(inPtr);
-
-        
-        if (freqs.length != 0 && clearPartialTracking == true) {
-            midicentsFromPartialTracking = [];
-        }
-
-
-        for (var i = 0; i < freqs.length; i++) {
-            midicentsFromPartialTracking.push(freq2MidiCent(freqs[i]));
-        }
+        window.doingPartialTracking = false;
+        console.log("FFT done");
         return;
     }
 }
@@ -151,6 +157,18 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     // =====================
     img = document.getElementById("imgNote");
     pngPitchFile = "public/" + pngPitchFile;
+    
+    // check if pngPitchFile exists
+    var http = new XMLHttpRequest();
+    http.open('HEAD', pngPitchFile, false);
+    http.send();
+    if (http.status == 404) {
+        pngPitchFile = "public/pausa.png";
+        midicent = 0;
+        img.src = pngPitchFile;
+        return;
+    }
+
     img.src = pngPitchFile;
     var durationMs = eventDuration - eventClass.breathTime;
     var durationSec = durationMs / 1000;
@@ -213,12 +231,7 @@ function StartMicroEvent(event, eventDuration) {
     // notas
     var notes = event.notes; 
     var notesProbabilities = event.notesProbabilities;
-    if (event.clearPartialTracking == true){
-        clearPartialTracking = true;
-    }
-    else{
-        clearPartialTracking = false;
-    }
+
 
     if (thisNaipe == undefined){
         setTheNaipe();
@@ -239,20 +252,21 @@ function StartMicroEvent(event, eventDuration) {
      // NOTE: Here is where I execute the partial tracking
     if (event.mkPartialTracking == true) {
         streamAudioForPartialTracking = true;
-        if (midicentsFromPartialTracking.length != 0){
+        if (window.midicentsFromPartialTracking.length != 0){
             notes = [];
+            var localMidicentsOfPartialTracking = window.midicentsFromPartialTracking.slice();
             var notesAlreadyAdded = [];
-            for (var i = 0; i < midicentsFromPartialTracking.length; i++) {
-                if (event.replaceNotes = true){
-                    midicentsFromPartialTracking[i] = replaceByNearNote([midicentsFromPartialTracking[i]], event.notes2replace)[0];
+            for (var i = 0; i < localMidicentsOfPartialTracking.length; i++) {
+                if (event.replaceNotes === true){
+                    localMidicentsOfPartialTracking[i] = replaceByNearNote([localMidicentsOfPartialTracking[i]], event.notes2replace)[0];
                 }
                 var partialtrackingnotes = [];
                 // check if note is already inside the array notes
-                if (!notesAlreadyAdded.includes(Math.round(midicentsFromPartialTracking[i]))){ // all notes have the same probability
-                    partialtrackingnotes.push(midicent2note(midicentsFromPartialTracking[i]));
-                    partialtrackingnotes.push(Math.round(midicentsFromPartialTracking[i]));
+                if (!notesAlreadyAdded.includes(Math.round(localMidicentsOfPartialTracking[i])) && localMidicentsOfPartialTracking[i] != undefined){
+                    partialtrackingnotes.push(midicent2note(localMidicentsOfPartialTracking[i]));
+                    partialtrackingnotes.push(Math.round(localMidicentsOfPartialTracking[i]));
                     notes.push(partialtrackingnotes);
-                    notesAlreadyAdded.push(Math.round(midicentsFromPartialTracking[i]));
+                    notesAlreadyAdded.push(Math.round(localMidicentsOfPartialTracking[i]));
                 }
             }
             console.log("Array not empty");
@@ -261,6 +275,12 @@ function StartMicroEvent(event, eventDuration) {
             console.log("Array empty");
         }
     }
+
+    if (event.clearPartialTracking == true){
+        console.log("Clearing array of partial tracking");
+        window.midicentsFromPartialTracking = [];
+    }
+    
     // ========================================================
     // console.log("notes: " + notes);
     // ========================================================
@@ -272,8 +292,15 @@ function StartMicroEvent(event, eventDuration) {
             goodNotesProbabilities.push(notesProbabilities[i]);
         }
     }
-    // console.log("Good notes: " + goodNotes);
-    if (goodNotes.length > 0) {
+
+    var breathEvent = false;
+    if (event.breath === true) {
+        if (Math.random() < event.breathProbability) { // this that if the Math.random() is 
+            console.log("Breath Event");
+            breathEvent = true; 
+        }
+    }
+    if (goodNotes.length > 0 && breathEvent === false) {
         // notes
         if (event.mkPartialTracking == false) {
             var noteAndMidicent = chooseWithProbabilities(goodNotes, goodNotesProbabilities);
@@ -281,6 +308,7 @@ function StartMicroEvent(event, eventDuration) {
         else{
             var randomIndex = Math.floor(Math.random() * goodNotes.length);
             var noteAndMidicent = goodNotes[randomIndex];
+            console.log(noteAndMidicent);
         }
         var note = noteAndMidicent[0];
         var midicent = noteAndMidicent[1];
@@ -294,6 +322,7 @@ function StartMicroEvent(event, eventDuration) {
         pngFile = pngFile.replace("#", "s");
     }
     else{
+        console.log("No good notes or breath event");
         var pngFile = "public/pausa.png";
         midicent = 0;
     }
@@ -343,37 +372,6 @@ async function startMediumEvents(eventNumber) {
 }
 
 // ========================================================
-async function delay(ms) {
-    completePhrase = document.getElementById("completePhrase");
-    var img = document.getElementById("imgNote");
-    completePhrase.style.color = "red";
-    var cicles = Math.floor(ms / 1000);
-    now = new Date().getTime();
-    var end = now + ms;
-    while (now < end) {
-        now = new Date().getTime();
-        var timeLeft = end - now;
-        var ciclesLeft = Math.floor(timeLeft / 1000);
-        completePhrase.innerHTML = "Aguarde " + ciclesLeft + " segundos...";
-        if (ciclesLeft > 29) {
-            completePhrase.style.color = "green";
-        }
-        else if (ciclesLeft > 15 && ciclesLeft <= 29) {
-            completePhrase.style.color = "#FFBF00";
-        }
-        else if (ciclesLeft <= 15) {
-            completePhrase.style.color = "red";
-        }
-        await new Promise((resolve) => setTimeout(resolve, 1));
-    }
-    var pngFile = "public/respire.png";
-    img.src = pngFile;
-    completePhrase.innerHTML = "";
-    completePhrase.style.color = "black";
-    return;
-}
-
-// ========================================================
 async function syncStart() {
     if (thisNaipe == undefined) {
         setTheNaipe();
@@ -395,7 +393,7 @@ async function syncStart() {
     var delayTime = startPieceTimeMs - now;
     var completePhrase = document.getElementById("completePhrase");
     var allMediumEvents;
-    delayTime = 0;
+    // delayTime = 0;
 
     delay(delayTime).then(function() {
         startMediumEvents(1);
