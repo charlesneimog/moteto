@@ -132,21 +132,32 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     completePhrase.style.position = "absolute";
     completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
 
-    // set the color of the bar
     if (midicent != 0) {
         var pngFile = "respire.png";
         pngFile = "public/" + pngFile;
         var eventDuration = eventClass.duration;
         img.src = pngFile;
+        completePhrase.innerHTML = eventClass.completePhrase;
     }
     else{
         img.src = pngPitchFile; 
-        completePhrase.innerHTML = "Nenhuma nota encontrada.";
+        if (pngPitchFile == "public/pausa.png") {
+            completePhrase.innerHTML = "";
+
+        }
+        else if (pngPitchFile == "public/respire.png") {
+            completePhrase.innerHTML = " _ ";
+        }
+        else if (pngPitchFile == "public/ouvir.png") {
+            completePhrase.innerHTML = " _ ";
+        }
+        else {
+            completePhrase.innerHTML = "Nenhuma nota encontrada.";
+        }
         await new Promise((resolve) => setTimeout(resolve, eventClass.breathTime));
         return;
 
     }
-    completePhrase.innerHTML = "";
 
     // delay for breathTime
     // =====================
@@ -159,15 +170,15 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     pngPitchFile = "public/" + pngPitchFile;
     
     // check if pngPitchFile exists
-    var http = new XMLHttpRequest();
-    http.open('HEAD', pngPitchFile, false);
-    http.send();
-    if (http.status == 404) {
-        pngPitchFile = "public/pausa.png";
-        midicent = 0;
-        img.src = pngPitchFile;
-        return;
-    }
+    // var http = new XMLHttpRequest();
+    // http.open('HEAD', pngPitchFile, false);
+    // http.send();
+    // if (http.status == 404) {
+    //     pngPitchFile = "public/pausa.png";
+    //     midicent = 0;
+    //     img.src = pngPitchFile;
+    //     return;
+    // }
 
     img.src = pngPitchFile;
     var durationMs = eventDuration - eventClass.breathTime;
@@ -178,7 +189,7 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
 
     // Send to PureData (simulating)
     // =====================
-    if (onWebSite == false) {
+    if (onWebSite === false) {
         var xhr = new XMLHttpRequest();
         var host = window.location.hostname;
         var port = window.location.port;
@@ -206,7 +217,6 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
         Module._free(samplesPtr);
     }
     completePhrase.innerHTML = eventClass.completePhrase; //     TODO: SHOW THE PHRASE AND BOLD SYLLABLES
-
 }
 
 // ++++++++++++++++++++++++
@@ -321,6 +331,10 @@ function StartMicroEvent(event, eventDuration) {
         var pngFile = "notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
         pngFile = pngFile.replace("#", "s");
     }
+    else if (breathEvent === true){
+        var pngFile = "public/ouvir.png";
+        midicent = 0;
+    }
     else{
         console.log("No good notes or breath event");
         var pngFile = "public/pausa.png";
@@ -393,7 +407,7 @@ async function syncStart() {
     var delayTime = startPieceTimeMs - now;
     var completePhrase = document.getElementById("completePhrase");
     var allMediumEvents;
-    // delayTime = 0;
+    delayTime = 0;
 
     delay(delayTime).then(function() {
         startMediumEvents(1);
