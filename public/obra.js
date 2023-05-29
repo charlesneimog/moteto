@@ -407,7 +407,7 @@ async function syncStart() {
     var delayTime = startPieceTimeMs - now;
     var completePhrase = document.getElementById("completePhrase");
     var allMediumEvents;
-    delayTime = 0;
+    // delayTime = 0;
 
     delay(delayTime).then(function() {
         startMediumEvents(1);

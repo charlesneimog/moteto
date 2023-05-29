@@ -178,7 +178,7 @@ totalofIterations = len(silabas) * len(notenames) * 7 * 3
 
 for silaba in silabas:
     for notename in notenames:
-        accidentals = ["", "+", "#", "#+"]
+        accidentals = ["", "+", "#", "#+", "-"]
         for accidental in accidentals:
             for octave in range(2, 6):
                 # excludes all notes that are low that G2
