@@ -164,6 +164,7 @@ pieceEvents = createPieceEvents();
 // ++++++++++ MACRO Event 1 +++++++
 // ++++++++++++++++++++++++++++++++
 
+// /*
 macroEvent = createMacroEvent(1);
 let microEventTuplet= randomInt(1, 3);
 console.log("Tuplet variation of Macro event 1: " + microEventTuplet);
@@ -1033,7 +1034,7 @@ else if (microEventTuplet == 3) {
 //     alert("Algum erro aconteceu, duração total: " + pieceEvents.getDuration());
 // }
 //
-// */
+// 
 
 // ++++++++++++++++++++++++++++++++
 // ++++++++++ MACRO Event 4 +++++++
@@ -1105,44 +1106,690 @@ if (Math.round(pieceEvents.getDuration()) != (167500 + 60000)){
     alert("Algum erro aconteceu, duração total: " + pieceEvents.getDuration());
 }
 
+
 // ++++++++++++++++++++++++++++++++
 // ++++++++++ MACRO Event 5 +++++++
 // ++++++++++++++++++++++++++++++++
-
+microEventTuplet = randomInt(1, 4);
+console.log("Tuplet variation of Macro event 5: " + microEventTuplet);
 macroEvent = createMacroEvent(5);
-// -------- microEvent 5.1 --------
-mediumEvent = createMediumEvent(13);
-var tupletValue = randomInt(5, 10);
-var breathTimeValue = 500;
-for (var i = 0; i < tupletValue; i++) {
-    var tupletValueMs = 30000 / tupletValue;
-    microEvent = createMicroEvent(i + 1);
-    microEvent.mkPartialTracking = true;
-    // var replaceNotes = Math.Random > 0.7; // 30% de chance de trocar as notas
-    // microEvent.replaceNotes = replaceNotes;
-    // microEvent.notes = [["e4", 6386], ["b4", 7087.96], ["g#4", 6772.31], ["c#+4", 6154.83], ["f#+4", 6589.91], ["a4", 6937.32], ["c+4", 6026.53], ["d#4", 6274.27]];
-    // microEvent.notes2replace = [6600, 6182, 6947, 6853, 6431, 7194, 6449, 6378]
-    // microEvent.replacenotes = true;
-    // microEvent.notesProbabilities = [0.1, 0.1, 0.1, 0.1, 0.1, 0.15, 0.15, 0.1];
-    microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
-    var probabilitiesList = [];
-    for (var j = 0; j < 61; j++){
-        probabilitiesList.push(1/80);
-    }
-    probabilitiesList.push(1/20); // Ho
-    probabilitiesList.push(1/20); // mem
-    probabilitiesList.push(1/20); // cri
-    probabilitiesList.push(1/20); // a
-    probabilitiesList.push(1/20); // do
-    microEvent.syllablesProbabilities = probabilitiesList;
-    microEvent.breath = false;
-    microEvent.breathProbability = 0.25;
-    microEvent.completePhrase = "";
-    microEvent.breathTime = breathTimeValue;
-    microEvent.possibleDurations = [tupletValueMs];
-    microEvent.microEventString = "5.1." + (i + 1);
-    mediumEvent.add(microEvent);
-}
-macroEvent.add(mediumEvent);
-pieceEvents.add(macroEvent);
 
+if (microEventTuplet == 1) {
+    // -------- microEvent 5.1 --------
+    mediumEvent = createMediumEvent(13);
+    var tupletValue = randomInt(5, 8);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 30000 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.25;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.1." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 5.2 --------
+    mediumEvent = createMediumEvent(14);
+    var tupletValue = randomInt(5, 8);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 27500 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        var replaceNotesProb = Math.random();
+        if (replaceNotesProb < 0.3) {
+            microEvent.replaceNotes = true;
+            microEvent.notes2replace = [6600, 6182, 6947, 6853, 6431, 7194, 6449, 6378];
+        }
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.4;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.2." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 5.3 --------
+    mediumEvent = createMediumEvent(15);
+    var tupletValue = randomInt(5, 8);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 22500 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        var replaceNotesProb = Math.random();
+        if (replaceNotesProb < 0.75) {
+            microEvent.replaceNotes = true;
+            microEvent.notes2replace = [6600, 6182, 6947, 6853, 6431, 7194, 6449, 6378];
+        }
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.75;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.3." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 5.4 --------
+    mediumEvent = createMediumEvent(15);
+    var tupletValue = randomInt(5, 8);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 20000 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        var replaceNotesProb = Math.random();
+        if (replaceNotesProb < 0.9) {
+            microEvent.replaceNotes = true;
+            microEvent.notes2replace = [6600, 6182, 6947];
+        }
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.9;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.4." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+        // -------- microEvent 5.5 --------
+    mediumEvent = createMediumEvent(16);
+    var tupletValue = randomInt(5, 8);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 10000 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        microEvent.replaceNotes = true;
+        microEvent.notes2replace = [6600, 6182, 6947];
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.75;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.5." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+    pieceEvents.add(macroEvent);
+}
+
+else if (microEventTuplet == 2) {
+    // -------- microEvent 5.1 --------
+    mediumEvent = createMediumEvent(13);
+    var tupletValue = randomInt(4, 6);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 25000 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.25;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.1." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 5.2 --------
+    mediumEvent = createMediumEvent(14);
+    var tupletValue = randomInt(10, 15);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 45000 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        var replaceNotesProb = Math.random();
+        if (replaceNotesProb < 0.3) {
+            microEvent.replaceNotes = true;
+            microEvent.notes2replace = [6600, 6182, 6947, 6853, 6431, 7194, 6449, 6378];
+        }
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.4;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.2." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 5.3 --------
+    mediumEvent = createMediumEvent(15);
+    var tupletValue = randomInt(3, 5);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 15000 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        var replaceNotesProb = Math.random();
+        if (replaceNotesProb < 0.75) {
+            microEvent.replaceNotes = true;
+            microEvent.notes2replace = [6600, 6182, 6947, 6853, 6431, 7194, 6449, 6378];
+        }
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.75;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.3." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 5.4 --------
+    mediumEvent = createMediumEvent(15);
+    var tupletValue = randomInt(3, 5);
+    var breathTimeValue = 400;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 17500 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        var replaceNotesProb = Math.random();
+        if (replaceNotesProb < 0.9) {
+            microEvent.replaceNotes = true;
+            microEvent.notes2replace = [6600, 6182, 6947];
+        }
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.9;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.4." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+        // -------- microEvent 5.5 --------
+    mediumEvent = createMediumEvent(16);
+    var tupletValue = randomInt(1, 2);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 7500 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        microEvent.replaceNotes = true;
+        microEvent.notes2replace = [6600, 6182, 6947];
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.75;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.5." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+    pieceEvents.add(macroEvent);
+}
+
+else if (microEventTuplet == 3) {
+    // -------- microEvent 5.1 --------
+    mediumEvent = createMediumEvent(13);
+    var tupletValue = randomInt(7, 9);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 35000 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.25;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.1." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 5.2 --------
+    mediumEvent = createMediumEvent(14);
+    var tupletValue = randomInt(4, 6);
+    var breathTimeValue = 300;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 20000 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        var replaceNotesProb = Math.random();
+        if (replaceNotesProb < 0.3) {
+            microEvent.replaceNotes = true;
+            microEvent.notes2replace = [6600, 6182, 6947, 6853, 6431, 7194, 6449, 6378];
+        }
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.4;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.2." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 5.3 --------
+    mediumEvent = createMediumEvent(15);
+    var tupletValue = randomInt(3, 5);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 20000 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        var replaceNotesProb = Math.random();
+        if (replaceNotesProb < 0.75) {
+            microEvent.replaceNotes = true;
+            microEvent.notes2replace = [6600, 6182, 6947, 6853, 6431, 7194, 6449, 6378];
+        }
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.75;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.3." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 5.4 --------
+    mediumEvent = createMediumEvent(15);
+    var tupletValue = randomInt(3, 5);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 22500 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        var replaceNotesProb = Math.random();
+        if (replaceNotesProb < 0.9) {
+            microEvent.replaceNotes = true;
+            microEvent.notes2replace = [6600, 6182, 6947];
+        }
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.9;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.4." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+        // -------- microEvent 5.5 --------
+    mediumEvent = createMediumEvent(16);
+    var tupletValue = randomInt(1, 2);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 12500 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        microEvent.replaceNotes = true;
+        microEvent.notes2replace = [6600, 6182, 6947];
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.75;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.5." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+    pieceEvents.add(macroEvent);
+}
+
+else if (microEventTuplet == 4) {
+    // -------- microEvent 5.1 --------
+    mediumEvent = createMediumEvent(13);
+    var tupletValue = randomInt(7, 9);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 37500 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.25;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.1." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 5.2 --------
+    mediumEvent = createMediumEvent(14);
+    var tupletValue = randomInt(4, 6);
+    var breathTimeValue = 300;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 22500 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        var replaceNotesProb = Math.random();
+        if (replaceNotesProb < 0.3) {
+            microEvent.replaceNotes = true;
+            microEvent.notes2replace = [6600, 6182, 6947, 6853, 6431, 7194, 6449, 6378];
+        }
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.4;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.2." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 5.3 --------
+    mediumEvent = createMediumEvent(15);
+    var tupletValue = randomInt(3, 5);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 20000 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        var replaceNotesProb = Math.random();
+        if (replaceNotesProb < 0.75) {
+            microEvent.replaceNotes = true;
+            microEvent.notes2replace = [6600, 6182, 6947, 6853, 6431, 7194, 6449, 6378];
+        }
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.75;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.3." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+    // -------- microEvent 5.4 --------
+    mediumEvent = createMediumEvent(15);
+    var tupletValue = randomInt(2, 4);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 12500 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        var replaceNotesProb = Math.random();
+        if (replaceNotesProb < 0.9) {
+            microEvent.replaceNotes = true;
+            microEvent.notes2replace = [6600, 6182, 6947];
+        }
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.9;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.4." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+
+        // -------- microEvent 5.5 --------
+    mediumEvent = createMediumEvent(16);
+    var tupletValue = randomInt(3, 5);
+    var breathTimeValue = 500;
+    for (var i = 0; i < tupletValue; i++) {
+        var tupletValueMs = 17500 / tupletValue;
+        microEvent = createMicroEvent(i + 1);
+        microEvent.mkPartialTracking = true;
+        // prob to replace notes
+        microEvent.replaceNotes = true;
+        microEvent.notes2replace = [6600, 6182, 6947];
+        microEvent.syllables = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
+        var probabilitiesList = [];
+        for (var j = 0; j < 61; j++){
+            probabilitiesList.push(1/80);
+        }
+        probabilitiesList.push(1/20); // Ho
+        probabilitiesList.push(1/20); // mem
+        probabilitiesList.push(1/20); // cri
+        probabilitiesList.push(1/20); // a
+        probabilitiesList.push(1/20); // do
+        microEvent.syllablesProbabilities = probabilitiesList;
+        microEvent.breath = true;
+        microEvent.breathProbability = 0.75;
+        microEvent.completePhrase = "";
+        microEvent.breathTime = breathTimeValue;
+        microEvent.possibleDurations = [tupletValueMs];
+        microEvent.microEventString = "5.5." + (i + 1);
+        mediumEvent.add(microEvent);
+    }
+    macroEvent.add(mediumEvent);
+    pieceEvents.add(macroEvent);
+}
+
+if (Math.round(pieceEvents.getDuration()) != (110000 + 167500 + 60000)){
+    alert("Algum erro aconteceu, duração total: " + pieceEvents.getDuration());
+}
