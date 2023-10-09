@@ -189,18 +189,19 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
 
     // Send to PureData (simulating)
     // =====================
-    if (onWebSite === false) {
-        var xhr = new XMLHttpRequest();
-        var host = window.location.hostname;
-        var port = window.location.port;
-        var protocol = window.location.protocol;
-        var url = protocol + '//' + host + ':' + port + '/send2pd'; 
-        xhr.open('POST', url, true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        var playValues = [midicent, durationMs];
-        xhr.send(JSON.stringify({'play': playValues}));
-    }
-    else{
+    onwebSite = true;
+    // if (onWebSite === false) {
+    //     var xhr = new XMLHttpRequest();
+    //     var host = window.location.hostname;
+    //     var port = window.location.port;
+    //     var protocol = window.location.protocol;
+    //     var url = protocol + '//' + host + ':' + port + '/send2pd'; 
+    //     xhr.open('POST', url, true);
+    //     xhr.setRequestHeader('Content-Type', 'application/json');
+    //     var playValues = [midicent, durationMs];
+    //     xhr.send(JSON.stringify({'play': playValues}));
+    // }
+    // else{
         Module.HEAPF64.set(samples, samplesPtr >> 3);
         Module.ccall(   
             'generate_sine_wave', 'number', ['number', 'number', 'number', 'number'], 
@@ -215,7 +216,7 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
         source.connect(audioContext.destination);
         source.start();
         Module._free(samplesPtr);
-    }
+    // }
     completePhrase.innerHTML = eventClass.completePhrase; //     TODO: SHOW THE PHRASE AND BOLD SYLLABLES
 }
 
