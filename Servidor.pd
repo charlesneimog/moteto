@@ -84,7 +84,7 @@
 #X f 24;
 #X text 44 225 Click here to start the performance!;
 #X text 30 261 10s for sync... You can change it.;
-#N canvas 10 682 450 300 config 1;
+#N canvas 10 682 450 300 config 0;
 #X obj 3 50 py4pd -lib pyFunc;
 #X obj 3 32 declare -path else;
 #X restore 57 3 pd config;

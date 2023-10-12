@@ -170,6 +170,7 @@ async function delay(ms) {
     now = new Date().getTime();
     var end = now + ms;
     while (now < end) {
+        // console.log("running");
         now = new Date().getTime();
         var timeLeft = end - now;
         var ciclesLeft = Math.floor(timeLeft / 1000);
@@ -183,7 +184,7 @@ async function delay(ms) {
         else if (ciclesLeft <= 15) {
             completePhrase.style.color = "red";
         }
-        await new Promise((resolve) => setTimeout(resolve, 1));
+        await new Promise((resolve) => setTimeout(resolve, 40));
     }
     var pngFile = "public/respire.png";
     img.src = pngFile;

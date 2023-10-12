@@ -3,6 +3,7 @@
 // set global variables
 var streamAudioForPartialTracking = false;
 var clearPartialTracking = false;
+var lastPartialTracking = new Date().getTime();
 // const midicentsFromPartialTracking = [];
 window.midicentsFromPartialTracking = [];
 window.doingPartialTracking = false;
@@ -14,7 +15,14 @@ function configFFT(dataArray, sampleRate){
     if (dataArray.length != fftSize) {
         return;
     }
+    var now = new Date().getTime();
+    // just make fft each 0.25 seconds
+    if (now - lastPartialTracking < 250) {
+        return;
+    }
     else {
+        lastPartialTracking = now;
+        // console.log("Fazendo FFT");
         const inArray = new Float64Array(dataArray);
         const inPtr = Module._malloc(inArray.length * inArray.BYTES_PER_ELEMENT);
         const inHeap = new Float64Array(Module.HEAPF64.buffer, inPtr, inArray.length);
@@ -22,7 +30,7 @@ function configFFT(dataArray, sampleRate){
 
         const outArray = new Float32Array(fftSize);
         const outPtr = Module._malloc(outArray.length * outArray.BYTES_PER_ELEMENT);
-        const outHeap = new Float32Array(Module.HEAPF32.buffer, outPtr, outArray.length);
+        // const outHeap = new Float32Array(Module.HEAPF32.buffer, outPtr, outArray.length);
         
         // call the function
         Module.ccall('fft', 'number', ['number', 'number', 'number', 'number', 'number'], [inPtr, fftSize, 0, outPtr, sampleRate]);
@@ -37,7 +45,6 @@ function configFFT(dataArray, sampleRate){
                 var freq = result[2 * i];
                 var amp = result[2 * i + 1];
                 if (freq != undefined && amp != undefined) {
-                    // copy the values to the array, I will free the memory later
                     freqs.push(freq);
                     amps.push(amp);
                 }
@@ -50,11 +57,11 @@ function configFFT(dataArray, sampleRate){
             }
 
         }
-        console.log(window.midicentsFromPartialTracking);
+        // console.log(window.midicentsFromPartialTracking);
         Module._free(outPtr);
         Module._free(inPtr);
         window.doingPartialTracking = false;
-        console.log("FFT done");
+        // console.log("FFT done");
         return;
     }
 }
@@ -124,11 +131,11 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     // show the breath image
     var img = document.getElementById("imgNote");
     completePhrase = document.getElementById("completePhrase");
-    var div = document.getElementById('DurationBar');
+    // var div = document.getElementById('DurationBar');
     // div.style.color = "red";
     var imgNotePos = img.getBoundingClientRect();
-    var imgNoteWidth = imgNotePos.width;
-    var imgNoteHeight = imgNotePos.height;
+    // var imgNoteWidth = imgNotePos.width;
+    // var imgNoteHeight = imgNotePos.height;
     completePhrase.style.position = "absolute";
     completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
 
@@ -187,36 +194,21 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
     var samples = new Float64Array(samples);
     var samplesPtr = Module._malloc(samples.length * samples.BYTES_PER_ELEMENT);
 
-    // Send to PureData (simulating)
-    // =====================
     onwebSite = true;
-    // if (onWebSite === false) {
-    //     var xhr = new XMLHttpRequest();
-    //     var host = window.location.hostname;
-    //     var port = window.location.port;
-    //     var protocol = window.location.protocol;
-    //     var url = protocol + '//' + host + ':' + port + '/send2pd'; 
-    //     xhr.open('POST', url, true);
-    //     xhr.setRequestHeader('Content-Type', 'application/json');
-    //     var playValues = [midicent, durationMs];
-    //     xhr.send(JSON.stringify({'play': playValues}));
-    // }
-    // else{
-        Module.HEAPF64.set(samples, samplesPtr >> 3);
-        Module.ccall(   
-            'generate_sine_wave', 'number', ['number', 'number', 'number', 'number'], 
-            [midicent2Freq(midicent), sampleRate, eventDuration - eventClass.breathTime, samplesPtr]);
-        var samples = new Float64Array(Module.HEAPF64.buffer, samplesPtr, samples.length);
-        var audioContext = new AudioContext();
-        var buffer = audioContext.createBuffer(1, samples.length, sampleRate);
-        var channelData = buffer.getChannelData(0);
-        channelData.set(Float32Array.from(samples));
-        var source = audioContext.createBufferSource();
-        source.buffer = buffer;
-        source.connect(audioContext.destination);
-        source.start();
-        Module._free(samplesPtr);
-    // }
+    Module.HEAPF64.set(samples, samplesPtr >> 3);
+    Module.ccall(   
+        'generate_sine_wave', 'number', ['number', 'number', 'number', 'number'], 
+        [midicent2Freq(midicent), sampleRate, eventDuration - eventClass.breathTime, samplesPtr]);
+    var samples = new Float64Array(Module.HEAPF64.buffer, samplesPtr, samples.length);
+    var audioContext = new AudioContext();
+    var buffer = audioContext.createBuffer(1, samples.length, sampleRate);
+    var channelData = buffer.getChannelData(0);
+    channelData.set(Float32Array.from(samples));
+    var source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioContext.destination);
+    source.start();
+    Module._free(samplesPtr);
     completePhrase.innerHTML = eventClass.completePhrase; //     TODO: SHOW THE PHRASE AND BOLD SYLLABLES
 }
 
@@ -280,7 +272,7 @@ function StartMicroEvent(event, eventDuration) {
                     notesAlreadyAdded.push(Math.round(localMidicentsOfPartialTracking[i]));
                 }
             }
-            console.log("Array not empty");
+            // console.log("Array not empty");
         }
         else{
             console.log("Array empty");
@@ -288,7 +280,7 @@ function StartMicroEvent(event, eventDuration) {
     }
 
     if (event.clearPartialTracking == true){
-        console.log("Clearing array of partial tracking");
+        // console.log("Clearing array of partial tracking");
         window.midicentsFromPartialTracking = [];
     }
     
@@ -319,7 +311,7 @@ function StartMicroEvent(event, eventDuration) {
         else{
             var randomIndex = Math.floor(Math.random() * goodNotes.length);
             var noteAndMidicent = goodNotes[randomIndex];
-            console.log(noteAndMidicent);
+            // console.log(noteAndMidicent);
         }
         var note = noteAndMidicent[0];
         var midicent = noteAndMidicent[1];
@@ -329,7 +321,7 @@ function StartMicroEvent(event, eventDuration) {
         var syllablesProbabilities = event.syllablesProbabilities;
         var syllable = chooseWithProbabilities(syllables, syllablesProbabilities);
         var noteNameString = note[0]
-        var pngFile = "notes/" + noteNameString + "/" + note + "-" + syllable + ".png";
+        var pngFile = "notes/" + noteNameString + "/" + note + "-" + syllable + ".webp";
         pngFile = pngFile.replace("#", "s");
     }
     else if (breathEvent === true){
@@ -364,7 +356,7 @@ async function startMediumEvents(eventNumber) {
     for (var i = 0; i < length; i++) {
         var event = mediumEvent.MicroEvents[i];
         var eventDuration = event.possibleDurations[0];
-        console.log("=============================");
+        // console.log("=============================");
         StartMicroEvent(event, eventDuration);
         await new Promise((resolve) => setTimeout(resolve, eventDuration));
     }
@@ -378,11 +370,13 @@ async function startMediumEvents(eventNumber) {
         img.src = "./public/fim.png";
         completePhrase = document.getElementById("completePhrase");
         var imgNotePos = img.getBoundingClientRect();
-        var imgNoteWidth = imgNotePos.width;
-        var imgNoteHeight = imgNotePos.height;
+        console.log("A obra acabou no hora: " + new Date().getHours() + ":" + new Date().getMinutes());
         completePhrase.style.position = "absolute";
         completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
         completePhrase.innerHTML = "Fim da peça! Obrigado!";
+        // wait for 5 seconds and redirect to the home page
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        // window.location.href = "https://charlesneimog.github.io/moteto/poemas.html";
     }
 }
 
@@ -394,8 +388,8 @@ async function syncStart() {
     // Get the current time in milliseconds since the epoch
     var now = new Date().getTime();
     var thisHour = new Date().getHours();
-    var thisMinutDec = Math.floor(new Date().getMinutes() / 10) * 10; // decimal of 10 minutes
-    var thisMinutUnit = new Date().getMinutes() % 10; // unit of 10 minutes
+    // var thisMinutDec = Math.floor(new Date().getMinutes() / 10) * 10; // decimal of 10 minutes
+    // var thisMinutUnit = new Date().getMinutes() % 10; // unit of 10 minutes
     var minuteSelection = document.getElementById("minute-select").value;
     minuteSelectionInt = parseInt(minuteSelection);
     var startPieceTime = new Date();
@@ -406,11 +400,12 @@ async function syncStart() {
     startPieceTime.setHours(thisHour, minuteSelectionInt, 0, 0);
     var startPieceTimeMs = startPieceTime.getTime();
     var delayTime = startPieceTimeMs - now;
-    var completePhrase = document.getElementById("completePhrase");
-    var allMediumEvents;
+    // var completePhrase = document.getElementById("completePhrase");
+    // var allMediumEvents;
     // delayTime = 0;
 
     delay(delayTime).then(function() {
+        console.log("A obra iniciu na hora: " + new Date().getHours() + ":" + new Date().getMinutes());
         startMediumEvents(1);
     });
 }

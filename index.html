@@ -172,16 +172,16 @@
                 if (onWebSite){
                     return;
                 }
-                var xhr = new XMLHttpRequest();
-                var host = window.location.hostname;
-                var port = window.location.port;
-                var protocol = window.location.protocol;
-                var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
-                xhr.open('POST', url, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                const userAgent = navigator.userAgent;
-                const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
-                xhr.send(JSON.stringify({ 'name': deviceName}));
+                // var xhr = new XMLHttpRequest();
+                // var host = window.location.hostname;
+                // var port = window.location.port;
+                // var protocol = window.location.protocol;
+                // var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
+                // xhr.open('POST', url, true);
+                // xhr.setRequestHeader('Content-Type', 'application/json');
+                // const userAgent = navigator.userAgent;
+                // const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
+                // xhr.send(JSON.stringify({ 'name': deviceName}));
             }
 
             function chooseNaipe() {
@@ -203,12 +203,12 @@
                 var host = window.location.hostname;
                 var port = window.location.port;
                 var protocol = window.location.protocol;
-                var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
-                xhr.open('POST', url, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                const userAgent = navigator.userAgent;
-                const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
-                xhr.send(JSON.stringify({ 'ok': deviceName}));
+                // var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
+                // xhr.open('POST', url, true);
+                // xhr.setRequestHeader('Content-Type', 'application/json');
+                // const userAgent = navigator.userAgent;
+                // const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
+                // xhr.send(JSON.stringify({ 'ok': deviceName}));
             }
 
             function chooseMinute() {

@@ -168,10 +168,9 @@ def create_note(notename, accidental, octave, silaba):
     print(f"Criação da nota {notename + accidental + str(octave)}-{silaba}.png")
     chord(notename + accidental + str(octave), silaba)
 
+from poema import TODAS_SILABAS
 
-silabas = ['ha', 'vi', 'a', 'tu', 'do', 'cri', 'ou', 'se', 'o', 'na', 'da', 'tan', 'to', 'tu', 'do', 'to', 'cou', 'a', 'á', 'gua', 'a', 'chou', 'vi', 'da', 'ao', 'o', 'ce', 'a', 'no', 'fun', 'da', 'do', 'chão', 'pen', 'sou', 'que', 'a', 'ter', 'ra', 'nas', 'ceu', 'to', 'cou', 'se', 'i', 'lu', 'são', 'sen', 'tiu', 'se', 'cen', 'tro', 'do', 'to', 'do', 'jul', 'gou', 'se', 'di', 'vi', 'no', 'ho', 'mem', 'cri', 'a', 'do'];
-
-silabas = list(dict.fromkeys(silabas))
+silabas = list(dict.fromkeys(TODAS_SILABAS))
 
 notenames = ["c", "d", "e", "f", "g", "a", "b"]
 totalofIterations = len(silabas) * len(notenames) * 7 * 3
