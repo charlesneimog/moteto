@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title style="text-align: center;">Moteto</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="google-site-verification" content="EH9FHt8Iu2r-GH2VW-5jDf1Sv8YFLRVfK5bzGV7K4vA"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<meta name="author" content="" />
+
+		<!-- Facebook and Twitter integration -->
+		<meta property="og:title" content=""/>
+		<meta property="og:image" content=""/>
+		<meta property="og:url" content=""/>
+		<meta property="og:site_name" content=""/>
+		<meta property="og:description" content=""/>
+		<meta name="twitter:title" content="" />
+		<meta name="twitter:image" content="" />
+		<meta name="twitter:url" content="" />
+		<meta name="twitter:card" content="" />
+		<link rel="shortcut icon" href="./favicon.ico">
+		<link href="https://fonts.googleapis.com/css?family=Karla:400,700" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+		<script src="js/modernizr-2.6.2.min.js"></script>
         <video id="screenOn" autoplay style="height: 2px; width: 2px; position: absolute; top: 0; left: 0; z-index: -1;" controls muted> </video>
-    </head>
+        <title style="text-align: center;">Moteto</title>
+
+	</head>
+
     <body id="mainBody">
         <script>
             var host = window.location.hostname;
             var onWebSite = false;
             var thisNaipe = undefined;
-            if (host.includes("charlesneimog.com")){
+            if (host.includes("charlesneimog")){
                 onWebSite = true;
             }    
         </script>
@@ -20,7 +43,9 @@
         <script await src="./public/functions.js"> </script>
                 
         <link rel="stylesheet" type="text/css" href="public/style.css">
-        <h1 id="PageTitle" style="text-align: center;">Moteto</h1>
+        <h1 id="PageTitle" style="text-align: center;">Moteto (2023)</h1>
+        <h4 id="Composer" style="text-align: center;">Charles K. Neimog | Lucas Miranda</h4>
+
         <label id="message4choosenaipe" for="naipe-select" style="position: absolute; left: 50%; transform: translateX(-50%); text-align: center;"></label>
         <select id="naipe-select" onchange="chooseNaipe()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
             <option value="none">Selecione o seu naipe de voz.</option>
@@ -63,7 +88,6 @@
         <h4 id="infoPhrase" style="text-align: center; position: relative;"></h4>
         <script id="eventScript" src="./public/events.js"></script> 
         <script>
-
             window.pieceEvents = [];
             // set naipe-select and minute-select asinline-block" none
             var naipeSelection = document.getElementById("naipe-select");
@@ -94,23 +118,23 @@
                 completePhrase.style.textAlign = "center";
                 var completePhraseBound = completePhrase.getBoundingClientRect();
                 infoPhrase.innerHTML = "Todos os(as) performers devem escolher o mesmo minuto para iniciar a obra.";
-                infoPhrase.style.fontStyle = "italic";
+                // infoPhrase.style.fontStyle = "italic";
                 infoPhrase.style.fontWeight = "normal";
                 infoPhrase.style.position = "relative";
                 infoPhrase.style.color = "#21A5FF";
-                // put this infoPhrase below the Title
-                infoPhrase.style.top = `${imgNotePos.top - 170}px`;
+                infoPhrase.style.top = `${imgNotePos.top - 190}px`;
 
             });
 
         
             function checkCompatibility(){
+                let userAgent = navigator.userAgent;
+                let browserName;
                 if (typeof navigator === "undefined" || typeof navigator.userAgent === "undefined") {
                     alert("navigator.userAgent is undefined");
                     return;
                 }
-                let userAgent = navigator.userAgent;
-                let browserName;
+                
                  
                 if(userAgent.match(/chrome|chromium|crios/i)){
                     browserName = "chrome";
@@ -172,16 +196,6 @@
                 if (onWebSite){
                     return;
                 }
-                // var xhr = new XMLHttpRequest();
-                // var host = window.location.hostname;
-                // var port = window.location.port;
-                // var protocol = window.location.protocol;
-                // var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
-                // xhr.open('POST', url, true);
-                // xhr.setRequestHeader('Content-Type', 'application/json');
-                // const userAgent = navigator.userAgent;
-                // const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
-                // xhr.send(JSON.stringify({ 'name': deviceName}));
             }
 
             function chooseNaipe() {
@@ -195,20 +209,6 @@
                 AudioStream(); 
                 setTheNaipe();
                 img.src = "./public/none.png";
-
-                if (onWebSite){
-                    return;
-                }
-                var xhr = new XMLHttpRequest();
-                var host = window.location.hostname;
-                var port = window.location.port;
-                var protocol = window.location.protocol;
-                // var url = protocol + '//' + host + ':' + port + '/send2pd'; // WARNING: This is an standard, all the requests must be sent to this url
-                // xhr.open('POST', url, true);
-                // xhr.setRequestHeader('Content-Type', 'application/json');
-                // const userAgent = navigator.userAgent;
-                // const deviceName = userAgent.match(/\(([^)]+)\)/)[1];
-                // xhr.send(JSON.stringify({ 'ok': deviceName}));
             }
 
             function chooseMinute() {
@@ -220,7 +220,6 @@
                 if (selected == "none"){
                     return;
                 }
-                // img.src = "./public/naipe.png";
                 window.startMinute = selected;
                 document.getElementById("minute-select").style.display = "none";
                 document.getElementById("naipe-select").style.display = "inline-block";
