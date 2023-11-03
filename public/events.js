@@ -1367,7 +1367,7 @@ if (microEventTuplet == 1) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.25;
+        microEvent.breathProbability = 0.1;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.1." + (i + 1);
@@ -1394,7 +1394,7 @@ if (microEventTuplet == 1) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.4;
+        microEvent.breathProbability = 0.1;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.2." + (i + 1);
@@ -1421,7 +1421,7 @@ if (microEventTuplet == 1) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.75;
+        microEvent.breathProbability = 0.1;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.3." + (i + 1);
@@ -1448,7 +1448,7 @@ if (microEventTuplet == 1) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.8;
+        microEvent.breathProbability = 0.2;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.4." + (i + 1);
@@ -1471,7 +1471,7 @@ if (microEventTuplet == 1) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.75;
+        microEvent.breathProbability = 0.2;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.5." + (i + 1);
@@ -1522,7 +1522,7 @@ else if (microEventTuplet == 2) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.4;
+        microEvent.breathProbability = 0.3;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.2." + (i + 1);
@@ -1549,7 +1549,7 @@ else if (microEventTuplet == 2) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.75;
+        microEvent.breathProbability = 0.25;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.3." + (i + 1);
@@ -1576,7 +1576,7 @@ else if (microEventTuplet == 2) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.9;
+        microEvent.breathProbability = 0.25;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.4." + (i + 1);
@@ -1600,7 +1600,7 @@ else if (microEventTuplet == 2) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.75;
+        microEvent.breathProbability = 0.35;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.5." + (i + 1);
@@ -1651,7 +1651,7 @@ else if (microEventTuplet == 3) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.4;
+        microEvent.breathProbability = 0.35;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.2." + (i + 1);
@@ -1678,7 +1678,7 @@ else if (microEventTuplet == 3) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.75;
+        microEvent.breathProbability = 0.45;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.3." + (i + 1);
@@ -1705,7 +1705,7 @@ else if (microEventTuplet == 3) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.9;
+        microEvent.breathProbability = 0.4;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.4." + (i + 1);
@@ -1729,7 +1729,7 @@ else if (microEventTuplet == 3) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.75;
+        microEvent.breathProbability = 0.45;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.5." + (i + 1);
@@ -1753,7 +1753,7 @@ else if (microEventTuplet == 4) {
         microEvent.syllables = POEMA[PHRASE][1];
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
-        microEvent.breathProbability = 0.25;
+        microEvent.breathProbability = 0.75;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.1." + (i + 1);
@@ -1780,7 +1780,7 @@ else if (microEventTuplet == 4) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.4;
+        microEvent.breathProbability = 0.70;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.2." + (i + 1);
@@ -1833,7 +1833,7 @@ else if (microEventTuplet == 4) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.9;
+        microEvent.breathProbability = 0.8;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.4." + (i + 1);
@@ -1857,7 +1857,7 @@ else if (microEventTuplet == 4) {
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.notes2replace = [6600, 6182, 6947];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.75;
+        microEvent.breathProbability = 0.9;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.5." + (i + 1);
