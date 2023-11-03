@@ -2,9 +2,9 @@
 // ========== VOICE STRUCTURES =========
 // =====================================
 const TIME_MULTIPLIER = 2.668;
-const POEMA_CHOISE = randomInt(0, 4);
-const TARGETLEN = 69;
-const deviation = 5;
+const POEMA_CHOICE = randomInt(0, 4); //
+const TARGETLEN = 69; // Numero de eventos
+const deviation = 5; // Numero maximo de repetições de cada frase do poema
 
 
 function getRandomRepetitionCount(baseCount, deviation) {
@@ -165,7 +165,7 @@ const VEEM_ADAO_EVA = POEMAS_LEN(VEEM_ADAO_EVA_NORMAL);
 
 // ===================================================
 const POEMAS = [ADAO, LAMENTACAO, CAMINHAM_NO_DESERTO, SOBRE_A_AREIA, VEEM_ADAO_EVA];
-const POEMA = POEMAS[POEMA_CHOISE];
+const POEMA = POEMAS[POEMA_CHOICE];
 var PHRASE = 0
 
 class Baixo {
@@ -1576,7 +1576,7 @@ else if (microEventTuplet == 2) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.25;
+        microEvent.breathProbability = 0.7;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.4." + (i + 1);
@@ -1600,7 +1600,7 @@ else if (microEventTuplet == 2) {
         microEvent.syllablesProbabilities = POEMA[PHRASE][2];
         microEvent.completePhrase = POEMA[PHRASE][0];
         microEvent.breath = true;
-        microEvent.breathProbability = 0.35;
+        microEvent.breathProbability = 0.1;
         microEvent.breathTime = breathTimeValue;
         microEvent.possibleDurations = [tupletValueMs];
         microEvent.microEventString = "5.5." + (i + 1);
