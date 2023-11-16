@@ -1,239 +1,325 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-    <head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="google-site-verification" content="EH9FHt8Iu2r-GH2VW-5jDf1Sv8YFLRVfK5bzGV7K4vA"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="" />
-		<meta name="keywords" content="" />
-		<meta name="author" content="" />
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="google-site-verification"
+      content="EH9FHt8Iu2r-GH2VW-5jDf1Sv8YFLRVfK5bzGV7K4vA"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
 
-		<!-- Facebook and Twitter integration -->
-		<meta property="og:title" content=""/>
-		<meta property="og:image" content=""/>
-		<meta property="og:url" content=""/>
-		<meta property="og:site_name" content=""/>
-		<meta property="og:description" content=""/>
-		<meta name="twitter:title" content="" />
-		<meta name="twitter:image" content="" />
-		<meta name="twitter:url" content="" />
-		<meta name="twitter:card" content="" />
-		<link rel="shortcut icon" href="./favicon.ico">
-		<link href="https://fonts.googleapis.com/css?family=Karla:400,700" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700" rel="stylesheet">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-		<script src="js/modernizr-2.6.2.min.js"></script>
-        <video id="screenOn" autoplay style="height: 2px; width: 2px; position: absolute; top: 0; left: 0; z-index: -1;" controls muted> </video>
-        <title style="text-align: center;">Moteto</title>
+    <!-- Facebook and Twitter integration -->
+    <meta property="og:title" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:site_name" content="" />
+    <meta property="og:description" content="" />
+    <meta name="twitter:title" content="" />
+    <meta name="twitter:image" content="" />
+    <meta name="twitter:url" content="" />
+    <meta name="twitter:card" content="" />
+    <link rel="shortcut icon" href="./favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Karla:400,700"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <script src="js/modernizr-2.6.2.min.js"></script>
+    <video
+      id="screenOn"
+      autoplay
+      style="
+        height: 2px;
+        width: 2px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+      "
+      controls
+      muted
+    ></video>
+    <title style="text-align: center">Moteto</title>
+  </head>
 
-	</head>
+  <body id="mainBody">
+    <script>
+      var host = window.location.hostname;
+      var onWebSite = false;
+      var thisNaipe = undefined;
+      if (host.includes("charlesneimog")) {
+        onWebSite = true;
+      }
+    </script>
 
-    <body id="mainBody">
-        <script>
-            var host = window.location.hostname;
-            var onWebSite = false;
-            var thisNaipe = undefined;
-            if (host.includes("charlesneimog")){
-                onWebSite = true;
-            }    
-        </script>
+    <script await src="./public/permitionRequests.js"></script>
+    <script await src="./public/functions.js"></script>
 
-        <script await src="./public/permitionRequests.js"> </script>
-        <script await src="./public/functions.js"> </script>
-                
-        <link rel="stylesheet" type="text/css" href="public/style.css">
-        <h1 id="PageTitle" style="text-align: center;">Moteto (2023)</h1>
-        <h4 id="Composer" style="text-align: center;">Charles K. Neimog | Lucas Miranda</h4>
+    <link rel="stylesheet" type="text/css" href="public/style.css" />
+    <h1 id="PageTitle" style="text-align: center">Moteto (2023)</h1>
+    <h4 id="Composer" style="text-align: center">
+      Charles K. Neimog | Lucas Miranda
+    </h4>
 
-        <label id="message4choosenaipe" for="naipe-select" style="position: absolute; left: 50%; transform: translateX(-50%); text-align: center;"></label>
-        <select id="naipe-select" onchange="chooseNaipe()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
-            <option value="none">Selecione o seu naipe de voz.</option>
-            <option value="Soprano">Soprano</option>
-            <option value="Contralto">Contralto</option>
-            <option value="Tenor">Tenor</option>
-            <option value="Baixo">Baixo</option>
-        </select>
-        <select id="minute-select" onchange="chooseMinute()" style="position: absolute; left: 50%; transform: translateX(-50%);"> 
-            <option id="minute-select-none" value="none">Selecione o horário para início da obra.</option>
-            <option id="minute-select-0" value="0">0</option>
-            <option id="minute-select-1" value="1">1</option>
-            <option id="minute-select-2" value="2">2</option>
-            <option id="minute-select-3" value="3">3</option>
-            <option id="minute-select-4" value="4">4</option>
-            <option id="minute-select-5" value="5">5</option>
-            <option id="minute-select-6" value="6">6</option>
-            <option id="minute-select-7" value="7">7</option>
-            <option id="minute-select-8" value="8">8</option>
-            <option id="minute-select-9" value="9">9</option>
-        </select>
-        <script>
-            var thisMinutDec = Math.floor(new Date().getMinutes() / 10) * 10; // decimal of 10 minutes
-            var thisMinutUnit = new Date().getMinutes() % 10; // unit of 10 minutes    
-            var thisMinut = parseInt(thisMinutDec.toString()) + parseInt(thisMinutUnit.toString());
-            for (i = 0; i < 10; i++){
-                const minuteSelect = document.getElementById("minute-select-" + i.toString());
-                minuteSelect.value = parseInt(thisMinut) + 1 + i; 
-                thisHour = new Date().getHours();
-                minuteSelect.innerHTML = "Iniciar obra às " + thisHour + ":" + ((parseInt(thisMinut) + 1 + i) % 60).toString().padStart(2, '0') + ".";
-            }
-            // hidde naipe-select
-            const naipeSelectionStart = document.getElementById("naipe-select");
-            naipeSelectionStart.style.display = "none";
+    <label
+      id="message4choosenaipe"
+      for="naipe-select"
+      style="
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+      "
+    ></label>
+    <select
+      id="naipe-select"
+      onchange="chooseNaipe()"
+      style="position: absolute; left: 50%; transform: translateX(-50%)"
+    >
+      <option value="none">Selecione o seu naipe de voz.</option>
+      <option value="Soprano">Soprano</option>
+      <option value="Contralto">Contralto</option>
+      <option value="Tenor">Tenor</option>
+      <option value="Baixo">Baixo</option>
+    </select>
+    <select
+      id="minute-select"
+      onchange="chooseMinute()"
+      style="position: absolute; left: 50%; transform: translateX(-50%)"
+    >
+      <option id="minute-select-none" value="none">
+        Selecione o horário para início da obra.
+      </option>
+      <option id="minute-select-0" value="0">0</option>
+      <option id="minute-select-1" value="1">1</option>
+      <option id="minute-select-2" value="2">2</option>
+      <option id="minute-select-3" value="3">3</option>
+      <option id="minute-select-4" value="4">4</option>
+      <option id="minute-select-5" value="5">5</option>
+      <option id="minute-select-6" value="6">6</option>
+      <option id="minute-select-7" value="7">7</option>
+      <option id="minute-select-8" value="8">8</option>
+      <option id="minute-select-9" value="9">9</option>
+    </select>
+    <script>
+      var thisMinutDec = Math.floor(new Date().getMinutes() / 10) * 10; // decimal of 10 minutes
+      var thisMinutUnit = new Date().getMinutes() % 10; // unit of 10 minutes
+      var thisMinut =
+        parseInt(thisMinutDec.toString()) + parseInt(thisMinutUnit.toString());
+      for (i = 0; i < 10; i++) {
+        const minuteSelect = document.getElementById(
+          "minute-select-" + i.toString(),
+        );
+        minuteSelect.value = parseInt(thisMinut) + 1 + i;
+        thisHour = new Date().getHours();
+        minuteSelect.innerHTML =
+          "Iniciar obra às " +
+          thisHour +
+          ":" +
+          ((parseInt(thisMinut) + 1 + i) % 60).toString().padStart(2, "0") +
+          ".";
+      }
+      // hidde naipe-select
+      const naipeSelectionStart = document.getElementById("naipe-select");
+      naipeSelectionStart.style.display = "none";
+    </script>
+    <img
+      id="imgNote"
+      style="
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 95%;
+        max-height: 50vh;
+        width: auto;
+        height: auto;
+      "
+      src="public/none.png"
+      alt="Note"
+    />
+    <h4 id="completePhrase" style="text-align: center; position: relative"></h4>
+    <br />
+    <h4 id="infoPhrase" style="text-align: center; position: relative"></h4>
+    <script id="eventScript" src="./public/events.js"></script>
+    <script src="./public/enable-threads.js"></script>
+    <script src="./public/helpers.js"></script>
+    <script src="./public/libpd.js"></script>
+    <script>
+      window.pieceEvents = [];
+      var naipeSelection = document.getElementById("naipe-select");
+      var minuteSelection = document.getElementById("minute-select");
+      var infoPhrase = document.getElementById("infoPhrase");
+      var img = document.getElementById("imgNote");
 
-        </script>
-        <img id="imgNote" style="position: absolute; left: 50%; transform: translateX(-50%); max-width: 95%; max-height: 50vh; width: auto; height: auto;" src="public/none.png" alt="Note">
-        <h4 id="completePhrase" style="text-align: center; position: relative;"></h4>
-        <br>
-        <h4 id="infoPhrase" style="text-align: center; position: relative;"></h4>
-        <script id="eventScript" src="./public/events.js"></script> 
-        <script>
-            window.pieceEvents = [];
-            // set naipe-select and minute-select asinline-block" none
-            var naipeSelection = document.getElementById("naipe-select");
-            var minuteSelection = document.getElementById("minute-select");
-            var infoPhrase = document.getElementById("infoPhrase");
-            var img = document.getElementById("imgNote");
+      naipeSelection.value = "none";
+      minuteSelection.value = "none";
 
-            naipeSelection.value = "none";
-            minuteSelection.value = "none";
-            
-            const naipeSelectionPos = minuteSelection.getBoundingClientRect();
-            img.style.top = `${naipeSelectionPos.bottom + 60}px`;
+      const naipeSelectionPos = minuteSelection.getBoundingClientRect();
+      img.style.top = `${naipeSelectionPos.bottom + 60}px`;
 
-            const imgNote = document.getElementById('imgNote');
-            imgNote.addEventListener('click', function() {
-                const select = document.getElementById("minute-select");
-                select.focus();
-                
-            });
-            // add completePhrase after imgNote
-            var completePhrase = document.getElementById("completePhrase");
-            imgNote.addEventListener("load", function() {
-                var imgNotePos = imgNote.getBoundingClientRect();
-                var imgNoteWidth = imgNotePos.width;
-                var imgNoteHeight = imgNotePos.height;
-                completePhrase.style.position = "absolute";
-                completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
-                completePhrase.style.textAlign = "center";
-                var completePhraseBound = completePhrase.getBoundingClientRect();
-                infoPhrase.innerHTML = "Todos os(as) performers devem escolher o mesmo minuto para iniciar a obra.";
-                // infoPhrase.style.fontStyle = "italic";
-                infoPhrase.style.fontWeight = "normal";
-                infoPhrase.style.position = "relative";
-                infoPhrase.style.color = "#21A5FF";
-                infoPhrase.style.top = `${imgNotePos.top - 190}px`;
+      const imgNote = document.getElementById("imgNote");
+      imgNote.addEventListener("click", function () {
+        const select = document.getElementById("minute-select");
+        select.focus();
+      });
+      // add completePhrase after imgNote
+      var completePhrase = document.getElementById("completePhrase");
+      imgNote.addEventListener("load", function () {
+        var imgNotePos = imgNote.getBoundingClientRect();
+        var imgNoteWidth = imgNotePos.width;
+        var imgNoteHeight = imgNotePos.height;
+        completePhrase.style.position = "absolute";
+        completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
+        completePhrase.style.textAlign = "center";
+        var completePhraseBound = completePhrase.getBoundingClientRect();
+        infoPhrase.innerHTML =
+          "Todos os(as) performers devem escolher o mesmo minuto para iniciar a obra.";
+        // infoPhrase.style.fontStyle = "italic";
+        infoPhrase.style.fontWeight = "normal";
+        infoPhrase.style.position = "relative";
+        infoPhrase.style.color = "#21A5FF";
+        infoPhrase.style.top = `${imgNotePos.top - 190}px`;
+      });
 
-            });
+      function checkCompatibility() {
+        let userAgent = navigator.userAgent;
+        let browserName;
+        if (
+          typeof navigator === "undefined" ||
+          typeof navigator.userAgent === "undefined"
+        ) {
+          alert("navigator.userAgent is undefined");
+          return;
+        }
 
-        
-            function checkCompatibility(){
-                let userAgent = navigator.userAgent;
-                let browserName;
-                if (typeof navigator === "undefined" || typeof navigator.userAgent === "undefined") {
-                    alert("navigator.userAgent is undefined");
-                    return;
-                }
-                
-                 
-                if(userAgent.match(/chrome|chromium|crios/i)){
-                    browserName = "chrome";
-                }
-                else if(userAgent.match(/firefox|fxios/i)){
-                    browserName = "firefox";
-                    const isMobile = navigator.userAgent.mobile;
-                    if (isMobile){
-                        alert("O navegador Firefox não parece ser compatível com algumas de nossas funcionalidades. Para melhor experiência altere o navegador.");
-                    }
-                }  
-                else if(userAgent.match(/safari/i)){
-                    browserName = "safari";
-                }
-                else if(userAgent.match(/opr\//i)){
-                    browserName = "opera";
-                } 
-                else if(userAgent.match(/edg/i)){
-                    browserName = "edge";
-                }
-                else{
-                    browserName="No browser detection";
-                }
-                if (/Mobi|Android/i.test(navigator.userAgent) == true && browserName == "firefox") {
-                    alert("O navegador Firefox não parece ser compatível com algumas requisitos de nossa obra (Moteto). Para melhor experiência altere o navegador.");
-                }
-            }
-            checkCompatibility();
+        if (userAgent.match(/chrome|chromium|crios/i)) {
+          browserName = "chrome";
+        } else if (userAgent.match(/firefox|fxios/i)) {
+          browserName = "firefox";
+          const isMobile = navigator.userAgent.mobile;
+          if (isMobile) {
+            alert(
+              "O navegador Firefox não parece ser compatível com algumas de nossas funcionalidades. Para melhor experiência altere o navegador.",
+            );
+          }
+        } else if (userAgent.match(/safari/i)) {
+          browserName = "safari";
+        } else if (userAgent.match(/opr\//i)) {
+          browserName = "opera";
+        } else if (userAgent.match(/edg/i)) {
+          browserName = "edge";
+        } else {
+          browserName = "No browser detection";
+        }
+        if (
+          /Mobi|Android/i.test(navigator.userAgent) == true &&
+          browserName == "firefox"
+        ) {
+          alert(
+            "O navegador Firefox não parece ser compatível com algumas requisitos de nossa obra (Moteto). Para melhor experiência altere o navegador.",
+          );
+        }
+      }
+      checkCompatibility();
 
-            if (/Mobi|Android/i.test(navigator.userAgent) == true) {
-                askForFullScreen();
-            }
+      if (/Mobi|Android/i.test(navigator.userAgent) == true) {
+        askForFullScreen();
+      }
 
-            completePhrase = document.getElementById("completePhrase");
-            completePhrase.style.color = "black";
-            var imgNotePos = imgNote.getBoundingClientRect();
-            var imgNoteWidth = imgNotePos.width;
-            var imgNoteHeight = imgNotePos.height;
-            completePhrase.style.position = "absolute";
-            completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
-            sendMessage();
+      completePhrase = document.getElementById("completePhrase");
+      completePhrase.style.color = "black";
+      var imgNotePos = imgNote.getBoundingClientRect();
+      var imgNoteWidth = imgNotePos.width;
+      var imgNoteHeight = imgNotePos.height;
+      completePhrase.style.position = "absolute";
+      completePhrase.style.top = `${imgNotePos.bottom + 20}px`;
 
-            // set image as none
-            // img.src = "./public/begin.png";
-            
-            function loadCFunctionsFFT() {
-                return new Promise((resolve, reject) => {
-                    var script = document.createElement('script');
-                    script.onload = resolve;
-                    script.onerror = reject;
-                    script.src = 'public/cFunctions/cFunctions.js';
-                    document.head.appendChild(script);
-                });
-            }
-            
-            loadCFunctionsFFT();
+      function startPdPatch() {}
 
-            function sendMessage() {
-                if (onWebSite){
-                    return;
-                }
-            }
+      function chooseNaipe() {
+        var selectedNaipe = document.getElementById("naipe-select").value;
+        window.naipe = selectedNaipe;
+        if (selectedNaipe == "none") {
+          return;
+        }
+        startPdPatch();
+        syncStart();
+        setTheNaipe();
+          async function init(stream) {
+              let audioContext = window.MainAudioContext;
+              let audioWorkletNode = window.MainAudioWorkletNode;
+    const mic = audioContext.createMediaStreamSource(stream);
+    const clickListenerMic = (_) => {
+      if (audioContext.state !== "running") {
+        mic.connect(audioWorkletNode);
+      } else {
+        audioContext.suspend();
+      }
+    };
+  }
 
-            function chooseNaipe() {
-                var selectedNaipe = document.getElementById("naipe-select").value;
-                window.naipe = selectedNaipe;
-                if (selectedNaipe == "none"){
-                    return;
-                }
-                syncStart();
-                setTheNaipe();
-                AudioStream(); 
-                setTheNaipe();
-                img.src = "./public/none.png";
-            }
+  navigator.mediaDevices
+    .getUserMedia({
+      video: false,
+      audio: {
+        latency: 0,
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false,
+        channelCount: 1,
+      },
+    })
+    .then((stream) => init(stream));
 
-            function chooseMinute() {
-                var selected = document.getElementById("minute-select").value;
-                var h4 = document.getElementById("completePhrase");
-                h4.style.left = "50%";
-                h4.style.transform = "translateX(-50%)";
-                infoPhrase.style.display = "none";
-                if (selected == "none"){
-                    return;
-                }
-                window.startMinute = selected;
-                document.getElementById("minute-select").style.display = "none";
-                document.getElementById("naipe-select").style.display = "inline-block";
 
-                h4.innerHTML = "Clique para escolher seu naipe!";
-                h4.style.color = "#21A5FF";
-                if (onWebSite){
-                    return;
-                }
-                
-            }
 
-        </script>
-        <script src="./public/obra.js"></script>
-        <div id="DurationBar" style="position: fixed; bottom: 0; left: 0; width: 0%; height: 20px; background-color: black;"></div>
-    </body>
+          console.log(audioContext);
+
+        img.src = "./public/none.png";
+      }
+
+      function chooseMinute() {
+        var selected = document.getElementById("minute-select").value;
+        var h4 = document.getElementById("completePhrase");
+        h4.style.left = "50%";
+        h4.style.transform = "translateX(-50%)";
+        infoPhrase.style.display = "none";
+        if (selected == "none") {
+          return;
+        }
+        window.startMinute = selected;
+        document.getElementById("minute-select").style.display = "none";
+        document.getElementById("naipe-select").style.display = "inline-block";
+
+        h4.innerHTML = "Clique para escolher seu naipe!";
+        h4.style.color = "#21A5FF";
+        if (onWebSite) {
+          return;
+        }
+      }
+    </script>
+    <script src="./public/obra.js"></script>
+    <div
+      id="DurationBar"
+      style="
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 20px;
+        background-color: black;
+      "
+    ></div>
+  </body>
 </html>

@@ -78,31 +78,31 @@ function configFFT(dataArray, sampleRate) {
 
 // ========================================================
 function AudioStream() {
-  var audioContext = new AudioContext();
-  var analyser = audioContext.createAnalyser();
-  analyser.fftSize = 4096; // this will
-  var sampleRate = audioContext.sampleRate;
-  var data = new Float32Array(analyser.fftSize);
-  // -----------------------------------------------
-  function step() {
-    if (streamAudioForPartialTracking == true) {
-      audioContext.resume();
-      analyser.getFloatTimeDomainData(data);
-      const floatData = new Float32Array(data.length);
-      floatData.set(data);
-      configFFT(floatData, sampleRate);
-      requestAnimationFrame(step);
-      streamAudioForPartialTracking = false;
-    } else if (streamAudioForPartialTracking == false) {
-      requestAnimationFrame(step);
-    }
-  }
-  // -----------------------------------------------
-  stream.then(function (stream) {
-    var mediaStreamSource = audioContext.createMediaStreamSource(stream);
-    mediaStreamSource.connect(analyser);
-    step(); // this is a requestAnimationFrame???
-  });
+  // var audioContext = new AudioContext();
+  // var analyser = audioContext.createAnalyser();
+  // analyser.fftSize = 4096; // this will
+  // var sampleRate = audioContext.sampleRate;
+  // var data = new Float32Array(analyser.fftSize);
+  // // -----------------------------------------------
+  // function step() {
+  //   if (streamAudioForPartialTracking == true) {
+  //     audioContext.resume();
+  //     analyser.getFloatTimeDomainData(data);
+  //     const floatData = new Float32Array(data.length);
+  //     floatData.set(data);
+  //     configFFT(floatData, sampleRate);
+  //     requestAnimationFrame(step);
+  //     streamAudioForPartialTracking = false;
+  //   } else if (streamAudioForPartialTracking == false) {
+  //     requestAnimationFrame(step);
+  //   }
+  // }
+  // // -----------------------------------------------
+  // stream.then(function (stream) {
+  //   var mediaStreamSource = audioContext.createMediaStreamSource(stream);
+  //   mediaStreamSource.connect(analyser);
+  //   step(); // this is a requestAnimationFrame???
+  // });
 }
 
 // ========================================================
@@ -152,17 +152,16 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
 
   if (midicent != 0) {
     var pngFile = "respire.png";
-    pngFile = "public/" + pngFile;
     var eventDuration = eventClass.duration;
     img.src = pngFile;
     completePhrase.innerHTML = eventClass.completePhrase;
   } else {
     img.src = pngPitchFile;
-    if (pngPitchFile == "public/pausa.png") {
+    if (pngPitchFile == "pausa.png") {
       completePhrase.innerHTML = "";
-    } else if (pngPitchFile == "public/respire.png") {
+    } else if (pngPitchFile == "respire.png") {
       completePhrase.innerHTML = " _ ";
-    } else if (pngPitchFile == "public/ouvir.png") {
+    } else if (pngPitchFile == "ouvir.png") {
       completePhrase.innerHTML = " _ ";
     } else {
       completePhrase.innerHTML = "Nenhuma nota encontrada.";
@@ -174,12 +173,9 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
   // delay for breathTime
   // =====================
   await new Promise((resolve) => setTimeout(resolve, eventClass.breathTime)); // TODO: rethink about this
-  var div = document.getElementById("DurationBar");
 
-  // show the note image
-  // =====================
   img = document.getElementById("imgNote");
-  pngPitchFile = "public/" + pngPitchFile;
+  // pngPitchFile = pngPitchFile;
 
   // check if pngPitchFile exists
   // var http = new XMLHttpRequest();
@@ -194,38 +190,40 @@ async function showNoteAndBreath(pngPitchFile, eventClass, midicent) {
 
   img.src = pngPitchFile;
   var durationMs = eventDuration - eventClass.breathTime;
-  var durationSec = durationMs / 1000;
-  var samples = Math.floor(durationSec * sampleRate);
-  var samples = new Float64Array(samples);
-  var samplesPtr = Module._malloc(samples.length * samples.BYTES_PER_ELEMENT);
+  sendFloat("freq", midicent2Freq(midicent));
+  sendFloat("duracao", durationMs);
+  // var durationSec = durationMs / 1000;
+  // var samples = Math.floor(durationSec * sampleRate);
+  // var samples = new Float64Array(samples);
+  // var samplesPtr = Module._malloc(samples.length * samples.BYTES_PER_ELEMENT);
 
-  onwebSite = true;
-  Module.HEAPF64.set(samples, samplesPtr >> 3);
-  Module.ccall(
-    "generate_sine_wave",
-    "number",
-    ["number", "number", "number", "number"],
-    [
-      midicent2Freq(midicent),
-      sampleRate,
-      eventDuration - eventClass.breathTime,
-      samplesPtr,
-    ],
-  );
-  var samples = new Float64Array(
-    Module.HEAPF64.buffer,
-    samplesPtr,
-    samples.length,
-  );
-  var audioContext = new AudioContext();
-  var buffer = audioContext.createBuffer(1, samples.length, sampleRate);
-  var channelData = buffer.getChannelData(0);
-  channelData.set(Float32Array.from(samples));
-  var source = audioContext.createBufferSource();
-  source.buffer = buffer;
-  source.connect(audioContext.destination);
-  source.start();
-  Module._free(samplesPtr);
+  // onwebSite = true;
+  // Module.HEAPF64.set(samples, samplesPtr >> 3);
+  // Module.ccall(
+  //   "generate_sine_wave",
+  //   "number",
+  //   ["number", "number", "number", "number"],
+  //   [
+  //     midicent2Freq(midicent),
+  //     sampleRate,
+  //     eventDuration - eventClass.breathTime,
+  //     samplesPtr,
+  //   ],
+  // );
+  // var samples = new Float64Array(
+  //   Module.HEAPF64.buffer,
+  //   samplesPtr,
+  //   samples.length,
+  // );
+  // var audioContext = new AudioContext();
+  // var buffer = audioContext.createBuffer(1, samples.length, sampleRate);
+  // var channelData = buffer.getChannelData(0);
+  // channelData.set(Float32Array.from(samples));
+  // var source = audioContext.createBufferSource();
+  // source.buffer = buffer;
+  // source.connect(audioContext.destination);
+  // source.start();
+  // Module._free(samplesPtr);
   completePhrase.innerHTML = eventClass.completePhrase; //     TODO: SHOW THE PHRASE AND BOLD SYLLABLES
 }
 
@@ -261,11 +259,9 @@ function StartMicroEvent(event, eventDuration) {
 
   var higherNote = thisNaipe.higherNote;
   var lowerNote = thisNaipe.lowerNote;
-  var validEvents = [];
 
   var goodNotes = [];
   var goodNotesProbabilities = [];
-  var sendPartialTracking = Math.random();
 
   // ========================================================
   // NOTE: Here is where I execute the partial tracking
@@ -388,7 +384,6 @@ async function startMediumEvents(eventNumber) {
   for (var i = 0; i < length; i++) {
     var event = mediumEvent.MicroEvents[i];
     var eventDuration = event.possibleDurations[0];
-    // console.log("=============================");
     StartMicroEvent(event, eventDuration);
     await new Promise((resolve) => setTimeout(resolve, eventDuration));
   }
@@ -398,7 +393,7 @@ async function startMediumEvents(eventNumber) {
     startMediumEvents(eventNumber);
   } else {
     var img = document.getElementById("imgNote");
-    img.src = "./public/fim.png";
+    img.src = "./fim.png";
     completePhrase = document.getElementById("completePhrase");
     var imgNotePos = img.getBoundingClientRect();
     console.log(
@@ -412,7 +407,7 @@ async function startMediumEvents(eventNumber) {
     completePhrase.innerHTML = "Fim da peça! Obrigado!";
     // wait for 5 seconds and redirect to the home page
     setTimeout(function () {
-      window.location.href = "./poemas.html";
+      window.location.href = "../poemas.html";
     }, 5000);
   }
 }
@@ -422,6 +417,8 @@ async function syncStart() {
   if (thisNaipe == undefined) {
     setTheNaipe();
   }
+  startMediumEvents(1);
+  return;
   // Get the current time in milliseconds since the epoch
   var now = new Date().getTime();
   var thisHour = new Date().getHours();
