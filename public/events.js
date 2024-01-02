@@ -740,23 +740,23 @@ class Soprano {
 
 class MicroEvent {
   constructor(eventNumber) {
-    this.eventNumber = eventNumber;
-    this.notes = [];
-    this.notesProbabilities = [];
-    this.notesMidicent = [];
-    this.syllables = [];
-    this.syllablesProbabilities = [];
-    this.completePhrase = "";
-    this.breathTime = 800;
-    this.microEventString = "";
-    this.possibleDurations = [];
-    this.mkPartialTracking = false;
-    this.clearPartialTracking = false;
-    this.replaceNotes = false;
-    this.notes2replace = [];
-    // respire
-    this.breath = false;
-    this.breathProbability = 0;
+    this.eventNumber = eventNumber; // Numero do evento (somente para controle)
+    this.notes = []; // Notas em Strings "C4", "G#3" etc...
+    this.notesProbabilities = []; // as notas são sorteadas aleatoriamente, aqui voce pode definir a propabilidade para cada nota
+    this.notesMidicent = []; // Notas em Midicents 6000, 5600, etcc...
+    this.syllables = []; // silabas que serão cantadas
+    this.syllablesProbabilities = []; // probabilidade para a escolha de cada silaba
+    this.completePhrase = ""; // Frase do poema
+    this.microEventString = ""; // string para erros
+    this.possibleDurations = []; // duracoes possíveis para a nota,
+    this.mkPartialTracking = false; // fazer ou não partial tracking, caso falso, é necessário especificar notesMidicent.
+    this.clearPartialTracking = false; // O partial Tracking se acumula, aqui podemos limpar os dados de partial tracking
+    this.replaceNotes = false; // caso verdadeiro, as notas do partial tracking serão substituidas pelas notas mais proximas das notas especificadas em notes2replace
+    this.notes2replace = []; // notas para substituir as notas do partial tracking
+
+    this.breath = false; // haver ou não a indicação de respiração entre eventos
+    this.breathProbability = 0; // probabilidade de ter respiração
+    this.breathTime = 800; // Tempo para respiração
   }
 
   getDuration() {
